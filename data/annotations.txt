@@ -1,0 +1,4 @@
+#id,type,start,end,strand,track,name
+aaa,CDS,1259,1467,+,track1,At2g26540
+ccc,CDS,1259,1467,-,track1,At2g26540
+bbb,CDS,21359,24467,+,track2,At4g16240
