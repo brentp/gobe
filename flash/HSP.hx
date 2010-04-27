@@ -42,8 +42,8 @@ class Edge extends Sprite {
             this.drawn = force;
             return;
         }
-        var ul = aa.localToGlobal(new flash.geom.Point(0, aa.y + aa.h));
-        var ur = aa.localToGlobal(new flash.geom.Point(aa.pxmax - aa.pxmin, aa.y + aa.h));
+        var ul = aa.localToGlobal(new flash.geom.Point(0, 0));
+        var ur = aa.localToGlobal(new flash.geom.Point(aa.pxmax - aa.pxmin, 0));
 
         var ll = bb.localToGlobal(new flash.geom.Point(0, 0));
         var lr = bb.localToGlobal(new flash.geom.Point(bb.pxmax - bb.pxmin, 0));
@@ -143,7 +143,9 @@ class Annotation extends Sprite {
             Gobe.edges[te[i]].draw();
         }
         //trace([this.id, this.fname, (this.bpmax + this.bpmin)/ 2, e.stageX, this.track_id].join(","));
-        Gobe.js_onclick(this.id, this.fname, (this.bpmax + this.bpmin)/ 2, e.stageX, this.track_id);
+        if(! e.shiftKey){
+            Gobe.js_onclick(this.id, this.fname, (this.bpmax + this.bpmin)/ 2, e.stageX, this.track_id);
+        }
     }
 }
 
