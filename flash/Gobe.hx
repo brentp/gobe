@@ -52,6 +52,7 @@ class Gobe extends Sprite {
     public var annotations_url:String;
     public var edges_url:String;
     public var tracks_url:String;
+    public var style_url:String;
 
     public function clearPanelGraphics(e:MouseEvent){
         while(panel.numChildren != 0){ panel.removeChildAt(0); }
@@ -103,8 +104,9 @@ class Gobe extends Sprite {
         this.annotations_url = p.annotations;
         this.edges_url = p.edges;
         this.tracks_url = p.tracks;
+        this.style_url = p.style;
 
-        panel = new Sprite(); 
+        panel = new Sprite();
         addChild(panel);
         addChild(this.drag_sprite);
         this.add_callbacks();
@@ -119,10 +121,11 @@ class Gobe extends Sprite {
         flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyPress);
         this.stage_width = flash.Lib.current.stage.stage.stageWidth;
         this.stage_height = flash.Lib.current.stage.stage.stageHeight;
-        geturl(p.style, styleReturn);
+        geturl(this.style_url, styleReturn);
 
 
     }
+
     public function styleReturn(e:Event) {
         feature_stylesheet = new StyleSheet();
         feature_stylesheet.parseCSS(e.target.data);
@@ -132,7 +135,7 @@ class Gobe extends Sprite {
             var st = feature_stylesheet.getStyle(ftype);
             styles.set(ftype, new Style(ftype, st));
         }
-        this.geturl(this.tracks_url, trackReturn); //
+        geturl(this.tracks_url, trackReturn);
     }
 
     public function onKeyPress(e:KeyboardEvent){
@@ -146,12 +149,14 @@ class Gobe extends Sprite {
         }
     }
     public function geturl(url:String, handler:Event -> Void){
+        url = StringTools.urlDecode(url);
         trace("getting:" + url);
         var ul = new URLLoader();
         ul.load(new URLRequest(url));
         ul.addEventListener(Event.COMPLETE, handler);
         ul.addEventListener(IOErrorEvent.IO_ERROR, function(e:Event){
-Gobe.js_warn("failed to get:" + url + "\n" + e); });
+            Gobe.js_warn("failed to get:" + url + "\n" + e); 
+        });
     }
 
     public function edgeReturn(e:Event){
@@ -160,8 +165,19 @@ Gobe.js_warn("failed to get:" + url + "\n" + e); });
         var edge_tracks = new Hash<Hash<Int>>();
         for(line in lines){
             if(line.charAt(0) == "#" || line.length == 0) { continue; }
-            var edge = Util.add_edge_line(line, annotations);
-            if (edge == null){ continue; }
+            var l = line.split(",");
+            var a = annotations.get(l[0]); var b = annotations.get(l[1]);
+            var strength = Std.parseFloat(l[2]);
+            updateEdgeTracks(a, b, strength, edge_tracks);
+        }
+        initializeSubTracks(edge_tracks);
+        addAnnotations();
+    }
+    private function updateEdgeTracks(a:Annotation, b:Annotation, strength:Float, edge_tracks:Hash<Hash<Int>>){
+        // used in edgeReturn and addAnnotation to add annos to edge_tracsk whic
+       // keeps track of unique track pairs.
+            var edge = Util.add_edge_line(a, b, strength);
+            if (edge == null){ return; }
 
             // so here we tabulate all the unique track pairs...
             var aid = edge.a.track.id;
@@ -172,9 +188,7 @@ Gobe.js_warn("failed to get:" + url + "\n" + e); });
             if(! edge_tracks.exists(bid)) { edge_tracks.set(bid, new Hash<Int>()); }
             edge_tracks.get(bid).set(aid, 1);
             edge_tracks.get(aid).set(bid, 1);
-        }
-        initializeSubTracks(edge_tracks);
-        addAnnotations();
+
     }
     private function initializeSubTracks(edge_tracks:Hash<Hash<Int>>){
         // so here, it knows all the annotations and edges, so we figure out
@@ -257,26 +271,53 @@ Gobe.js_warn("failed to get:" + url + "\n" + e); });
     }
 
     public function annotationReturn(e:Event){
+        // requires tracks to be set!
         annotations = new Hash<Annotation>();
+        var implicit = this.edges_url != null && this.edges_url == 'implicit';
         var anno_lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
+        var hsps = new Array<Annotation>();
+        var edge_tracks = new Hash<Hash<Int>>();
         for(line in anno_lines){
             if(line.charAt(0) == "#" || line.length == 0){ continue;}
             var a = new Annotation(line, tracks);
-            a.style = styles.get(a.ftype);
+            var b = styles.get(a.ftype);
+            if(b == null){
+                Gobe.js_warn("no style defined for:" + a.ftype);
+                a.style = styles.get('cds');
+            }
+            else {
+                a.style = b;
+            }
             if(annotations.exists(a.id)) {
                 Gobe.js_warn(a.id + " is not a unique annotation id. overwriting");
             }
             annotations.set(a.id, a);
+            // we set the edges implicitly based on consecutive hsps.
+            if(implicit && a.ftype == "hsp"){
+                hsps.push(a);
+                if(hsps.length % 2 == 0){
+                    updateEdgeTracks(hsps[0], hsps[1], 1.0, edge_tracks);
+                    hsps = [];
+                }
+            }
+            else if (hsps.length != 0) {
+                Gobe.js_warn("non-consecutive hsps");
+            }
         }
-        geturl(this.edges_url, edgeReturn);
-
+        if (! implicit ) {
+            geturl(this.edges_url, edgeReturn);
+        }
+        else {
+            initializeSubTracks(edge_tracks);
+            addAnnotations();
+        }
     }
 
     public function trackReturn(e:Event){
         // called by style return.
-        this.geturl(this.annotations_url, annotationReturn);
-        tracks = new Hash<Track>();
+        geturl(this.annotations_url, annotationReturn);
         var lines:Array<String> = e.target.data.split("\n");
+        tracks = new Hash<Track>();
         var ntracks = 0;
         for(line in lines){ if (line.charAt(0) != "#" && line.length != 0){ ntracks += 1; }}
         var track_height = Std.int(this.stage_height / ntracks);

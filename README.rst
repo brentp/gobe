@@ -4,7 +4,7 @@ Gobe: interactive comparative genomics viewer
 .. image:: http://lh4.ggpht.com/_uU_kLC5AdTc/S9Oz2FAE0MI/AAAAAAAAAz0/o9bOod42qA4/s800/screen1.png
     :align: right
 
-a fast, interactive, light-weight, customizable, web-based comparative genomics viewer with simple text input format.  
+a fast, interactive, light-weight, customizable, web-based comparative genomics viewer with simple text input format.
 
 :Author: Brent Pedersen (brentp)
 :Email: bpederse@gmail.com
@@ -17,11 +17,11 @@ Summary
 =======
 You define a set of features, a set of tracks, and a css for styling features
 and you get a flash movie that allows you to interact with genomic data. The
-simple format makes it trivial to implement further interactivity including 
+simple format makes it trivial to implement further interactivity including
 panning and zooming.
 
-Interaction is customizable via javascript callbacks, css, and the input data. 
-No server-side rendering is required. `haxe`_ programming language is used for 
+Interaction is customizable via javascript callbacks, css, and the input data.
+No server-side rendering is required. `haxe`_ programming language is used for
 development, but it is not required to use the library.
 
 File Formats
@@ -39,7 +39,7 @@ allows you to draw relationships between features.
 An annotation file is a simple
 text file with 7 **comma-delimited** columns per row:
 
-    1) `id`: a unique identifier for this annotation. this is anything you 
+    1) `id`: a unique identifier for this annotation. this is anything you
        want, can be your own database id or gene name or just an enumeration.
 
     2) `type`: a feature type (CDS, gene etc).
@@ -53,29 +53,31 @@ text file with 7 **comma-delimited** columns per row:
 
     6) `track`: the track on which to draw this feature. See `Tracks`.
 
-    7) `name`: the name of the feature e.g. 'At2g26540'. Can be anythign.
+    7) `name`: the name of the feature e.g. 'At2g26540'. Can be anything.
 
 an example looks like ::
 
-    1,HSP,25,38,+,4,4
+    1,HSP,25,38,+,5,4
+    2,HSP,22,123,+,4,4
     At2g26540,gene,1110,1683,+,4,feature name
     3,CDS,1210,1653,+,4,4
     4,CDS,1210,1653,-,4,4
-    5,HSP,22,123,+,4,4
 
 Note the first 4 will all be drawn in a `track` with id 4. The 5th will be
-drawn in track with id '5' and only the 3rd item is on the - strand. You may 
+drawn in track with id '5' and only the 3rd item is on the - strand. You may
 have thousands of annotations. The ids do not have to be numeric.
+If your `Edges`_ argument is specified as &edge=implicit, then consecutive HSPs
+will be linked with an edge.
 
 Tracks
 ------
 
-A track defines the name and extent of regions to be drawn. Since Gobe is for 
+A track defines the name and extent of regions to be drawn. Since Gobe is for
 comparative genomics, you will usually draw more than one region. The track
 id is used in the annotations (column 6) to indicate where to draw the features.
 A track definition has 4 comma delimited columns per row:
 
-    1) `id`: a unique id. used by the annotation to indicate it belongs to 
+    1) `id`: a unique id. used by the annotation to indicate it belongs to
        this track.
 
     2) `name`: a name for this track displayed in the viewer.
@@ -85,7 +87,7 @@ A track definition has 4 comma delimited columns per row:
     4) `end`: the maximum bound of this track.
 
 an example looks like::
-    
+
     4,Track Title,19,1999
 
 So in that example, the bounds are from 9 to 1999 in basepair coordinates and
@@ -94,8 +96,27 @@ any annotation beloning to this track will use '4' in the track column.
 
 Edges
 -----
-An edge defines a relationship between 2 annotations. The format is extremely
-simple. It is 3 comma-delimited columns:
+An edge defines a relationship between 2 annotations.
+
+Implicit
+++++++++
+
+If the url argument for edges is 'implicit'. e.g: &edges=implicit, then edges
+will be inferred between consecutive HSP's.  So that lines like::
+
+    1,HSP,25,38,+,4,4
+    2,HSP,22,123,+,5,5
+    3,HSP,35,68,+,4,4
+    4,HSP,99,223,+,5,5
+
+will infer edges between HSP's 1,2 and HSP's 3,4. This is e.g. when parsing a
+blast, where it's very simple to output consecutive lines for a single blast pair.
+
+
+Explicit
+++++++++
+
+The format is 3 comma-delimited columns:
 
    1) `id`: id of annotation a
 
@@ -128,7 +149,7 @@ then specify the paths to your own data with a url like:
 
     /gobe/?tracks=data/t.tracks&annotations=data/t.annos&edges=data/t.edges&style=gobe.css
 
-Once you have each of those files in the proper location, gobe will render the 
+Once you have each of those files in the proper location, gobe will render the
 interactive flash movie.
 
 TODO
@@ -139,6 +160,7 @@ TODO
   * automatically guess tracks based on annotations if not given.
   * customizable fonts
   * move HSP colors to CSS.
+  * wiggle tracks.
 
 .. image:: http://lh4.ggpht.com/_uU_kLC5AdTc/S9O1wilCMBI/AAAAAAAAA0A/NniSF6OhTps/s800/screen2.png
 

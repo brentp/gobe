@@ -3,11 +3,7 @@ import Gobe;
 
 class Util {
     public static var track_colors:Array<UInt> = [0xff9900, 0x330000, 0x99cc00, 0x009966, 0x9933cc, 0x3300ff, 0xffcc99];
-    public static function add_edge_line(line:String, annotations:Hash<Annotation>):Null<Edge>{
-        var l = line.split(",");
-        var a = annotations.get(l[0]);
-        var b = annotations.get(l[1]);
-        var strength = Std.parseFloat(l[2]);
+    public static function add_edge_line(a:Annotation, b:Annotation, strength:Float):Null<Edge>{
         if (a == null || b == null){ return null; }
 
         var edge = new Edge(a, b, strength);
