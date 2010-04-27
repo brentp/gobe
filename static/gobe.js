@@ -8,6 +8,21 @@ var Gobe = {
         console.error("Flash msg:" + msg);
     },
 
+    'redraw': function(){
+        Gobe.swf.redraw();
+    },
+
+    'set_hsp_colors': function(){
+        var colors = [];
+        if (arguments.length > 0 && arguments[0] instanceof Array){
+            colors = arguments[0];
+        }
+        else {
+            for(var i=0; i<arguments.length; i++){ colors.push(arguments[i]); }
+        }
+        if(colors) Gobe.swf.set_hsp_colors(colors);
+    },
+
     DIV: 'flashcontent',
     'get_movie': function () {
           if (swfobject.ua.ie) {

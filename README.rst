@@ -102,21 +102,23 @@ Implicit
 ++++++++
 
 If the url argument for edges is 'implicit'. e.g: &edges=implicit, then edges
-will be inferred between consecutive HSP's.  So that lines like::
+will be inferred between consecutive HSP's.  So that annotation lines like::
 
     1,HSP,25,38,+,4,4
     2,HSP,22,123,+,5,5
     3,HSP,35,68,+,4,4
     4,HSP,99,223,+,5,5
 
-will infer edges between HSP's 1,2 and HSP's 3,4. This is e.g. when parsing a
-blast, where it's very simple to output consecutive lines for a single blast pair.
+will infer edges between HSP's 1,2 and HSP's 3,4. This is common e.g. when
+parsing a blast, where it's very simple to output consecutive lines for a
+single blast pair.
 
 
 Explicit
 ++++++++
 
-The format is 3 comma-delimited columns:
+If you can not use the `Implicit`_ format in the `Annotations`_, then the
+format is 3 comma-delimited columns:
 
    1) `id`: id of annotation a
 

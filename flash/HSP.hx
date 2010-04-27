@@ -18,6 +18,7 @@ class Edge extends Sprite {
         this.a = a; this.b = b; this.strength = s;
         this.drawn = false;
         this.addEventListener(MouseEvent.CLICK, onClick);
+        this.visible = false;
     }
     public function draw(?force:Bool=false){
         if(this.drawn){
@@ -60,6 +61,7 @@ class Edge extends Sprite {
         g.lineTo(ul.x, ul.y);
         g.endFill();
         this.drawn = true;
+        this.visible = true;
     }
     public function onClick(e:MouseEvent){
         this.visible = false;
@@ -98,14 +100,14 @@ class Annotation extends Sprite {
         this.fname = l[6];
 
         this.track = tracks.get(this.track_id);
-        this.pxmin = track.rw2pix(this.bpmin);
-        this.pxmax = track.rw2pix(this.bpmax);
-        this.x = pxmin;
         this.addEventListener(MouseEvent.CLICK, onClick);
         //trace(this.bpmin + "," + this.bpmax + "=>" + this.pxmin + "," + this.pxmax);
 
     }
     public function draw(){
+        this.pxmin = track.rw2pix(this.bpmin);
+        this.pxmax = track.rw2pix(this.bpmax);
+        this.x = pxmin;
         var g = this.graphics;
         var is_hsptrack = Std.is(subtrack, HSPTrack);
         this.y = -this.subtrack.track_height / 2;
@@ -124,11 +126,11 @@ class Annotation extends Sprite {
 
         var m = new flash.geom.Matrix();
         m.createGradientBox(tw, h/3, 290, 0, -h/6);
-        g.beginGradientFill(flash.display.GradientType.LINEAR, 
-                         [Util.color_shift(c, -24), Util.color_shift(c, 24)], 
+        g.beginGradientFill(flash.display.GradientType.LINEAR,
+                         [Util.color_shift(c, -24), Util.color_shift(c, 24)],
                          [style.fill_alpha, style.fill_alpha],
                         [0x00, 0xFF], m);
-    
+
 
         g.lineTo(xstart, -h/2);
         g.lineTo(xend - alen, -h/2);
@@ -352,9 +354,7 @@ class Track extends Sprite {
     }
 
     public inline function rw2pix(bp:Int){
-        var pix = (bp - this.bpmin) / this.bpp;
-        //trace(bp + " => " + pix);
-        return pix;
+        return (bp - this.bpmin) / this.bpp;
     }
 
     public function setUpTextField(){
