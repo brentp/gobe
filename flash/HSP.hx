@@ -71,6 +71,7 @@ class Edge extends Sprite {
 // this is the base class for drawable annotations.
 class Annotation extends Sprite {
     public var ftype:String;
+    public var is_hsp:Bool;
     public var id:String; // key for anntations hash.
     public var pxmin:Float;
     public var pxmax:Float;
@@ -98,6 +99,7 @@ class Annotation extends Sprite {
         this.strand = l[4] == "+" ? 1 : l[4] == "-" ? -1 : 0;
         this.track_id = l[5];
         this.fname = l[6];
+        this.is_hsp = this.ftype.substr(0, 3) == "hsp";
 
         this.track = tracks.get(this.track_id);
         this.addEventListener(MouseEvent.CLICK, onClick);

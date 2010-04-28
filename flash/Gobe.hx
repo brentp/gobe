@@ -160,7 +160,7 @@ class Gobe extends Sprite {
         ul.load(new URLRequest(url));
         ul.addEventListener(Event.COMPLETE, handler);
         ul.addEventListener(IOErrorEvent.IO_ERROR, function(e:Event){
-            Gobe.js_warn("failed to get:" + url + "\n" + e); 
+            Gobe.js_warn("failed to get:" + url + "\n" + e);
         });
     }
 
@@ -199,6 +199,7 @@ class Gobe extends Sprite {
             var remaining = atrack.track_height - (sub_height * 2 * ntracks);
             for(bid in btrack_ids){
                 var color_key = aid < bid ? aid + "|" + bid : bid + "|" + aid;
+                // TODO: allow getting this from css.
                 var track_color = Util.next_track_color(aid, bid, colors);
                 var btrack = tracks.get(bid);
                 for(strand in ['+', '-']){
@@ -228,8 +229,6 @@ class Gobe extends Sprite {
             var minus = new AnnoTrack(atrack, atrack, remaining/2);
             plus.y = i * sub_height + remaining / 2;
             minus.y = plus.y + remaining/ 2;
-            //minus.y = atrack.track_height - (ntracks - i) * sub_height - remaining/2;
-            //trace(plus.y);
             atrack.subtracks.set('+', plus);
             atrack.subtracks.set('-', minus);
             atrack.addChildAt(plus, 0);
@@ -244,7 +243,7 @@ class Gobe extends Sprite {
             return a.style.zindex < b.style.zindex ? -1 : 1;
         });
         for(a in arr){
-            if(a.ftype != "hsp"){
+            if(! a.is_hsp){
                 var sub = a.track.subtracks.get(a.strand == 1 ? '+' : '-');
                 a.subtrack = sub;
                 sub.addChild(a);
@@ -273,20 +272,23 @@ class Gobe extends Sprite {
         for(line in anno_lines){
             if(line.charAt(0) == "#" || line.length == 0){ continue;}
             var a = new Annotation(line, tracks);
-            var b = styles.get(a.ftype);
-            if(b == null){
+            var astyle = styles.get(a.ftype);
+            if (astyle == null && a.is_hsp){
+                astyle = styles.get('hsp');
+            }
+            if(astyle == null){
                 Gobe.js_warn("no style defined for:" + a.ftype);
                 a.style = styles.get('cds');
             }
             else {
-                a.style = b;
+                a.style = astyle;
             }
             if(annotations.exists(a.id)) {
                 Gobe.js_warn(a.id + " is not a unique annotation id. overwriting");
             }
             annotations.set(a.id, a);
             // we set the edges implicitly based on consecutive hsps.
-            if(a.ftype == "hsp"){
+            if(a.is_hsp){
                 hsps.push(a);
                 if(hsps.length % 2 == 0){
                     updateEdgeTracks(hsps[0], hsps[1], 1.0, edge_tracks);
