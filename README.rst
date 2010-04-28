@@ -96,6 +96,10 @@ an example looks like::
 So in that example, the bounds are from 9 to 1999 in basepair coordinates and
 any annotation beloning to this track will use '4' in the track column.
 
+**NOTE** that if no track is specified, or if it is specified as
+&track=implicit then the track ids and extents will be inferred from the
+annotations. The extent of the annotations for each track will be padded
+slightly to calculate the extent of the track.
 
 HSP
 ===
