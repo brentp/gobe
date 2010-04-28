@@ -343,7 +343,7 @@ class Track extends Sprite {
         var mid = track_height/2;
         var sw = flash.Lib.current.stage.stageWidth - 1;
         var px_posns = [0, sw/2, sw];
-        var bp_posns = [this.bpmin, (this.bpmin + this.bpmax)/2, this.bpmax];
+        var bp_posns = [this.bpmin, Math.round((this.bpmin + this.bpmax)/2), this.bpmax];
         for(i in 0 ... 3){
             var t = new MTextField();
             t.htmlText = (bp_posns[i] + "");
