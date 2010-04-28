@@ -14,6 +14,11 @@ class Util {
         flash.Lib.current.addChild(edge);
         return edge;
     }
+    public static function set_hsp_colors(colors:Array<String>){
+        var a = [];
+        for(c in colors){ a.push(Util.color_string_to_uint(c)); }
+        Util.track_colors = a;
+    }
 
     public static function sorted_keys(keys:Iterator<String>):Array<String>{
         var skeys = new Array<String>();
@@ -34,7 +39,8 @@ class Util {
         colors.set(color_key, track_color);
         return track_color;
     }
-    public static inline function color_string_to_uint(c:String):UInt{
+    public static function color_string_to_uint(c:String):UInt{
+        if(c == null){ return 0x000000; }
         c = StringTools.replace(c, '#', '0x');
         return Std.parseInt(c);
     }

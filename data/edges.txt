@@ -1,2 +1,0 @@
-# comments ignored.
-aaa,bbb,0.6
