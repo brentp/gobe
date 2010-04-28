@@ -108,7 +108,7 @@ class Gobe extends Sprite {
         this.drag_sprite = new DragSprite();
         this.wedge_alpha = 0.3;
         this.annotations_url = p.annotations;
-        this.tracks_url = p.tracks;
+        this.tracks_url = p.tracks != null ? p.tracks : "implicit";
         this.style_url = p.style;
 
         panel = new Sprite();
@@ -116,6 +116,7 @@ class Gobe extends Sprite {
         addChild(this.drag_sprite);
         this.add_callbacks();
         var i:Int;
+        tracks = new Hash<Track>();
 
         // the event only gets called when mousing over an HSP.
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -140,7 +141,12 @@ class Gobe extends Sprite {
             var st = feature_stylesheet.getStyle(ftype);
             styles.set(ftype, new Style(ftype, st));
         }
-        geturl(this.tracks_url, trackReturn);
+        if(this.tracks_url != "implicit"){
+            geturl(this.tracks_url, trackReturn);
+        }
+        else {
+            geturl(this.annotations_url, annotationReturn);
+        }
     }
 
     public function onKeyPress(e:KeyboardEvent){
@@ -269,6 +275,13 @@ class Gobe extends Sprite {
         var anno_lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
         var hsps = new Array<Annotation>();
         var edge_tracks = new Hash<Hash<Int>>();
+        var implicit = this.tracks_url == "implicit";
+        var track_names = new Hash<String>();
+
+        //if(implicit){
+        //    track_names = Util.get_unique_track_ids(anno_lines);
+        //}
+
         for(line in anno_lines){
             if(line.charAt(0) == "#" || line.length == 0){ continue;}
             var a = new Annotation(line, tracks);
@@ -307,7 +320,6 @@ class Gobe extends Sprite {
         // called by style return.
         geturl(this.annotations_url, annotationReturn);
         var lines:Array<String> = e.target.data.split("\n");
-        tracks = new Hash<Track>();
         var ntracks = 0;
         for(line in lines){ if (line.charAt(0) != "#" && line.length != 0){ ntracks += 1; }}
         var track_height = Std.int(this.stage_height / ntracks);

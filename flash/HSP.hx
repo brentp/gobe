@@ -88,16 +88,16 @@ class Annotation extends Sprite {
     public var fname:String;
     public function new(line:String, tracks:Hash<Track>){
         super();
-        //#id,type,start,end,strand,track,name
+        //#id,track_id,start,end,type,strand,name
         var l = line.split(",");
 
         this.edges = new Array<Int>();
         this.id = l[0];
-        this.ftype = l[1].toLowerCase();
+        this.track_id = l[1];
         this.bpmin = Std.parseInt(l[2]);
         this.bpmax = Std.parseInt(l[3]);
-        this.strand = l[4] == "+" ? 1 : l[4] == "-" ? -1 : 0;
-        this.track_id = l[5];
+        this.ftype = l[4].toLowerCase();
+        this.strand = l.length < 5 || l[5] == "+" ? 1 : -1;
         this.fname = l[6];
         this.is_hsp = this.ftype.substr(0, 3) == "hsp";
 
@@ -304,11 +304,11 @@ class Track extends Sprite {
         subtracks = new Hash<SubTrack>();
         var l = line.split(",");
         this.id = l[0];
-        this.title = l[1];
+        this.title = l.length > 3 ? l[3] : this.id;
 
         this.track_height = track_height;
-        this.bpmin = Std.parseInt(l[2]);
-        this.bpmax = Std.parseInt(l[3]);
+        this.bpmin = Std.parseInt(l[1]);
+        this.bpmax = Std.parseInt(l[2]);
         this.mouse_down = false;
         this.setUpTextField();
         this.bpp = (bpmax - bpmin)/(1.0 * flash.Lib.current.stage.stageWidth);

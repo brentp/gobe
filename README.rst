@@ -43,28 +43,30 @@ The annotation file is a text file with 7 **comma-delimited** columns per row:
     1) `id`: a unique identifier for this annotation. this is anything you
        want, can be your own database id or gene name or just an enumeration.
 
-    2) `type`: a feature type (CDS, gene etc).
+    2) `track_id`: the id of the track on which to draw this feature.
+       See `Track`_.
 
     3) `start`: the start of the feature.
 
     4) `end`: the end of the feature.
 
-    5) `strand`: either '+' or '-', the strand of the feature. `HSP`_'s with a
-       +/- match should both be assigned - as the strand
+    5) `type`: a feature type (CDS, gene etc). If not specified, 'default' is used.
 
-    6) `track`: the track on which to draw this feature. See `Track`_.
+    6) `strand`: either '+' or '-', the strand of the feature. `HSP`_'s with a
+       +/- match should both be assigned - as the strand. If not specified '+' is used.
 
-    7) `name`: the name of the feature e.g. 'At2g26540'. Can be anything.
+    7) `name`: the name of the feature e.g. 'At2g26540'. Can be anything. If not specified
+       `id` is used.
 
 an example looks like ::
 
-    1,HSP,25,38,+,5,4
-    2,HSP,22,123,+,4,4
-    At2g26540,gene,1110,1683,+,4,feature name
-    3,CDS,1210,1653,+,4,4
-    4,CDS,1210,1653,-,4,4
+    1,5,25,38,HSP,+,name1
+    2,4,22,123,HSP,+,name2
+    At2g26540,4,1110,1683,gene,+,feature name
+    3,4,1210,1653,CDS,+,name3
+    4,4,1210,1653,CDS,-,name4
 
-Note the first 4 will all be drawn in a `Track`_ with id 4. The 5th will be
+Note the last 4 will all be drawn in a `Track`_ with id 4. The 5th will be
 drawn in track with id '5' and only the 3rd item is on the - strand. You may
 have thousands of annotations. The ids do not have to be numeric.
 Consecutive `HSP`_'s will be linked with an edge.
@@ -80,15 +82,16 @@ A track definition has 4 comma delimited columns per row:
     1) `id`: a unique id. used by the annotation to indicate it belongs to
        this track.
 
-    2) `name`: a name for this track displayed in the viewer.
+    2) `start`: the minimum bound of this track.
 
-    3) `start`: the minimum bound of this track.
+    3) `end`: the maximum bound of this track.
 
-    4) `end`: the maximum bound of this track.
+    4) `name`: a name for this track displayed in the viewer. If not 
+       specified `id` is used.
 
 an example looks like::
 
-    4,Track Title,19,1999
+    4,19,1999,Track Title
 
 So in that example, the bounds are from 9 to 1999 in basepair coordinates and
 any annotation beloning to this track will use '4' in the track column.
