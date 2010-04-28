@@ -276,11 +276,12 @@ class Gobe extends Sprite {
         var hsps = new Array<Annotation>();
         var edge_tracks = new Hash<Hash<Int>>();
         var implicit = this.tracks_url == "implicit";
-        var track_names = new Hash<String>();
 
-        //if(implicit){
-        //    track_names = Util.get_unique_track_ids(anno_lines);
-        //}
+        if(implicit){
+            // this copies what gets done in track return if the tracks
+            // are to be guessed by the content in Annotations.
+            tracks = Util.add_tracks_from_annos(anno_lines);
+        }
 
         for(line in anno_lines){
             if(line.charAt(0) == "#" || line.length == 0){ continue;}

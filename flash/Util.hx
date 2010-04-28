@@ -20,6 +20,44 @@ class Util {
         Util.track_colors = a;
     }
 
+    public static function add_tracks_from_annos(anno_lines:Array<String>):Hash<Track>{
+        var lims = new Hash<Array<Int>>();
+        var ntracks = 0;
+        for(l in anno_lines){
+            if(l.length == 0 || l.charAt(0) == "#"){ continue; }
+            var a = l.split(",");
+            var track_id = a[1];
+            var start = Std.parseInt(a[2]);
+            var end  = Std.parseInt(a[3]);
+            if (! lims.exists(track_id)){
+                lims.set(track_id, [Std.parseInt(a[2]), Std.parseInt(a[3])]);
+                ntracks++;
+            }
+            else {
+                var lim = lims.get(track_id);
+                if(start < lim[0]){lim[0] = start; }
+                if(end > lim[1]){lim[1] = end; }
+            }
+        }
+        var track_height = Std.int(flash.Lib.current.stage.stage.stageHeight / ntracks);
+        var tracks = new Hash<Track>();
+        var k = 0;
+        for (track_id in lims.keys()){
+            var se = lims.get(track_id);
+            var rng = se[1] - se[0];
+            // extend the limits a bit.
+            var start = Math.max(1, Math.round(se[0] - rng * 0.05));
+            var end = Math.round(se[1] + rng * 0.05);
+            var line = [track_id, start, end].join(",");
+            var t = new Track(line, track_height); t.i = k;
+            tracks.set(track_id, t);
+            t.y = k * track_height;
+            flash.Lib.current.addChildAt(t, 0);
+            k += 1;
+        }
+        return tracks;
+    }
+
     public static function sorted_keys(keys:Iterator<String>):Array<String>{
         var skeys = new Array<String>();
         for(k in keys){ skeys.push(k); }

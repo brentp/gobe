@@ -1,3 +1,12 @@
+default {
+    fill_color: #cccccc;
+    fill_alpha: 0.8;
+    line_width: 0.2;
+    line_color: #222222;
+    height: 0.7;
+    z: 12;
+}
+
 CDS {
     fill_color: #22aa22;
     fill_alpha: 0.6;
