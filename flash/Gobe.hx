@@ -50,7 +50,6 @@ class Gobe extends Sprite {
     public static var edges = new Array<Edge>();
 
     public var annotations_url:String;
-    public var edges_url:String;
     public var tracks_url:String;
     public var style_url:String;
 
@@ -76,10 +75,17 @@ class Gobe extends Sprite {
     }
     private function add_callbacks(){
         ExternalInterface.addCallback("clear_wedges", clear_wedges);
+        ExternalInterface.addCallback("set_hsp_colors", Util.set_hsp_colors);
+        ExternalInterface.addCallback("redraw", redraw);
     }
 
     public function clear_wedges(){
         for(w in edges){ w.visible = false; }
+    }
+    public function redraw(){
+        for(w in edges){ w.drawn = false; w.graphics.clear(); }
+        for(a in annotations) { a.draw(); }
+
     }
     public function onMouseWheel(e:MouseEvent){
         var change = e.delta > 0 ? 1 : - 1;
@@ -102,7 +108,6 @@ class Gobe extends Sprite {
         this.drag_sprite = new DragSprite();
         this.wedge_alpha = 0.3;
         this.annotations_url = p.annotations;
-        this.edges_url = p.edges;
         this.tracks_url = p.tracks;
         this.style_url = p.style;
 
@@ -159,22 +164,8 @@ class Gobe extends Sprite {
         });
     }
 
-    public function edgeReturn(e:Event){
-        var lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
-        // for each track, keep track of the other tracks it maps to.
-        var edge_tracks = new Hash<Hash<Int>>();
-        for(line in lines){
-            if(line.charAt(0) == "#" || line.length == 0) { continue; }
-            var l = line.split(",");
-            var a = annotations.get(l[0]); var b = annotations.get(l[1]);
-            var strength = Std.parseFloat(l[2]);
-            updateEdgeTracks(a, b, strength, edge_tracks);
-        }
-        initializeSubTracks(edge_tracks);
-        addAnnotations();
-    }
     private function updateEdgeTracks(a:Annotation, b:Annotation, strength:Float, edge_tracks:Hash<Hash<Int>>){
-        // used in edgeReturn and addAnnotation to add annos to edge_tracsk whic
+        // used in addAnnotation to add annos to edge_tracsk whic
        // keeps track of unique track pairs.
             var edge = Util.add_edge_line(a, b, strength);
             if (edge == null){ return; }
@@ -273,7 +264,6 @@ class Gobe extends Sprite {
     public function annotationReturn(e:Event){
         // requires tracks to be set!
         annotations = new Hash<Annotation>();
-        var implicit = this.edges_url != null && this.edges_url == 'implicit';
         var anno_lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
         var hsps = new Array<Annotation>();
         var edge_tracks = new Hash<Hash<Int>>();
@@ -293,7 +283,7 @@ class Gobe extends Sprite {
             }
             annotations.set(a.id, a);
             // we set the edges implicitly based on consecutive hsps.
-            if(implicit && a.ftype == "hsp"){
+            if(a.ftype == "hsp"){
                 hsps.push(a);
                 if(hsps.length % 2 == 0){
                     updateEdgeTracks(hsps[0], hsps[1], 1.0, edge_tracks);
@@ -304,13 +294,8 @@ class Gobe extends Sprite {
                 Gobe.js_warn("non-consecutive hsps");
             }
         }
-        if (! implicit ) {
-            geturl(this.edges_url, edgeReturn);
-        }
-        else {
-            initializeSubTracks(edge_tracks);
-            addAnnotations();
-        }
+        initializeSubTracks(edge_tracks);
+        addAnnotations();
     }
 
     public function trackReturn(e:Event){
