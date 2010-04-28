@@ -184,18 +184,19 @@ class Gobe extends Sprite {
     private function initializeSubTracks(edge_tracks:Hash<Hash<Int>>){
         // so here, it knows all the annotations and edges, so we figure out
         // the subtracks it needs to show the relationships.
-        var atrack_ids:Array<String> = Util.sorted_keys(edge_tracks.keys());
+        var atrack_ids = Util.sorted_keys(tracks.keys());
         var colors = new Hash<UInt>();
         for(aid in atrack_ids){
-            var btrack_ids = Util.sorted_keys(edge_tracks.get(aid).keys());
-            var ntracks = btrack_ids.length;
             var atrack = tracks.get(aid);
-
             var i = 1;
+            var ex = edge_tracks.exists(aid);
+            var btrack_ids = ex ?
+                    Util.sorted_keys(edge_tracks.get(aid).keys()) : [];
+            var ntracks = btrack_ids.length;
+
             // the height used per HSP row.
             var sub_height = 0.95 * atrack.track_height / (2 * (ntracks + 1));
             var remaining = atrack.track_height - (sub_height * 2 * ntracks);
-            //trace(sub_height + ", " +  remaining + ", " + remaining / 2);
             for(bid in btrack_ids){
                 var color_key = aid < bid ? aid + "|" + bid : bid + "|" + aid;
                 var track_color = Util.next_track_color(aid, bid, colors);
@@ -219,6 +220,8 @@ class Gobe extends Sprite {
                 }
                 i += 1;
             }
+
+
             // now initialize the tracks for +/- annotations.
             i -= 1;
             var plus  = new AnnoTrack(atrack, atrack, remaining/2);
