@@ -4,7 +4,7 @@ Gobe: interactive comparative genomics viewer
 .. image:: http://lh4.ggpht.com/_uU_kLC5AdTc/S9Oz2FAE0MI/AAAAAAAAAz0/o9bOod42qA4/s800/screen1.png
     :align: right
 
-a fast, interactive, light-weight, customizable, web-based comparative genomics viewer with simple text input format.
+interactive, light-weight, customizable, web-based comparative genomics viewer with simple text input format.
 
 :Author: Brent Pedersen (brentp)
 :Email: bpederse@gmail.com
@@ -34,10 +34,11 @@ directory.
 Annotations
 -----------
 An annotation is anything you wish to draw. These will be things like CDSs,
-genes, mRNAs, UTRs or any feature you define. An `HSP` is a special type that
-allows you to draw relationships between features.
-An annotation file is a simple
-text file with 7 **comma-delimited** columns per row:
+genes, mRNAs, UTRs or any feature you define. An `HSP`_ is a special type that
+allows you to draw relationships between features. Consecutive `HSP`_'s are
+automatically linked so that clicking either one will draw a wedge to its pair.
+
+The annotation file is a text file with 7 **comma-delimited** columns per row:
 
     1) `id`: a unique identifier for this annotation. this is anything you
        want, can be your own database id or gene name or just an enumeration.
@@ -48,10 +49,10 @@ text file with 7 **comma-delimited** columns per row:
 
     4) `end`: the end of the feature.
 
-    5) `strand`: either '+' or '-', the strand of the feature. `HSP`'s with a
+    5) `strand`: either '+' or '-', the strand of the feature. `HSP`_'s with a
        +/- match should both be assigned - as the strand
 
-    6) `track`: the track on which to draw this feature. See `Tracks`.
+    6) `track`: the track on which to draw this feature. See `Track`_.
 
     7) `name`: the name of the feature e.g. 'At2g26540'. Can be anything.
 
@@ -63,14 +64,13 @@ an example looks like ::
     3,CDS,1210,1653,+,4,4
     4,CDS,1210,1653,-,4,4
 
-Note the first 4 will all be drawn in a `track` with id 4. The 5th will be
+Note the first 4 will all be drawn in a `Track`_ with id 4. The 5th will be
 drawn in track with id '5' and only the 3rd item is on the - strand. You may
 have thousands of annotations. The ids do not have to be numeric.
-If your `Edges`_ argument is specified as &edge=implicit, then consecutive HSPs
-will be linked with an edge.
+Consecutive `HSP`_'s will be linked with an edge.
 
-Tracks
-------
+Track
+-----
 
 A track defines the name and extent of regions to be drawn. Since Gobe is for
 comparative genomics, you will usually draw more than one region. The track
@@ -94,15 +94,14 @@ So in that example, the bounds are from 9 to 1999 in basepair coordinates and
 any annotation beloning to this track will use '4' in the track column.
 
 
-Edges
------
-An edge defines a relationship between 2 annotations.
+HSP
+===
 
-Implicit
-++++++++
+Consecutive HSP's specified in the `Annotations`_ file are related.
+Inside the flash movie, clicking either part of an HSP will result in
+a wedge being drawn between it and its pair (as in the example images).
 
-If the url argument for edges is 'implicit'. e.g: &edges=implicit, then edges
-will be inferred between consecutive HSP's.  So that annotation lines like::
+edges are inferred between consecutive HSP's.  So that annotation lines like::
 
     1,HSP,25,38,+,4,4
     2,HSP,22,123,+,5,5
@@ -113,25 +112,8 @@ will infer edges between HSP's 1,2 and HSP's 3,4. This is common e.g. when
 parsing a blast, where it's very simple to output consecutive lines for a
 single blast pair.
 
-
-Explicit
-++++++++
-
-If you can not use the `Implicit`_ format in the `Annotations`_, then the
-format is 3 comma-delimited columns:
-
-   1) `id`: id of annotation a
-
-   2) `id`: id of annotation b
-
-   3) `strength`: the strength of the edge between a and b.
-
-and example looks like ::
-
-    1,5,0.9
-
-Where that would add an edge between the annotations 1, 5 described in the
-section above.
+Any annotation **beginning with** "HSP" will be treated in this manner. This
+allows one to have different style classes for HSPs. e.g. HSP_blue, HSP_red.
 
 Javascript Callbacks
 ====================
@@ -149,7 +131,7 @@ The best way is to copy the index.html example included in the repository,
 adjust the paths to correctly point to your own gobe.js and the gobe.swf and
 then specify the paths to your own data with a url like:
 
-    /gobe/?tracks=data/t.tracks&annotations=data/t.annos&edges=data/t.edges&style=gobe.css
+    /gobe/?tracks=data/t.tracks&annotations=data/t.annos&style=gobe.css
 
 Once you have each of those files in the proper location, gobe will render the
 interactive flash movie.
