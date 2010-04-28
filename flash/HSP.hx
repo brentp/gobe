@@ -162,15 +162,15 @@ class Style {
     public var feat_height:Float; // in pct;
     public var zindex:Int;
 
-    public function new(ftype:String, json:Dynamic){
-        this.ftype = ftype.toLowerCase(); 
-        this.fill_color = Util.color_string_to_uint(json.fill_color);
-        this.fill_alpha = Std.parseFloat(json.fill_alpha);
-        this.line_width = Std.parseFloat(json.line_width);
-        this.line_color = Util.color_string_to_uint(json.line_color);
-        this.feat_height = Std.parseFloat(json.height);
-        this.arrow_len = json.arrow_len ? Std.parseFloat(json.arrow_len) : 0.0;
-        this.zindex = json.z ? Std.parseInt(json.z) : 5;
+    public function new(ftype:String, style_o:Dynamic){
+        this.ftype = ftype.toLowerCase();
+        this.fill_color = Util.color_string_to_uint(style_o.fill_color);
+        this.fill_alpha = Std.parseFloat(style_o.fill_alpha);
+        this.line_width = Std.parseFloat(style_o.line_width);
+        this.line_color = Util.color_string_to_uint(style_o.line_color);
+        this.feat_height = style_o.height ? Std.parseFloat(style_o.height) : 0.5;
+        this.arrow_len = style_o.arrow_len ? Std.parseFloat(style_o.arrow_len) : 0.0;
+        this.zindex = style_o.z ? Std.parseInt(style_o.z) : 5;
     }
     public function toString(){
         return "Style(" + this.ftype + "," + this.fill_color + "," + this.fill_alpha +")";
