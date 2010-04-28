@@ -165,11 +165,16 @@ class Style {
     public function new(ftype:String, style_o:Dynamic){
         this.ftype = ftype.toLowerCase();
         this.fill_color = Util.color_string_to_uint(style_o.fill_color);
-        this.fill_alpha = Std.parseFloat(style_o.fill_alpha);
-        this.line_width = Std.parseFloat(style_o.line_width);
-        this.line_color = Util.color_string_to_uint(style_o.line_color);
-        this.feat_height = style_o.height ? Std.parseFloat(style_o.height) : 0.5;
-        this.arrow_len = style_o.arrow_len ? Std.parseFloat(style_o.arrow_len) : 0.0;
+        this.fill_alpha = style_o.fill_alpha ?
+                            Std.parseFloat(style_o.fill_alpha) : 1.0;
+        this.line_width = style_o.line_width ?
+                            Std.parseFloat(style_o.line_width) : 0.1;
+        this.line_color = style_o.line_color ?
+                            Util.color_string_to_uint(style_o.line_color) : 0x000000;
+        this.feat_height = style_o.height ?
+                            Std.parseFloat(style_o.height) : 0.5;
+        this.arrow_len = style_o.arrow_len ?
+                            Std.parseFloat(style_o.arrow_len) : 0.0;
         this.zindex = style_o.z ? Std.parseInt(style_o.z) : 5;
     }
     public function toString(){
