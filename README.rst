@@ -24,19 +24,25 @@ Interaction is customizable via javascript callbacks, css, and the input data.
 No server-side rendering is required. `haxe`_ programming language is used for
 development, but it is not required to use the library.
 
-File Formats
-============
-
-The file formats are very simple. The best way to understand them is to briefly
-skim the summaries below and have a look at the examples in the `data/`
-directory.
-
 Annotations
------------
-An annotation is anything you wish to draw. These will be things like CDSs,
-genes, mRNAs, UTRs or any feature you define. An `HSP`_ is a special type that
-allows you to draw relationships between features. Consecutive `HSP`_'s are
-automatically linked so that clicking either one will draw a wedge to its pair.
+===========
+
+The annotatios to be rendered by the flash movie are in a simple tex format.
+The best way to understand them is to briefly skim the summaries below and
+have a look at the examples in the
+`data <http://github.com/brentp/gobe/tree/master/data/>`_ directory.
+
+Annotation
+----------
+An annotation is anything to be drawn. These will be things like CDSs,
+genes, mRNAs, UTRs or any feature you define and style.
+There are 2 special types: `HSP`_'s and `Track`_
+Briefly, an `HSP`_ allows one to draw relationships between features. The
+relationship is inferred between consecutive annotations with type 'HSP'
+in the file.
+`Track`_ s allow one to explicitly set the limits for each track (otherwise
+inferred by the extent of the features in that track).
+
 
 The annotation file is a text file with 7 **comma-delimited** columns per row:
 
@@ -72,34 +78,25 @@ have thousands of annotations. The ids do not have to be numeric.
 Consecutive `HSP`_'s will be linked with an edge.
 
 Track
------
+=====
 
-A track defines the name and extent of regions to be drawn. Since Gobe is for
-comparative genomics, you will usually draw more than one region. The track
-id is used in the annotations (column 6) to indicate where to draw the features.
-A track definition has 4 comma delimited columns per row:
+An line in the annotation file with type 'track' defines the name and extent
+of regions a track. The first column is used as the track_id (which is
+referenced by other anntations) and the 2nd column is used as the display name.
+The start and end indicate the bounds of the track. Annotations outside of
+these bounds will not be rendered.
 
-    1) `id`: a unique id. used by the annotation to indicate it belongs to
-       this track.
+an example looks like (note this is the same format and same file as
+`Annotations`_) ::
 
-    2) `start`: the minimum bound of this track.
-
-    3) `end`: the maximum bound of this track.
-
-    4) `name`: a name for this track displayed in the viewer. If not 
-       specified `id` is used.
-
-an example looks like::
-
-    4,19,1999,Track Title
+    track_1,Track 1,9,1999,track
 
 So in that example, the bounds are from 9 to 1999 in basepair coordinates and
-any annotation beloning to this track will use '4' in the track column.
+any annotation beloning to this track will use 'track 1' in the track column.
 
-**NOTE** that if no track is specified, or if it is specified as
-&track=implicit then the track ids and extents will be inferred from the
-annotations. The extent of the annotations for each track will be padded
-slightly to calculate the extent of the track.
+**NOTE** that if no tracks are specified then the track ids and extents
+will be inferred from the annotations. The extent of the annotations for
+each track will be padded slightly to calculate the extent of the track.
 
 HSP
 ===
@@ -108,7 +105,8 @@ Consecutive HSP's specified in the `Annotations`_ file are related.
 Inside the flash movie, clicking either part of an HSP will result in
 a wedge being drawn between it and its pair (as in the example images).
 
-edges are inferred between consecutive HSP's.  So that annotation lines like::
+edges are inferred between consecutive HSP's.  So that hsp annotation
+lines like::
 
     1,HSP,25,38,+,4,4
     2,HSP,22,123,+,5,5
@@ -121,6 +119,18 @@ single blast pair.
 
 Any annotation **beginning with** "HSP" will be treated in this manner. This
 allows one to have different style classes for HSPs. e.g. HSP_blue, HSP_red.
+
+Style
+=====
+
+Styling is done via CSS. See the `<default style http://github.com/brentp/gobe/blob/master/static/gobe.css>`_
+in gobe. When adding new features, it's wise to add a new style corresponding to each feature type.
+The style sheet is specified on the URL through the style argument. e.g. ::
+
+    &style=/static/awesome.css
+
+it must be on the same server as the SWF movie, or set up on a server that allows access via
+crossdomain.xml.
 
 Javascript Callbacks
 ====================
@@ -138,7 +148,7 @@ The best way is to copy the index.html example included in the repository,
 adjust the paths to correctly point to your own gobe.js and the gobe.swf and
 then specify the paths to your own data with a url like:
 
-    /gobe/?tracks=data/t.tracks&annotations=data/t.annos&style=gobe.css
+    /gobe/?annotations=data/t.annos&style=gobe.css
 
 Once you have each of those files in the proper location, gobe will render the
 interactive flash movie.
@@ -148,7 +158,6 @@ TODO
 
   * improve docs.
   * nicer ticks, axis labelling
-  * automatically guess tracks based on annotations if not given.
   * customizable fonts
   * move HSP colors to CSS.
   * wiggle tracks.
