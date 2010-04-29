@@ -50,7 +50,6 @@ class Gobe extends Sprite {
     public static var edges = new Array<Edge>();
 
     public var annotations_url:String;
-    public var tracks_url:String;
     public var style_url:String;
 
     public function clearPanelGraphics(e:MouseEvent){
@@ -108,7 +107,6 @@ class Gobe extends Sprite {
         this.drag_sprite = new DragSprite();
         this.wedge_alpha = 0.3;
         this.annotations_url = p.annotations;
-        this.tracks_url = p.tracks != null ? p.tracks : "implicit";
         this.style_url = p.style;
 
         panel = new Sprite();
@@ -141,12 +139,7 @@ class Gobe extends Sprite {
             var st = feature_stylesheet.getStyle(ftype);
             styles.set(ftype, new Style(ftype, st));
         }
-        if(this.tracks_url != "implicit"){
-            geturl(this.tracks_url, trackReturn);
-        }
-        else {
-            geturl(this.annotations_url, annotationReturn);
-        }
+        geturl(this.annotations_url, annotationReturn);
     }
 
     public function onKeyPress(e:KeyboardEvent){
@@ -270,21 +263,18 @@ class Gobe extends Sprite {
     }
 
     public function annotationReturn(e:Event){
-        // requires tracks to be set!
         annotations = new Hash<Annotation>();
-        var anno_lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
+        var lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
+        var anno_lines:Array<Array<String>> = [];
+        for(l in lines){ if (!(l.length == 0 || l.charAt(0) == "#")) { anno_lines.push(l.split(",")); } }
         var hsps = new Array<Annotation>();
         var edge_tracks = new Hash<Hash<Int>>();
-        var implicit = this.tracks_url == "implicit";
 
-        if(implicit){
-            // this copies what gets done in track return if the tracks
-            // are to be guessed by the content in Annotations.
-            tracks = Util.add_tracks_from_annos(anno_lines);
-        }
+        // first get the tracks either implicitly or from feature type == track.
+        tracks = Util.add_tracks_from_annos(anno_lines);
 
         for(line in anno_lines){
-            if(line.charAt(0) == "#" || line.length == 0){ continue;}
+            if(line[4] == "track"){ continue; }
             var a = new Annotation(line, tracks);
             var astyle = styles.get(a.ftype);
             if (astyle == null && a.is_hsp){
@@ -315,25 +305,6 @@ class Gobe extends Sprite {
         }
         initializeSubTracks(edge_tracks);
         addAnnotations();
-    }
-
-    public function trackReturn(e:Event){
-        // called by style return.
-        geturl(this.annotations_url, annotationReturn);
-        var lines:Array<String> = e.target.data.split("\n");
-        var ntracks = 0;
-        for(line in lines){ if (line.charAt(0) != "#" && line.length != 0){ ntracks += 1; }}
-        var track_height = Std.int(this.stage_height / ntracks);
-        var k = 0;
-        for(line in lines){
-            if(line.charAt(0) == "#" || line.length == 0){ continue; }
-            var t = new Track(line, track_height);
-            t.i = k;
-            tracks.set(t.id, t);
-            t.y = k * track_height;
-            flash.Lib.current.addChildAt(t, 0);
-            k += 1;
-        }
     }
 
 }

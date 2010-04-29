@@ -10,10 +10,10 @@
     examples:
     <ul>
         <li><a href="/gobe/">simple annos</a></li>
-        <li><a href="/gobe/?tracks=data/t.tracks&annotations=data/t.annos">hsps</a></li>
+        <li><a href="/gobe/?annotations=data/t.annos">hsps</a></li>
         <li>
-            <a href="/gobe/?tracks=data/pair/tracks.txt&annotations=data/pair/annos.txt&h=260">pair</a>
-            <a href="/gobe/?tracks=data/pair/tracks.txt&annotations=data/pair/annos.txt&h=260&style=/gobe/static/gobe2.css">(other style)</a></li>
+            <a href="/gobe/?annotations=data/pair/annos.txt&h=260">pair</a>
+            <a href="/gobe/?annotations=data/pair/annos.txt&h=260&style=/gobe/static/gobe2.css">(other style)</a></li>
     </ul>
 
     <input type="submit" onclick="Gobe.clear()" value="Clear" /><br/>
@@ -34,7 +34,6 @@
         var params = {'bgcolor': '#FFFFFF'};
         // only var is config=/web/path/to/config.js
         var flashVars = {
-            'tracks'   : get('tracks') || 'data/tracks.txt',
             'annotations'   : get('annotations') || 'data/annotations.txt',
             'style'  : get('style') || 'static/gobe.css'
         };

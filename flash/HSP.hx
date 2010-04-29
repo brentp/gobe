@@ -86,10 +86,9 @@ class Annotation extends Sprite {
     public var h:Float;
 
     public var fname:String;
-    public function new(line:String, tracks:Hash<Track>){
+    public function new(l:Array<String>, tracks:Hash<Track>){
         super();
         //#id,track_id,start,end,type,strand,name
-        var l = line.split(",");
 
         this.edges = new Array<Int>();
         this.id = l[0];
@@ -299,22 +298,24 @@ class Track extends Sprite {
     public  var mouse_down:Bool;
     public  var ttf:MTextField;
 
-    public function new(line:String, track_height:Int){
+    public function new(id:String, title:String, bpmin:Int, bpmax:Int, track_height:Int){
         super();
         subtracks = new Hash<SubTrack>();
-        var l = line.split(",");
-        this.id = l[0];
-        this.title = l.length > 3 ? l[3] : this.id;
-
+        this.id = id;
+        this.title = title;
         this.track_height = track_height;
-        this.bpmin = Std.parseInt(l[1]);
-        this.bpmax = Std.parseInt(l[2]);
+        this.bpmin = bpmin;
+        this.bpmax = bpmax;
         this.mouse_down = false;
         this.setUpTextField();
-        this.bpp = (bpmax - bpmin)/(1.0 * flash.Lib.current.stage.stageWidth);
+        this.set_bpp();
         this.draw();
         //trace("bpmin-bpmax(rng):" + bpmin +"-" + bpmax + "(" + (bpmax - bpmin) + "), bpp:" + this.bpp);
     }
+    public inline function set_bpp(){
+        this.bpp = (bpmax - bpmin)/(1.0 * flash.Lib.current.stage.stageWidth);
+    }
+
     public function draw(){
         var g = this.graphics;
         var mid = track_height/2;

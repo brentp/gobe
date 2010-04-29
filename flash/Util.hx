@@ -1,6 +1,21 @@
 import HSP;
 import Gobe;
 
+class TInfo {
+    public var bpmin:Int;
+    public var bpmax:Int;
+    public var id:String;
+    public var name:String;
+    public var order:Int;
+    public function new(id:String, name:String, bpmin:Int, bpmax:Int, order:Int){
+        this.bpmin = bpmin;
+        this.bpmax = bpmax;
+        this.id = id;
+        this.name = name;
+        this.order = order;
+    }
+}
+
 class Util {
     public static var track_colors:Array<UInt> = [0xff9900, 0x330000, 0x99cc00, 0x009966, 0x9933cc, 0x3300ff, 0xffcc99];
     public static function add_edge_line(a:Annotation, b:Annotation, strength:Float):Null<Edge>{
@@ -20,37 +35,57 @@ class Util {
         Util.track_colors = a;
     }
 
-    public static function add_tracks_from_annos(anno_lines:Array<String>):Hash<Track>{
-        var lims = new Hash<Array<Int>>();
+    //  public function new(id:String, title:String, bpmin:Int, bpmax:Int, track_height:Int){
+    public static function add_tracks_from_annos(anno_lines:Array<Array<String>>):Hash<Track>{
+        // takes precedence if the limits are set explicitly.
+        // keep track of which tracks have had their bounds set explicitly.
+        var explicit_set = new Hash<Int>();
+        var lims = new Hash<TInfo>();
+        var a:Array<String>;
+        var nexplicit = 0;
         var ntracks = 0;
-        for(l in anno_lines){
-            if(l.length == 0 || l.charAt(0) == "#"){ continue; }
-            var a = l.split(",");
+        for(a in anno_lines){
             var track_id = a[1];
             var start = Std.parseInt(a[2]);
             var end  = Std.parseInt(a[3]);
+            if (a[4] == "track"){ // explicitly specified track extents.
+                var info = new TInfo(a[0], a[1], start, end, nexplicit);
+                nexplicit += 1;
+                lims.set(info.id, info);
+                explicit_set.set(info.id, nexplicit);
+            }
+            // dont overwrite the explicit stuff with the inferred.
+            if(explicit_set.exists(track_id)) { continue; }
+
             if (! lims.exists(track_id)){
-                lims.set(track_id, [Std.parseInt(a[2]), Std.parseInt(a[3])]);
-                ntracks++;
+                var info = new TInfo(track_id, track_id, start, end, ntracks);
+                ntracks += 1;
+                lims.set(track_id, info);
             }
             else {
                 var lim = lims.get(track_id);
-                if(start < lim[0]){lim[0] = start; }
-                if(end > lim[1]){lim[1] = end; }
+                if(start < lim.bpmin){lim.bpmin = start; }
+                if(end > lim.bpmax){lim.bpmax = end; }
             }
         }
+        var arr:Array<TInfo> = Lambda.array(lims);
+        arr.sort(function(a:TInfo, b:TInfo){ return a.order < b.order ? 1 : -1; });
+        var ntracks = arr.length;
         var track_height = Std.int(flash.Lib.current.stage.stage.stageHeight / ntracks);
         var tracks = new Hash<Track>();
         var k = 0;
-        for (track_id in lims.keys()){
-            var se = lims.get(track_id);
-            var rng = se[1] - se[0];
-            // extend the limits a bit.
-            var start = Math.max(1, Math.round(se[0] - rng * 0.05));
-            var end = Math.round(se[1] + rng * 0.05);
-            var line = [track_id, start, end].join(",");
-            var t = new Track(line, track_height); t.i = k;
-            tracks.set(track_id, t);
+        for (t in arr){
+            var rng = t.bpmax - t.bpmin;
+            var start = t.bpmin;
+            var end = t.bpmax;
+            // extend the limits a bit. unless they were set explicitly.
+            if(!explicit_set.exists(t.id)){
+                start = Math.round(Math.max(1, Math.round(t.bpmin - rng * 0.05)));
+                end = Math.round(t.bpmax + rng * 0.05);
+            }
+            var t = new Track(t.id, t.name, start, end, track_height);
+            t.i = k;
+            tracks.set(t.id, t);
             t.y = k * track_height;
             flash.Lib.current.addChildAt(t, 0);
             k += 1;
