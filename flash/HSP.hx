@@ -201,6 +201,13 @@ class SubTrack extends Sprite {
         this.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 
     }
+    public function clear(){
+        this.graphics.clear();
+        var i = this.numChildren;
+        while(i-- > 0){
+            this.removeChildAt(i);
+        }
+    }
     public function onClick(e:MouseEvent){
         if(e.shiftKey){
             for(i in 0 ... this.numChildren){
@@ -315,7 +322,17 @@ class Track extends Sprite {
     public inline function set_bpp(){
         this.bpp = (bpmax - bpmin)/(1.0 * flash.Lib.current.stage.stageWidth);
     }
-
+    public function clear(){
+        for(st in this.subtracks.iterator()){
+            st.clear();
+            this.removeChild(st);
+        }
+        var i = this.numChildren;
+        while(i-- > 0){
+            this.removeChildAt(i);
+        }
+        this.subtracks = new Hash<SubTrack>();
+    }
     public function draw(){
         var g = this.graphics;
         var mid = track_height/2;

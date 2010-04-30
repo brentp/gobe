@@ -39,6 +39,7 @@ class Gobe extends Sprite {
     public var wedge_alpha:Float;
 
     public var drag_sprite:DragSprite;
+    public static var zi : flash.ui.ContextMenuItem;
 
     public var panel:Sprite; // holds the lines.
     public var feature_stylesheet:StyleSheet; // how to draw stuff..
@@ -68,14 +69,25 @@ class Gobe extends Sprite {
     public static function main(){
         haxe.Firebug.redirectTraces();
         var stage = flash.Lib.current.stage;
+        // this one the event gets called anywhere.
+        stage.focus = stage.stage;
         stage.align     = StageAlign.TOP_LEFT;
         stage.scaleMode = StageScaleMode.NO_SCALE;
-        stage.addChild( new Gobe());
+        stage.addChild(new Gobe());
     }
     private function add_callbacks(){
-        ExternalInterface.addCallback("clear_wedges", clear_wedges);
         ExternalInterface.addCallback("set_hsp_colors", Util.set_hsp_colors);
         ExternalInterface.addCallback("redraw", redraw);
+        ExternalInterface.addCallback("clear_wedges", clear_wedges);
+        ExternalInterface.addCallback("set_data", resetData);
+    }
+    public function resetData(data:String){
+        for(a in annotations.iterator()){ a.graphics.clear(); }
+        for(e in edges){ e.graphics.clear(); }
+        for(t in tracks.iterator()){ t.clear(); }
+        edges = [];
+        tracks = new Hash<Track>();
+        handleAnnotationData(data);
     }
 
     public function clear_wedges(){
@@ -99,7 +111,6 @@ class Gobe extends Sprite {
         trace(x);
     }
 
-
     public function new(){
         super();
         var p = flash.Lib.current.loaderInfo.parameters;
@@ -119,14 +130,22 @@ class Gobe extends Sprite {
         // the event only gets called when mousing over an HSP.
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 
-        // this one the event gets called anywhere.
-        flash.Lib.current.stage.focus = flash.Lib.current.stage.stage;
         //flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
         flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyPress);
         this.stage_width = flash.Lib.current.stage.stage.stageWidth;
         this.stage_height = flash.Lib.current.stage.stage.stageHeight;
         geturl(this.style_url, styleReturn);
-
+        /*
+        var cm = new flash.ui.ContextMenu();
+        cm.hideBuiltInItems();
+        zi = new flash.ui.ContextMenuItem("Zoom In", true, true, true);
+        zi.addEventListener(flash.events.ContextMenuEvent.MENU_ITEM_SELECT, function (e:Event){
+            trace('selected');
+        }, false, 0, true);
+        cm.customItems = [zi];
+        trace(cm.customItems);
+        flash.Lib.current.contextMenu = cm;
+        */
 
     }
 
@@ -139,7 +158,15 @@ class Gobe extends Sprite {
             var st = feature_stylesheet.getStyle(ftype);
             styles.set(ftype, new Style(ftype, st));
         }
-        geturl(this.annotations_url, annotationReturn);
+        if(StringTools.startsWith(this.annotations_url, "javascript:")){
+            // getting the data directly from javascript call..
+            var jsfn = this.annotations_url.substr(9);
+            var data = ExternalInterface.call(jsfn);
+            handleAnnotationData(data);
+        }
+        else {
+            geturl(this.annotations_url, annotationReturn);
+        }
     }
 
     public function onKeyPress(e:KeyboardEvent){
@@ -261,10 +288,12 @@ class Gobe extends Sprite {
             a.draw();
         }
     }
-
     public function annotationReturn(e:Event){
+        handleAnnotationData(e.target.data);
+    }
+    public function handleAnnotationData(data:String){
+        var lines:Array<String> = StringTools.ltrim(data).split("\n");
         annotations = new Hash<Annotation>();
-        var lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
         var anno_lines:Array<Array<String>> = [];
         for(l in lines){ if (!(l.length == 0 || l.charAt(0) == "#")) { anno_lines.push(l.split(",")); } }
         var hsps = new Array<Annotation>();
