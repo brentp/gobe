@@ -36,36 +36,42 @@ class Util {
     }
 
     //  public function new(id:String, title:String, bpmin:Int, bpmax:Int, track_height:Int){
-    public static function add_tracks_from_annos(anno_lines:Array<Array<String>>):Hash<Track>{
+    public static function add_tracks_from_annos(anno_lines:Array<Array<String>>):Array<Annotation>{
         // takes precedence if the limits are set explicitly.
         // keep track of which tracks have had their bounds set explicitly.
         var explicit_set = new Hash<Int>();
+        var anarr = new Array<Annotation>();
         var lims = new Hash<TInfo>();
-        var a:Array<String>;
+        var al:Array<String>;
         var nexplicit = 0;
         var ntracks = 0;
-        for(a in anno_lines){
-            var track_id = a[1];
-            var start = Std.parseInt(a[2]);
-            var end  = Std.parseInt(a[3]);
-            if (a[4] == "track"){ // explicitly specified track extents.
-                var info = new TInfo(a[0], a[1], start, end, nexplicit);
+        // public function new(id:String, track_id:String, bpmin:Int, bpmax:Int, ftype:String, strand:Int, fname:String){
+        for(al in anno_lines){
+            var track_id = al[1];
+            var a:Annotation;
+            if (al[4] == "track"){ // explicitly specified track extents.
+                var start = Std.parseInt(al[2]);
+                var end  = Std.parseInt(al[3]);
+                var info = new TInfo(al[0], al[1], start, end, nexplicit);
                 nexplicit += 1;
                 lims.set(info.id, info);
                 explicit_set.set(info.id, nexplicit);
             }
-            // dont overwrite the explicit stuff with the inferred.
-            if(explicit_set.exists(track_id)) { continue; }
-
-            if (! lims.exists(track_id)){
-                var info = new TInfo(track_id, track_id, start, end, ntracks);
-                ntracks += 1;
-                lims.set(track_id, info);
-            }
             else {
-                var lim = lims.get(track_id);
-                if(start < lim.bpmin){lim.bpmin = start; }
-                if(end > lim.bpmax){lim.bpmax = end; }
+                var a = new Annotation(al);
+                anarr.push(a);
+                if(explicit_set.exists(track_id)) { continue; }
+
+                if (! lims.exists(track_id)){
+                    var info = new TInfo(track_id, track_id, a.bpmin, a.bpmax, ntracks);
+                    ntracks += 1;
+                    lims.set(track_id, info);
+                }
+                else {
+                    var lim = lims.get(track_id);
+                    if(a.bpmin < lim.bpmin){lim.bpmin = a.bpmin; }
+                    if(a.bpmax > lim.bpmax){lim.bpmax = a.bpmax; }
+                }
             }
         }
         var arr:Array<TInfo> = Lambda.array(lims);
@@ -90,7 +96,9 @@ class Util {
             flash.Lib.current.addChildAt(t, 0);
             k += 1;
         }
-        return tracks;
+        Gobe.tracks = tracks;
+        for(a in anarr){ a.track = tracks.get(a.track_id); }
+        return anarr;
     }
 
     public static function sorted_keys(keys:Iterator<String>):Array<String>{

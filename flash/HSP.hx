@@ -1,6 +1,7 @@
 import flash.display.Sprite;
 import flash.display.Shape;
 import flash.events.MouseEvent;
+import flash.events.Event;
 import flash.geom.Point;
 import flash.utils.Timer;
 import flash.events.TimerEvent;
@@ -84,9 +85,9 @@ class Annotation extends Sprite {
     public var subtrack:SubTrack;
     public var track_id:String;
     public var h:Float;
-
     public var fname:String;
-    public function new(l:Array<String>, tracks:Hash<Track>){
+
+    public function new(l:Array<String>){
         super();
         //#id,track_id,start,end,type,strand,name
 
@@ -97,20 +98,23 @@ class Annotation extends Sprite {
         this.bpmax = Std.parseInt(l[3]);
         this.ftype = l[4].toLowerCase();
         this.strand = l.length < 5 || l[5] == "+" ? 1 : -1;
-        this.fname = l[6];
+        this.fname = l.length < 6 ? l[0] : l[6];
         this.is_hsp = this.ftype.substr(0, 3) == "hsp";
-
-        this.track = tracks.get(this.track_id);
         this.addEventListener(MouseEvent.CLICK, onClick);
-        //trace(this.bpmin + "," + this.bpmax + "=>" + this.pxmin + "," + this.pxmax);
+        // this only happens once its track is set.
+        this.addEventListener(Event.ADDED_TO_STAGE, set_extents);
 
     }
-    public function draw(){
+    public inline function set_extents(e:Event){
         this.pxmin = track.rw2pix(this.bpmin);
         this.pxmax = track.rw2pix(this.bpmax);
+        //trace(this.bpmin + "," + this.bpmax + "=>" + this.pxmin + "," + this.pxmax);
+    }
+
+    public function draw(){
         this.x = pxmin;
         var g = this.graphics;
-        var is_hsptrack = Std.is(subtrack, HSPTrack);
+        var is_hsptrack = is_hsp; //Std.is(subtrack, HSPTrack);
         this.y = -this.subtrack.track_height / 2;
         g.clear();
         this.h = style.feat_height * this.subtrack.track_height;

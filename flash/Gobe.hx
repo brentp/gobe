@@ -45,7 +45,7 @@ class Gobe extends Sprite {
     public var feature_stylesheet:StyleSheet; // how to draw stuff..
 
     private var _all:Bool;
-    public var tracks:Hash<Track>;
+    public static var tracks:Hash<Track>;
     public var annotations:Hash<Annotation>;
     public var styles:Hash<Style>; // {'CDS': CDSINFO }
     public static var edges = new Array<Edge>();
@@ -82,11 +82,14 @@ class Gobe extends Sprite {
         ExternalInterface.addCallback("set_data", resetData);
     }
     public function resetData(data:String){
+        var t = haxe.Timer.stamp();
         for(a in annotations.iterator()){ a.graphics.clear(); }
         for(e in edges){ e.graphics.clear(); }
         for(t in tracks.iterator()){ t.clear(); }
         edges = [];
         tracks = new Hash<Track>();
+        var t0= haxe.Timer.stamp();
+        trace("seconds to clear:" + (t0 - t));
         handleAnnotationData(data);
     }
 
@@ -106,7 +109,7 @@ class Gobe extends Sprite {
     }
     public function onMouseMove(e:MouseEvent){
         var x = e.localX;
-        var tid = this.tracks.keys().next();
+        var tid = tracks.keys().next();
         var t = tracks.get(tid);
         trace(x);
     }
@@ -261,10 +264,8 @@ class Gobe extends Sprite {
             atrack.addChildAt(minus, 0);
         }
     }
-    private function addAnnotations(){
-        var arr = new Array<Annotation>();
+    private function addAnnotations(arr:Array<Annotation>){
         var a:Annotation;
-        for(a in annotations.iterator()){ arr.push(a); }
         arr.sort(function(a:Annotation, b:Annotation):Int {
             return a.style.zindex < b.style.zindex ? -1 : 1;
         });
@@ -292,6 +293,7 @@ class Gobe extends Sprite {
         handleAnnotationData(e.target.data);
     }
     public function handleAnnotationData(data:String){
+        var t = haxe.Timer.stamp();
         var lines:Array<String> = StringTools.ltrim(data).split("\n");
         annotations = new Hash<Annotation>();
         var anno_lines:Array<Array<String>> = [];
@@ -300,11 +302,13 @@ class Gobe extends Sprite {
         var edge_tracks = new Hash<Hash<Int>>();
 
         // first get the tracks either implicitly or from feature type == track.
-        tracks = Util.add_tracks_from_annos(anno_lines);
+        var t0 = haxe.Timer.stamp();
+        trace("seconds to split:" + (t0 - t));
+        var anarr = Util.add_tracks_from_annos(anno_lines);
+        var t1 = haxe.Timer.stamp();
+        trace("seconds to parse:" + (t1 - t0));
 
-        for(line in anno_lines){
-            if(line[4] == "track"){ continue; }
-            var a = new Annotation(line, tracks);
+        for(a in anarr){
             var astyle = styles.get(a.ftype);
             if (astyle == null && a.is_hsp){
                 astyle = styles.get('hsp');
@@ -332,8 +336,15 @@ class Gobe extends Sprite {
                 Gobe.js_warn("non-consecutive hsps");
             }
         }
+        var t2 = haxe.Timer.stamp();
+        trace("seconds to reparse, make edges:" + (t2 - t1));
         initializeSubTracks(edge_tracks);
-        addAnnotations();
+        var t3 = haxe.Timer.stamp();
+        trace("seconds to add subtracks:" + (t3 - t2));
+        addAnnotations(anarr);
+        var t4 = haxe.Timer.stamp();
+        trace("seconds to add annotations:" + (t4 - t3));
+        trace("seconds tototal:" + (t4 - t));
     }
 
 }
