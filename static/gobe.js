@@ -1,8 +1,8 @@
 var Gobe = {
-    'onmouseover': function(id, name, bpx, px, track_id){
+    'onmouseover': function(id, name, bpstart, bpend, track_id){
     },
-    'onclick': function(id, name, bpx, px, track_id){
-        console.log(id, name, bpx, px, track_id);
+    'onclick': function(id, name, bpstart, bpend, track_id){
+        console.log(id, name, bpstart, bpend, track_id);
     },
     'warn': function(msg){
         console.error("Flash msg:" + msg);

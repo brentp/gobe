@@ -151,7 +151,7 @@ class Annotation extends Sprite {
         }
         //trace([this.id, this.fname, (this.bpmax + this.bpmin)/ 2, e.stageX, this.track_id].join(","));
         if(! e.shiftKey){
-            Gobe.js_onclick(this.id, this.fname, (this.bpmax + this.bpmin)/ 2, e.stageX, this.track_id);
+            Gobe.js_onclick(this.id, this.fname, this.bpmin, this.bpmax, this.track_id);
         }
     }
 }
@@ -206,7 +206,6 @@ class SubTrack extends Sprite {
 
     }
     public function clear(){
-        this.graphics.clear();
         var i = this.numChildren;
         while(i-- > 0){
             this.removeChildAt(i);
@@ -327,8 +326,8 @@ class Track extends Sprite {
         this.bpp = (bpmax - bpmin)/(1.0 * flash.Lib.current.stage.stageWidth);
     }
     public function clear(){
+        this.graphics.clear();
         for(st in this.subtracks.iterator()){
-            st.clear();
             this.removeChild(st);
         }
         var i = this.numChildren;

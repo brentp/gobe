@@ -56,14 +56,14 @@ class Gobe extends Sprite {
     public function clearPanelGraphics(e:MouseEvent){
         while(panel.numChildren != 0){ panel.removeChildAt(0); }
     }
-    public static function js_onclick(fid:String, fname:String, px:Float, x:Float, track_id:String){
-        ExternalInterface.call('Gobe.onclick', fid, fname, px, x, track_id);
+    public static function js_onclick(fid:String, fname:String, bpmin:Int, bpmax:Int, track_id:String){
+        ExternalInterface.call('Gobe.onclick', fid, fname, bpmin, bpmax, track_id);
     }
     public static function js_warn(warning:String){
         ExternalInterface.call('Gobe.warn', warning);
     }
-    public static function js_onmouseover(fid:String, fname:String, px:Float, x:Float, track_id:String){
-        ExternalInterface.call('Gobe.onmouseover', fid, fname, px, x, track_id);
+    public static function js_onmouseover(fid:String, fname:String, bpmin:Int, bpmax:Int, track_id:String){
+        ExternalInterface.call('Gobe.onmouseover', fid, fname, bpmin, bpmax, track_id);
     }
 
     public static function main(){
@@ -79,18 +79,24 @@ class Gobe extends Sprite {
         ExternalInterface.addCallback("set_hsp_colors", Util.set_hsp_colors);
         ExternalInterface.addCallback("redraw", redraw);
         ExternalInterface.addCallback("clear_wedges", clear_wedges);
-        ExternalInterface.addCallback("set_data", resetData);
+        ExternalInterface.addCallback("set_data", set_data);
+        ExternalInterface.addCallback("set_url", set_url);
     }
-    public function resetData(data:String){
-        var t = haxe.Timer.stamp();
+    public function reset(){
         for(a in annotations.iterator()){ a.graphics.clear(); }
-        for(e in edges){ e.graphics.clear(); }
+        // and remove edges.
+        for(e in edges){ flash.Lib.current.removeChild(e); /*e.graphics.clear();*/ }
         for(t in tracks.iterator()){ t.clear(); }
-        edges = [];
+        edges = new Array<Edge>();
         tracks = new Hash<Track>();
-        var t0= haxe.Timer.stamp();
-        trace("seconds to clear:" + (t0 - t));
-        handleAnnotationData(data);
+        annotations = new Hash<Annotation>();
+    }
+    public function set_data(data:String){
+        this.handleAnnotationData(data);
+    }
+    public function set_url(url:String){
+        this.annotations_url = url;
+        geturl(url, annotationReturn);
     }
 
     public function clear_wedges(){
@@ -129,6 +135,7 @@ class Gobe extends Sprite {
         this.add_callbacks();
         var i:Int;
         tracks = new Hash<Track>();
+        annotations = new Hash<Annotation>();
 
         // the event only gets called when mousing over an HSP.
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -295,7 +302,7 @@ class Gobe extends Sprite {
     public function handleAnnotationData(data:String){
         var t = haxe.Timer.stamp();
         var lines:Array<String> = StringTools.ltrim(data).split("\n");
-        annotations = new Hash<Annotation>();
+        if(!Lambda.empty(annotations)){ this.reset(); }
         var anno_lines:Array<Array<String>> = [];
         for(l in lines){ if (!(l.length == 0 || l.charAt(0) == "#")) { anno_lines.push(l.split(",")); } }
         var hsps = new Array<Annotation>();
