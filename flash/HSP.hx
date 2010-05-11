@@ -70,14 +70,13 @@ class Edge extends Sprite {
 }
 
 // this is the base class for drawable annotations.
-class Annotation extends Sprite {
+class BaseAnnotation extends Sprite {
     public var ftype:String;
     public var is_hsp:Bool;
     public var id:String; // key for anntations hash.
     public var pxmin:Float;
     public var pxmax:Float;
     public var strand:Int;
-    public var edges:Array<Int>;
     public var bpmin:Int;
     public var bpmax:Int;
     public var style:Style;
@@ -91,7 +90,6 @@ class Annotation extends Sprite {
         super();
         //#id,track_id,start,end,type,strand,name
 
-        this.edges = new Array<Int>();
         this.id = l[0];
         this.track_id = l[1];
         this.bpmin = Std.parseInt(l[2]);
@@ -99,19 +97,33 @@ class Annotation extends Sprite {
         this.ftype = l[4].toLowerCase();
         this.strand = l.length < 5 || l[5] == "+" ? 1 : -1;
         this.fname = l.length < 6 ? l[0] : l[6];
-        this.is_hsp = this.ftype.substr(0, 3) == "hsp";
-        this.addEventListener(MouseEvent.CLICK, onClick);
-        // this only happens once its track is set.
-        this.addEventListener(Event.ADDED_TO_STAGE, set_extents);
-
+        this.addEventListener(Event.ADDED_TO_STAGE, added);
     }
-    public inline function set_extents(e:Event){
+    public function draw(){}
+    public inline function set_extents(){
         this.pxmin = track.rw2pix(this.bpmin);
         this.pxmax = track.rw2pix(this.bpmax);
         //trace(this.bpmin + "," + this.bpmax + "=>" + this.pxmin + "," + this.pxmax);
     }
+    public function added(e:Event){
+        this.set_extents();
+        this.draw();
+    }
+}
 
-    public function draw(){
+class Annotation extends BaseAnnotation {
+    public var edges:Array<Int>;
+
+    public function new(l:Array<String>){
+        super(l);
+        this.edges = new Array<Int>();
+        this.is_hsp = this.ftype.substr(0, 3) == "hsp";
+        this.addEventListener(MouseEvent.CLICK, onClick);
+        // this only happens once its track is set.
+
+    }
+
+    public override function draw(){
         this.x = pxmin;
         var g = this.graphics;
         var is_hsptrack = is_hsp; //Std.is(subtrack, HSPTrack);

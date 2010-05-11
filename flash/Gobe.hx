@@ -23,6 +23,7 @@ import flash.events.TimerEvent;
 import flash.events.IOErrorEvent;
 import Util;
 import HSP;
+import Plot;
 
 
 class Gobe extends Sprite {
@@ -47,7 +48,8 @@ class Gobe extends Sprite {
     private var _all:Bool;
     public static var tracks:Hash<Track>;
     public var annotations:Hash<Annotation>;
-    public var styles:Hash<Style>; // {'CDS': CDSINFO }
+    public static var plots:Hash<Plot>;
+    public static var styles:Hash<Style>; // {'CDS': CDSINFO }
     public static var edges = new Array<Edge>();
 
     public var annotations_url:String;
@@ -90,6 +92,7 @@ class Gobe extends Sprite {
         edges = new Array<Edge>();
         tracks = new Hash<Track>();
         annotations = new Hash<Annotation>();
+        plots = new Hash<Plot>();
     }
     public function set_data(data:String){
         this.handleAnnotationData(data);
@@ -136,6 +139,7 @@ class Gobe extends Sprite {
         var i:Int;
         tracks = new Hash<Track>();
         annotations = new Hash<Annotation>();
+        plots = new Hash<Plot>();
 
         // the event only gets called when mousing over an HSP.
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -189,7 +193,7 @@ class Gobe extends Sprite {
             }
         }
     }
-    public function geturl(url:String, handler:Event -> Void){
+    public static function geturl(url:String, handler:Event -> Void){
         url = StringTools.urlDecode(url);
         trace("getting:" + url);
         var ul = new URLLoader();
@@ -271,6 +275,7 @@ class Gobe extends Sprite {
             atrack.addChildAt(minus, 0);
         }
     }
+
     private function addAnnotations(arr:Array<Annotation>){
         var a:Annotation;
         arr.sort(function(a:Annotation, b:Annotation):Int {
@@ -293,7 +298,6 @@ class Gobe extends Sprite {
                     sub.addChild(a);
                 }
             }
-            a.draw();
         }
     }
     public function annotationReturn(e:Event){

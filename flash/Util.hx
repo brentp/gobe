@@ -45,7 +45,6 @@ class Util {
         var al:Array<String>;
         var nexplicit = 0;
         var ntracks = 0;
-        // public function new(id:String, track_id:String, bpmin:Int, bpmax:Int, ftype:String, strand:Int, fname:String){
         for(al in anno_lines){
             var track_id = al[1];
             var a:Annotation;
@@ -56,6 +55,10 @@ class Util {
                 nexplicit += 1;
                 lims.set(info.id, info);
                 explicit_set.set(info.id, nexplicit);
+            }
+            else if(al[4].substr(0, 4) == "plot"){
+                var p = new Plot(al);
+                Gobe.plots.set(p.track_id, p);
             }
             else {
                 var a = new Annotation(al);
@@ -98,6 +101,7 @@ class Util {
         }
         Gobe.tracks = tracks;
         for(a in anarr){ a.track = tracks.get(a.track_id); }
+        for(p in Gobe.plots){ p.track = tracks.get(p.track_id); }
         return anarr;
     }
 
