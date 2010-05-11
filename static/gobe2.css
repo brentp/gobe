@@ -51,3 +51,8 @@ five_prime_UTR, three_prime_UTR {
     height: 0.7;
     z: 5;
 }
+
+plot_line {
+    line_color: #0000ff;
+    line_width: 3.0;
+}
