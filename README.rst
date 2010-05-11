@@ -27,7 +27,7 @@ development, but it is not required to use the library.
 Annotations
 ===========
 
-The annotatios to be rendered by the flash movie are in a simple tex format.
+The annotations to be rendered by the flash movie are in a simple text format.
 The best way to understand them is to briefly skim the summaries below and
 have a look at the examples in the
 `data <http://github.com/brentp/gobe/tree/master/data/>`_ directory.
