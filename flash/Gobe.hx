@@ -362,11 +362,6 @@ class Gobe extends Sprite {
 
     public function mouseMove(e:MouseEvent){
         if(! e.buttonDown){ return; }
-        if (!e.buttonDown){
-            var e2 = new MouseEvent(MouseEvent.MOUSE_UP, false, false, e.localX, e.localY);
-            this.dispatchEvent(e2);
-            return;
-        }
         //trace(e.stageX + "," + e.stageY);
         var r = this.drag_sprite.do_draw(e.stageX, e.stageY);
         drawEdgesInRect(r);
