@@ -142,9 +142,11 @@ class Gobe extends Sprite {
         plots = new Hash<Plot>();
 
         // the event only gets called when mousing over an HSP.
+        var stage = flash.Lib.current.stage;
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 
-        //flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+        stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+        stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
         flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyPress);
         this.stage_width = flash.Lib.current.stage.stage.stageWidth;
         this.stage_height = flash.Lib.current.stage.stage.stageHeight;
@@ -358,6 +360,35 @@ class Gobe extends Sprite {
         trace("seconds tototal:" + (t4 - t));
     }
 
+    public function mouseMove(e:MouseEvent){
+        if(! e.buttonDown){ return; }
+        if (!e.buttonDown){
+            var e2 = new MouseEvent(MouseEvent.MOUSE_UP, false, false, e.localX, e.localY);
+            this.dispatchEvent(e2);
+            return;
+        }
+        //trace(e.stageX + "," + e.stageY);
+        var r = this.drag_sprite.do_draw(e.stageX, e.stageY);
+        drawEdgesInRect(r);
+   }
+
+    public function mouseDown(e:MouseEvent){
+        var d = this.drag_sprite;
+        d.graphics.clear();
+        d.startx = e.stageX;
+        d.starty = e.stageY;
+    }
+
+    public function drawEdgesInRect(r:Rectangle){
+        for(ed in edges){
+            ed.visible = false;
+            if(r.intersects(ed.a.getRect(this)) || r.intersects(ed.b.getRect(this))){
+                ed.draw();
+            }
+        }
+    }
+
+
 }
 
 class MTextField extends TextField {
@@ -381,10 +412,10 @@ class DragSprite extends Sprite {
         var xmax = Math.max(this.startx, eX);
         var ymin = Math.min(this.starty, eY);
         var ymax = Math.max(this.starty, eY);
-
         this.graphics.beginFill(0xcccccc, 0.2);
         this.graphics.drawRect(xmin, ymin, xmax - xmin, ymax - ymin);
         this.graphics.endFill();
+        return new Rectangle(xmin, ymin, xmax - xmin, ymax - ymin);
     }
 }
 
