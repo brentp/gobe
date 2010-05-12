@@ -287,5 +287,5 @@ s_4.080,s,69618418,69618608,CDS,+,Sb01g046420
 s_4.090,s,69618699,69618807,CDS,+,Sb01g046420
 s_4.100,s,69619050,69619198,CDS,+,Sb01g046420
 s_4.110,s,69619282,69619525,CDS,+,Sb01g046420
-#id,track_id,xmin,xmax,style,data-source
+#id,track_id,xmin,xmax,style,strand,data-source
 plot1,q,71630143,71695587,plot_line,+,data/pair/gc_content.txt
