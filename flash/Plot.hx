@@ -37,7 +37,7 @@ class Plot extends BaseAnnotation {
             if(d < ymin) { ymin = d; }
             if(d > ymax) { ymax = d; }
         }
-        trace(ymin + "," + ymax);
+        //trace(ymin + "," + ymax);
         // NOTE: this only works if the tracks are added to the movie before
         // we get here. should base on events...
         this.set_track();
@@ -64,7 +64,7 @@ class Plot extends BaseAnnotation {
             var yy = -h + (d - ymin) / rng * h;
             var xx = this.track.rw2pix(this.bpmin + i);
             if(i % 1000 == 0){
-                trace(xx + "," + yy);
+                //trace(xx + "," + yy);
             }
             g.lineTo(xx, yy);
             i += 1;
