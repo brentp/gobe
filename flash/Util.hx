@@ -78,7 +78,7 @@ class Util {
             }
         }
         var arr:Array<TInfo> = Lambda.array(lims);
-        arr.sort(function(a:TInfo, b:TInfo){ return a.order < b.order ? 1 : -1; });
+        arr.sort(function(a:TInfo, b:TInfo){ return a.order < b.order ? -1 : 1; });
         var ntracks = arr.length;
         var track_height = Std.int(flash.Lib.current.stage.stage.stageHeight / ntracks);
         var tracks = new Hash<Track>();
