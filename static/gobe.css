@@ -9,9 +9,9 @@ default {
 
 sorghum_brachy_cns {
     fill_color: #ff0000;
-    fill_alpha: 0.9;
-    line_width: 0.1;
-    line_color: #ffff66;
+    fill_alpha: 0.7;
+    line_width: 0.0;
+    line_color: #ff0000;
     height: 0.8;
     z: 21;
 }
@@ -19,16 +19,16 @@ sorghum_brachy_cns {
 sorghum_rice_cns {
     fill_color: #0000ff;
     fill_alpha: 0.9;
-    line_width: 0.1;
+    line_width: 0.0;
     line_color: #ffff66;
     height: 0.8;
     z: 21;
 }
 
 CDS {
-    fill_color: #22aa22;
-    fill_alpha: 0.6;
-    line_width: 0.1;
+    fill_color: #00aa00;
+    fill_alpha: 0.4;
+    line_width: 0.0;
     line_color: #222222;
     height: 0.9;
     z: 16;
@@ -37,7 +37,7 @@ CDS {
 HSP {
     fill_color: #0000ff;
     fill_alpha: 0.8;
-    line_width: 0.01;
+    line_width: 0.00;
     line_color: #000000;
     height: 0.5;
     z: 20;
@@ -48,31 +48,44 @@ start_codon, stop_codon {
     fill_alpha: 0;
 }
 
-gene {
+gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno {
     fill_color: #bbbbbb;
     fill_alpha: 0.6;
     line_width: 0.0;
     line_color: #000000;
     height: 0.4;
-    z:30;
+    z:3;
     arrow_len: 0.05;
 }
 
+gene.rna, gene.protein {
+    line_width: 2.0;
+    line_color: #0000ff;
+    z: 20;
+}
+
+gene.localdup {
+   fill_color: #000000;
+   height: 0.7;
+   line_width: 0.0;
+   z: 20;
+}
+
 mRNA {
-    fill_color: #00ff00;
+    fill_color: #00aa00;
     fill_alpha: 0.8;
     line_width: 0.0;
-    line_color: #0000ff;
+    line_color: #000000;
     height: 0.6;
-    z: 12;
+    z: 2;
 }
 
 exon {
     fill_color: #00ff00;
     fill_alpha: 0.6;
-    line_width: 0.1;
+    line_width: 0.0;
     line_color: #0000ff;
-    height: 0.76;
+    height: 0.66;
     z: 2;
 }
 
@@ -82,5 +95,7 @@ five_prime_UTR, three_prime_UTR {
     line_width: 0.0;
     line_color: #0000ff;
     height: 0.5;
+    arrow_len: 0.15;
     z: 5;
 }
+
