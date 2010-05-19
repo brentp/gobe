@@ -163,7 +163,7 @@ class Annotation extends BaseAnnotation {
         }
         //trace([this.id, this.fname, (this.bpmax + this.bpmin)/ 2, e.stageX, this.track_id].join(","));
         if(! e.shiftKey){
-            Gobe.js_onclick(this.id, this.fname, this.bpmin, this.bpmax, this.track_id);
+            Gobe.js_onclick(this.id, this.fname, this.ftype, this.bpmin, this.bpmax, this.track_id);
         }
     }
 }

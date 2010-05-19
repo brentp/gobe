@@ -58,8 +58,8 @@ class Gobe extends Sprite {
     public function clearPanelGraphics(e:MouseEvent){
         while(panel.numChildren != 0){ panel.removeChildAt(0); }
     }
-    public static function js_onclick(fid:String, fname:String, bpmin:Int, bpmax:Int, track_id:String){
-        ExternalInterface.call('Gobe.onclick', fid, fname, bpmin, bpmax, track_id);
+    public static function js_onclick(fid:String, fname:String, ftype:String, bpmin:Int, bpmax:Int, track_id:String){
+        ExternalInterface.call('Gobe.onclick', [fid, fname, ftype, bpmin, bpmax, track_id]);
     }
     public static function js_warn(warning:String){
         ExternalInterface.call('Gobe.warn', warning);
@@ -196,6 +196,7 @@ class Gobe extends Sprite {
         }
     }
     public static function geturl(url:String, handler:Event -> Void){
+        //trace("getting:" + url);
         url = StringTools.urlDecode(url);
         trace("getting:" + url);
         var ul = new URLLoader();
