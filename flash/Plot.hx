@@ -81,12 +81,12 @@ class PlotLine extends Plot {
 
         var i = 0;
         for(d in data){
-            var yy = -h + (d - ymin) / rng * h;
+            var yy = (d - ymin) / rng * h;
             var xx = this.track.rw2pix(this.bpmin + i);
             if(i % 1000 == 0){
                 //trace(xx + "," + yy);
             }
-            g.lineTo(xx, yy);
+            g.lineTo(xx, -yy);
             i += 1;
         }
     }
@@ -105,8 +105,8 @@ class PlotHist extends Plot {
             g.lineStyle(lw, d.color, 0.6);
             g.beginFill(d.color);
             g.moveTo(x0, -h);
-            g.lineTo(x0, d.y);
-            g.lineTo(x1, d.y);
+            g.lineTo(x0, -d.y);
+            g.lineTo(x1, -d.y);
             g.lineTo(x1, -h);
             g.endFill();
         }
@@ -148,7 +148,7 @@ class PlotHist extends Plot {
         var rng = ymax - ymin;
         var h = this.subtrack.height;
         for(d in data){
-            d.y = -h + (d.yraw - ymin) / rng * h;
+            d.y = (d.yraw - ymin) / rng * h;
         }
         trace('rescaled hist');
     }

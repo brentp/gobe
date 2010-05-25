@@ -282,6 +282,7 @@ class Gobe extends Sprite {
         plot.track = Gobe.tracks.get(plot.track_id);
         var st = plot.track.subtracks.get(plot.strand == 1 ? '+' : '-');
         plot.subtrack = st;
+        // NOTE: always putting the plot at the bottom...
         st.addChildAt(plot, 0);
     }
     private function addAnnotations(arr:Array<Annotation>){
