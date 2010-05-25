@@ -69,22 +69,12 @@ class Util {
                     continue;
                 }
                 Gobe.plots.set(p.track_id, p);
+                ntracks += set_track_info(p, lims, explicit_set);
             }
             else {
                 var a = new Annotation(al);
                 anarr.push(a);
-                if(explicit_set.exists(track_id)) { continue; }
-
-                if (! lims.exists(track_id)){
-                    var info = new TInfo(track_id, track_id, a.bpmin, a.bpmax, ntracks);
-                    ntracks += 1;
-                    lims.set(track_id, info);
-                }
-                else {
-                    var lim = lims.get(track_id);
-                    if(a.bpmin < lim.bpmin){lim.bpmin = a.bpmin; }
-                    if(a.bpmax > lim.bpmax){lim.bpmax = a.bpmax; }
-                }
+                ntracks += set_track_info(a, lims, explicit_set);
             }
         }
         var arr:Array<TInfo> = Lambda.array(lims);
@@ -113,7 +103,22 @@ class Util {
         for(a in anarr){ a.track = tracks.get(a.track_id); }
         return anarr;
     }
+    public static function set_track_info(a:BaseAnnotation, lims:Hash<TInfo>, explicit_set:Hash<Int>):Int{
+        var ntracks = 0;
+        if(explicit_set.exists(a.track_id)) { return 0; }
 
+        if (! lims.exists(a.track_id)){
+            var info = new TInfo(a.track_id, a.track_id, a.bpmin, a.bpmax, ntracks);
+            ntracks = 1;
+            lims.set(a.track_id, info);
+        }
+        else {
+            var lim = lims.get(a.track_id);
+            if(a.bpmin < lim.bpmin){lim.bpmin = a.bpmin; }
+            if(a.bpmax > lim.bpmax){lim.bpmax = a.bpmax; }
+        }
+        return ntracks;
+    }
     public static function sorted_keys(keys:Iterator<String>):Array<String>{
         var skeys = new Array<String>();
         for(k in keys){ skeys.push(k); }
