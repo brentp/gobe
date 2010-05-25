@@ -94,6 +94,23 @@ class PlotLine extends Plot {
 
 }
 class PlotHist extends Plot {
+    public override function draw(){
+        var lw:Float = 1, lc:Int = 0;
+        var rw2pix = this.track.rw2pix;
+        var st = this.subtrack;
+        var g = this.graphics;
+        x = 0; y = 0;
+        for(d in data){
+            var x0 = rw2pix(d.xmin), x1 = rw2pix(d.xmax);
+            g.lineStyle(lw, d.color, 0.6);
+            g.beginFill(d.color);
+            g.moveTo(x0, -h);
+            g.lineTo(x0, d.y);
+            g.lineTo(x1, d.y);
+            g.lineTo(x1, -h);
+            g.endFill();
+        }
+    }
     /*
     format from file is xstart,xstop,zvalue [, color]
     */
@@ -112,7 +129,7 @@ class PlotHist extends Plot {
                    xmax : Std.parseInt(a[1]),
                    yraw : y,
                    y    : y,
-                   color: 0x000000 };
+                   color: Util.color_string_to_uint(a[3]) };
 
             data.push(pt);
             if(y < ymin) { ymin = y; }
@@ -134,8 +151,5 @@ class PlotHist extends Plot {
             d.y = -h + (d.yraw - ymin) / rng * h;
         }
         trace('rescaled hist');
-    }
-    public override function draw(){
-        trace('drawing hist');
     }
 }

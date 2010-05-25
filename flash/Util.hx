@@ -135,7 +135,7 @@ class Util {
     }
     public static function color_string_to_uint(c:String):UInt{
         if(c == null){ return 0x000000; }
-        c = StringTools.replace(c, '#', '0x');
+        c = '0x' + StringTools.replace(c, '#', '');
         return Std.parseInt(c);
     }
 
