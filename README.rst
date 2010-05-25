@@ -30,7 +30,7 @@ Annotations
 The annotations to be rendered by the flash movie are in a simple text format.
 The best way to understand them is to briefly skim the summaries below and
 have a look at the examples in the
-`data <http://github.com/brentp/gobe/tree/master/data/>`_ directory.
+`data/ <http://github.com/brentp/gobe/tree/master/data/>`_ directory.
 
 Annotation
 ----------
@@ -123,7 +123,7 @@ allows one to have different style classes for HSPs. e.g. HSP_blue, HSP_red.
 Style
 =====
 
-Styling is done via CSS. See the `<default style http://github.com/brentp/gobe/blob/master/static/gobe.css>`_
+Styling is done via CSS. See the `default style <http://github.com/brentp/gobe/blob/master/static/gobe.css>`_
 in gobe. When adding new features, it's wise to add a new style corresponding to each feature type.
 The style sheet is specified on the URL through the style argument. e.g. ::
 
@@ -154,9 +154,9 @@ the range specified by the `xmin`, `xmax` parameters in the annotations file.
 NOTE: the `style` type specified in the annotations file must be exactly:
 'plot_line'. Data is scaled automatically.
 The line-color and width are specified in the css file under plot_line.
-See the example `<data http://github.com/brentp/gobe/blob/master/data/pair/gc_content.txt>`_
-, `<annotations file http://github.com/brentp/gobe/blob/master/data/pair/annos.txt>`_ (the line with id of 'plot1')
-and `<css http://github.com/brentp/gobe/blob/master/static/gobe2.css>`_
+See the example `data <http://github.com/brentp/gobe/blob/master/data/pair/gc_content.txt>`_
+, `annotations file <http://github.com/brentp/gobe/blob/master/data/pair/annos.txt>`_ (the line with id of 'plot1')
+and `css <http://github.com/brentp/gobe/blob/master/static/gobe2.css>`_
 
 Histograms
 ----------
