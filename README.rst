@@ -152,7 +152,10 @@ and the final column indicates a (local) url from which to get the data.
 The data format is a **single y value per line** with the number of lines matching
 the range specified by the `xmin`, `xmax` parameters in the annotations file.
 NOTE: the `style` type specified in the annotations file must be exactly:
-'plot_line'. Data is scaled automatically.
+'plot_line'. Data is scaled automatically. If a plot is specified in a new track (without
+other annotations, the values specified in the `xmin`, `xmax` will be used as the track bounds
+and it will be drawn in it's own track.
+
 The line-color and width are specified in the css file under plot_line.
 See the example `data <http://github.com/brentp/gobe/blob/master/data/pair/gc_content.txt>`_
 , `annotations file <http://github.com/brentp/gobe/blob/master/data/pair/annos.txt>`_ (the line with id of 'plot1')

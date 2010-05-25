@@ -68,6 +68,13 @@ class Util {
                 else {
                     continue;
                 }
+                // if a plot is specified, its limits are used as the explicit extents.
+                if(! explicit_set.exists(al[1])){
+                    var info = new TInfo(al[1], al[1], p.bpmin, p.bpmax, nexplicit);
+                    lims.set(info.id, info);
+                    nexplicit += 1;
+                    explicit_set.set(info.id, nexplicit);
+                }
                 Gobe.plots.set(p.track_id, p);
                 ntracks += set_track_info(p, lims, explicit_set);
             }

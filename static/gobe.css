@@ -48,7 +48,7 @@ start_codon, stop_codon {
     fill_alpha: 0;
 }
 
-gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno {
+gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno, gene.interruptor {
     fill_color: #bbbbbb;
     fill_alpha: 0.6;
     line_width: 0.0;
