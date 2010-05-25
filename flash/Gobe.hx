@@ -278,7 +278,12 @@ class Gobe extends Sprite {
             atrack.addChildAt(minus, 0);
         }
     }
-
+    public static function addPlot(plot:Plot){
+        plot.track = Gobe.tracks.get(plot.track_id);
+        var st = plot.track.subtracks.get(plot.strand == 1 ? '+' : '-');
+        plot.subtrack = st;
+        st.addChild(plot);
+    }
     private function addAnnotations(arr:Array<Annotation>){
         var a:Annotation;
         arr.sort(function(a:Annotation, b:Annotation):Int {
@@ -317,10 +322,10 @@ class Gobe extends Sprite {
 
         // first get the tracks either implicitly or from feature type == track.
         var t0 = haxe.Timer.stamp();
-        trace("seconds to split:" + (t0 - t));
+        //trace("seconds to split:" + (t0 - t));
         var anarr = Util.add_tracks_from_annos(anno_lines);
         var t1 = haxe.Timer.stamp();
-        trace("seconds to parse:" + (t1 - t0));
+        //trace("seconds to parse:" + (t1 - t0));
 
         for(a in anarr){
             var astyle = styles.get(a.ftype);
@@ -350,15 +355,15 @@ class Gobe extends Sprite {
                 Gobe.js_warn("non-consecutive hsps");
             }
         }
-        var t2 = haxe.Timer.stamp();
-        trace("seconds to reparse, make edges:" + (t2 - t1));
+        //var t2 = haxe.Timer.stamp();
+        //trace("seconds to reparse, make edges:" + (t2 - t1));
         initializeSubTracks(edge_tracks);
-        var t3 = haxe.Timer.stamp();
-        trace("seconds to add subtracks:" + (t3 - t2));
+        //var t3 = haxe.Timer.stamp();
+        //trace("seconds to add subtracks:" + (t3 - t2));
         addAnnotations(anarr);
-        var t4 = haxe.Timer.stamp();
-        trace("seconds to add annotations:" + (t4 - t3));
-        trace("seconds tototal:" + (t4 - t));
+        //var t4 = haxe.Timer.stamp();
+        //trace("seconds to add annotations:" + (t4 - t3));
+        //trace("seconds tototal:" + (t4 - t));
     }
 
     public function mouseMove(e:MouseEvent){

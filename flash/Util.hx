@@ -1,5 +1,6 @@
 import HSP;
 import Gobe;
+import Plot;
 
 class TInfo {
     public var bpmin:Int;
@@ -57,7 +58,16 @@ class Util {
                 explicit_set.set(info.id, nexplicit);
             }
             else if(al[4].substr(0, 4) == "plot"){
-                var p = new Plot(al);
+                var p:Plot;
+                if(al[4].substr(5, 9) == "line"){
+                    p = new PlotLine(al);
+                }
+                else if(al[4].substr(5, 9) == "hist"){
+                    p = new PlotHist(al);
+                }
+                else {
+                    continue;
+                }
                 Gobe.plots.set(p.track_id, p);
             }
             else {
@@ -101,7 +111,6 @@ class Util {
         }
         Gobe.tracks = tracks;
         for(a in anarr){ a.track = tracks.get(a.track_id); }
-        for(p in Gobe.plots){ p.track = tracks.get(p.track_id); }
         return anarr;
     }
 

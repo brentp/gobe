@@ -7,40 +7,60 @@ class PlotTrack extends Track {
 
 }
 
+typedef Data = {
+    var xmin : Int;
+    var xmax : Int;
+    var yraw : Float;
+    var y    : Float;
+    var color: Int;
+}
+
 class Plot extends BaseAnnotation {
-    /*
-    #id,track_id,xmin,xmax,style,data-source
-    plot1,q,71630143,71695587,plot_line,data/pair/gc_content.txt
-    */
     public var data_url:String;
-    public var data:Array<Float>;
     public var ymin:Float;
     public var ymax:Float;
-
 
     public function new(aline:Array<String>){
         super(aline);
         this.data_url = aline[6];
-        Gobe.geturl(this.data_url, dataReturn);
+        Gobe.geturl(this.data_url, _dataReturn);
         ymin = Math.POSITIVE_INFINITY;
         ymax = Math.NEGATIVE_INFINITY;
+
+    }
+    public function _dataReturn(e:Event){
+        var lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
+        var cleaned = new Array<String>();
+        for(line in lines){
+            if(line.length == 0 || line.charAt(0) == "#"){ continue; }
+            cleaned.push(line);
+        }
+        this.dataReturn(cleaned);
+        Gobe.addPlot(this);
+    }
+    public function dataReturn(lines:Array<String>){
+        trace('override this');
     }
 
-    public function dataReturn(e:Event){
-        var lines:Array<String> = StringTools.ltrim(e.target.data).split("\n");
+}
+
+
+class PlotLine extends Plot {
+    /*
+    #id,track_id,xmin,xmax,style,data-source
+    plot1,q,71630143,71695587,plot_line,data/pair/gc_content.txt
+    */
+    public var data:Array<Float>;
+
+    public override function dataReturn(lines:Array<String>){
         data = new Array<Float>();
         var d:Float;
         for(line in lines){
-            if(line.length == 0 || line.charAt(0) == "#"){ continue; }
             d = Std.parseFloat(line);
             data.push(d);
             if(d < ymin) { ymin = d; }
             if(d > ymax) { ymax = d; }
         }
-        //trace(ymin + "," + ymax);
-        // NOTE: this only works if the tracks are added to the movie before
-        // we get here. should base on events...
-        this.set_track();
     }
 
     public override function draw(){
@@ -52,7 +72,7 @@ class Plot extends BaseAnnotation {
         }
 
         var st = this.subtrack;
-        var h = this.subtrack.height;
+        var h = st.height;
         var g = this.graphics;
         x = 0; y = 0;
         var rng = ymax - ymin;
@@ -71,10 +91,51 @@ class Plot extends BaseAnnotation {
         }
     }
 
-    public function set_track(){
-        var st = this.track.subtracks.get(this.strand == 1 ? '+' : '-');
-        this.subtrack = st;
-        st.addChild(this);
+
+}
+class PlotHist extends Plot {
+    /*
+    format from file is xstart,xstop,zvalue [, color]
+    */
+    public var data:Array<Data>;
+
+    public override function dataReturn(lines:Array<String>){
+        data = new Array<Data>();
+        var a:Array<String>;
+        var y:Float;
+        var xmin:Float, xmax:Float;
+        for(line in lines){
+            a = line.split(",");
+            y = Std.parseFloat(a[2]);
+            var pt:Data;
+            pt = { xmin : Std.parseInt(a[0]),
+                   xmax : Std.parseInt(a[1]),
+                   yraw : y,
+                   y    : y,
+                   color: 0x000000 };
+
+            data.push(pt);
+            if(y < ymin) { ymin = y; }
+            if(y > ymax) { ymax = y; }
+        }
+        trace('hist data return ok');
     }
 
+    public override function added(e:Event){
+        this.rescale();
+        super.added(e);
+    }
+
+    public function rescale(){
+        var d:Data;
+        var rng = ymax - ymin;
+        var h = this.subtrack.height;
+        for(d in data){
+            d.y = -h + (d.yraw - ymin) / rng * h;
+        }
+        trace('rescaled hist');
+    }
+    public override function draw(){
+        trace('drawing hist');
+    }
 }
