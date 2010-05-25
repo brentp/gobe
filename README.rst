@@ -127,10 +127,60 @@ Styling is done via CSS. See the `<default style http://github.com/brentp/gobe/b
 in gobe. When adding new features, it's wise to add a new style corresponding to each feature type.
 The style sheet is specified on the URL through the style argument. e.g. ::
 
-    &style=/static/awesome.css
+    &style=/static/super-awesome.css
 
 it must be on the same server as the SWF movie, or set up on a server that allows access via
 crossdomain.xml.
+
+Plots
+=====
+It is also possible to plot line plots and histogram plots. Here is an example with a line plot
+on the top strand and a histogram on the bottom strand. (this is linked in index.html examples).
+
+.. image:: http://lh6.ggpht.com/_uU_kLC5AdTc/S_waNKlZqwI/AAAAAAAAA1Q/6cmENZia_Co/gobe_plot.png
+
+LinePlots
+---------
+The data-source for a line plot is indicated in the annotations file by a line
+like::
+
+    #id,track_id,xmin,xmax,style,strand,data-source
+    plot1,q,71630143,71695587,plot_line,+,data/pair/gc_content.txt
+
+where the `track_id` indicates the track on which to draw the plot.
+and the final column indicates a (local) url from which to get the data.
+The data format is a **single y value per line** with the number of lines matching
+the range specified by the `xmin`, `xmax` parameters in the annotations file.
+NOTE: the `style` type specified in the annotations file must be exactly:
+'plot_line'. Data is scaled automatically.
+The line-color and width are specified in the css file under plot_line.
+See the example `<data http://github.com/brentp/gobe/blob/master/data/pair/gc_content.txt>`_
+, `<annotations file http://github.com/brentp/gobe/blob/master/data/pair/annos.txt>`_ (the line with id of 'plot1')
+and `<css http://github.com/brentp/gobe/blob/master/static/gobe2.css>`_
+
+Histograms
+----------
+Histograms are specified in the same manner as `LinePlots`_ except the style type must be:
+'plot_hist'. An example annotations line looks like::
+
+    #id,track_id,xmin,xmax,style,strand,data-source
+    plot2,q,71630143,71695587,plot_hist,-,data/pair/hist_data.txt
+
+the format for histogram data is 4 columns:
+
+    1) xmin
+    2) xmax
+    3) y
+    4) hex-color
+
+so example data looks like::
+
+    71692442,71692569,20,#ff0000
+    71692721,71692883,21.444,#fc0000
+    71693023,71693079,38,#ffff00
+    71693375,71693591,60.2,#ff00bb
+
+This allows one to specify arbitrary widths and colors for each bar.
 
 Javascript Callbacks
 ====================
