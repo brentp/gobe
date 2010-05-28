@@ -130,7 +130,7 @@ class Annotation extends BaseAnnotation {
         this.y = -this.subtrack.track_height / 2;
         g.clear();
         this.h = style.feat_height * this.subtrack.track_height;
-        g.lineStyle(style.line_width, is_hsptrack ? subtrack.fill_color : style.line_color);
+        g.lineStyle(style.line_width, is_hsptrack ? subtrack.fill_color : style.line_color, 0.3);
         var tw = this.pxmax - this.pxmin;
         var alen = this.style.arrow_len * tw * this.strand;
         var xstart = this.strand == 1 ? 0 : tw;
@@ -140,14 +140,12 @@ class Annotation extends BaseAnnotation {
         //g.beginFill(is_hsptrack ? subtrack.fill_color : style.fill_color, style.fill_alpha);
         var c = is_hsptrack ? subtrack.fill_color : style.fill_color;
 
-
         var m = new flash.geom.Matrix();
         m.createGradientBox(tw, h/3, 290, 0, -h/6);
         g.beginGradientFill(flash.display.GradientType.LINEAR,
                          [Util.color_shift(c, -24), Util.color_shift(c, 24)],
                          [style.fill_alpha, style.fill_alpha],
                         [0x00, 0xFF], m);
-
 
         g.lineTo(xstart, -h/2);
         g.lineTo(xend - alen, -h/2);
@@ -187,7 +185,7 @@ class Style {
         this.line_width = style_o.line_width ?
                             Std.parseFloat(style_o.line_width) : 0.1;
         this.line_color = style_o.line_color ?
-                            Util.color_string_to_uint(style_o.line_color) : 0x000000;
+                            Util.color_string_to_uint(style_o.line_color) : 0xffffff;
         this.feat_height = style_o.height ?
                             Std.parseFloat(style_o.height) : 0.5;
         this.arrow_len = style_o.arrow_len ?
