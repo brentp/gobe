@@ -16,7 +16,7 @@ sorghum_brachy_cns {
     z: 21;
 }
 
-sorghum_rice_cns {
+sorghum_rice_cns, rice_rice_cns {
     fill_color: #0000ff;
     fill_alpha: 0.9;
     line_width: 0.0;
@@ -51,7 +51,7 @@ start_codon, stop_codon {
 gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno, gene.interruptor {
     fill_color: #bbbbbb;
     fill_alpha: 0.6;
-    line_width: 0.0;
+    line_width: 1.0;
     line_color: #000000;
     height: 0.4;
     z:3;

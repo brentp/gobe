@@ -7,19 +7,19 @@ CDS {
     z: 16;
 }
 
-HSP { 
+HSP {
     fill_color: #0000ff;
     fill_alpha: 0.8;
-    line_width: 0.01;
+    line_width: 0.00;
     line_color: #000000;
-    height: 0.2;
+    height: 0.5;
     z: 20;
 }
 
 gene { 
     fill_color: #000000;
     fill_alpha: 0.6;
-    line_width: 0.0;
+    line_width: 1.0;
     line_color: #ffffff;
     height: 0.4;
     z:0;
