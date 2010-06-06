@@ -61,8 +61,11 @@ The annotation file is a text file with 7 **comma-delimited** columns per row:
     6) `strand`: either '+' or '-', the strand of the feature. `HSP`_'s with a
        +/- match should both be assigned - as the strand. If not specified '+' is used.
 
-    7) `name`: the name of the feature e.g. 'At2g26540'. Can be anything. If not specified
+    7) *optional* `name`: the name of the feature e.g. 'At2g26540'. Can be anything. If not specified
        `id` is used.
+
+    8) *optional* `color`: the color of the feature to override that specified by its type. if not specified
+       the value in `type` is used.
 
 an example looks like ::
 
