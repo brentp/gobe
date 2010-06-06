@@ -88,7 +88,7 @@ class BaseAnnotation extends Sprite {
 
     public function new(l:Array<String>){
         super();
-        //#id,track_id,start,end,type,strand,name
+        //#id,track_id,start,end,type,strand,name, [color]
 
         this.id = l[0];
         this.track_id = l[1];
@@ -103,7 +103,6 @@ class BaseAnnotation extends Sprite {
     public inline function set_extents(){
         this.pxmin = track.rw2pix(this.bpmin);
         this.pxmax = track.rw2pix(this.bpmax);
-        //trace(this.bpmin + "," + this.bpmax + "=>" + this.pxmin + "," + this.pxmax);
     }
     public function added(e:Event){
         this.set_extents();
@@ -113,14 +112,23 @@ class BaseAnnotation extends Sprite {
 
 class Annotation extends BaseAnnotation {
     public var edges:Array<Int>;
+    public var color:UInt;
+    // empty_color is just a sentinel to show the color
+    // hasn't been set since a uint can't be undefined.
+    public static var empty_color:UInt = 0x000001;
 
     public function new(l:Array<String>){
         super(l);
+        this.color = Annotation.empty_color;
         this.edges = new Array<Int>();
         this.is_hsp = this.ftype.substr(0, 3) == "hsp";
         this.addEventListener(MouseEvent.CLICK, onClick);
         // this only happens once its track is set.
 
+        if (l.length > 7){
+            //trace('setting color');
+            this.color = Util.color_string_to_uint(l[7]);
+        }
     }
 
     public override function draw(){
@@ -130,16 +138,24 @@ class Annotation extends BaseAnnotation {
         this.y = -this.subtrack.track_height / 2;
         g.clear();
         this.h = style.feat_height * this.subtrack.track_height;
-        g.lineStyle(style.line_width, is_hsptrack ? subtrack.fill_color : style.line_color, 0.3);
+        g.lineStyle(style.line_width,
+                    is_hsptrack ? subtrack.fill_color : style.line_color,
+                    0.3);
         var tw = this.pxmax - this.pxmin;
         var alen = this.style.arrow_len * tw * this.strand;
         var xstart = this.strand == 1 ? 0 : tw;
         var xend = this.strand == 1 ? tw : 0;
 
-        g.moveTo(xstart, h/2);
-        //g.beginFill(is_hsptrack ? subtrack.fill_color : style.fill_color, style.fill_alpha);
-        var c = is_hsptrack ? subtrack.fill_color : style.fill_color;
+        // try to get the color. if it's not set, then get it from the style.
+        var c:UInt;
+        if(this.color != Annotation.empty_color){
+            c = this.color;
+        }
+        else {
+            c = is_hsptrack ? subtrack.fill_color : style.fill_color;
+        }
 
+        g.moveTo(xstart, h/2);
         var m = new flash.geom.Matrix();
         m.createGradientBox(tw, h/3, 290, 0, -h/6);
         g.beginGradientFill(flash.display.GradientType.LINEAR,

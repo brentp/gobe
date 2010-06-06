@@ -36,7 +36,6 @@ class Util {
         Util.track_colors = a;
     }
 
-    //  public function new(id:String, title:String, bpmin:Int, bpmax:Int, track_height:Int){
     public static function add_tracks_from_annos(anno_lines:Array<Array<String>>):Array<Annotation>{
         // takes precedence if the limits are set explicitly.
         // keep track of which tracks have had their bounds set explicitly.
