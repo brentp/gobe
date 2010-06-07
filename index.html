@@ -1,5 +1,17 @@
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="static/smoothness/jquery-ui-1.8.1.custom.css" />
+    <link rel="stylesheet" type="text/css" href="static/site.css" />
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">google.load("jquery","1"); google.load("jqueryui", "1");</script>
+    <script type="text/javascript">
+        // <![CDATA[
+        $(function() {
+            $("button, a").button();
+            $("button:submit").button({icons: {primary: "ui-icon-refresh"}});
+        });
+        // ]]>
+    </script>
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="static/gobe.js"></script>
 <style>
@@ -7,23 +19,21 @@
 </style>
 </head>
 <body>
-    examples:
-    <ul>
-        <li><a href="index.html">simple annos</a></li>
-        <li><a href="index.html?annotations=data/t.annos">hsps</a></li>
-        <li>
-            <a href="index.html?annotations=data/pair/annos.txt&h=260">pair</a>
-            <a href="index.html?annotations=data/pair/annos.txt&h=260&style=static/gobe2.css">(other style)</a></li>
-    </ul>
+    <h1>Gobe examples</h1>
+    <a href="index.html">simple annos</a>
+    <a href="index.html?annotations=data/t.annos">hsps</a>
+    <a href="index.html?annotations=data/pair/annos.txt&h=260">pair</a>
+    <a href="index.html?annotations=data/pair/annos.txt&h=260&style=static/gobe2.css">pair (other style)</a>
+    <a href="index.html?annotations=data/pair/annos1.txt&h=260&style=static/gobe3.css">glyphs</a>
 
-    <input type="submit" onclick="Gobe.clear()" value="Clear" /><br/>
+    <button class="submit" onclick="Gobe.clear()">Clear</button><br/>
 <div id="flashcontent" name="flashcontent" style="z-index=0;position:absolute">
     <strong>You need to install <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> (or turn it back on in your browser settings).</strong>
 </div>
 <div id="querybox"></div>
 <ul>
     <li>click a gray HSP to see its pair.</li>
-    <li>shift-click in a track to draw lines to all HSPs</li>
+    <li>shift-click in a track to draw lines to all HSPs.</li>
 </ul>
 
 <script type="text/javascript">

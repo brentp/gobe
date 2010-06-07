@@ -7,6 +7,7 @@ import flash.utils.Timer;
 import flash.events.TimerEvent;
 import flash.external.ExternalInterface;
 import Gobe;
+import Glyph;
 
 class Edge extends Sprite {
     public var a:Annotation;
@@ -133,42 +134,9 @@ class Annotation extends BaseAnnotation {
 
     public override function draw(){
         this.x = pxmin;
-        var g = this.graphics;
-        var is_hsptrack = is_hsp; //Std.is(subtrack, HSPTrack);
         this.y = -this.subtrack.track_height / 2;
-        g.clear();
         this.h = style.feat_height * this.subtrack.track_height;
-        g.lineStyle(style.line_width,
-                    is_hsptrack ? subtrack.fill_color : style.line_color,
-                    0.3);
-        var tw = this.pxmax - this.pxmin;
-        var alen = this.style.arrow_len * tw * this.strand;
-        var xstart = this.strand == 1 ? 0 : tw;
-        var xend = this.strand == 1 ? tw : 0;
-
-        // try to get the color. if it's not set, then get it from the style.
-        var c:UInt;
-        if(this.color != Annotation.empty_color){
-            c = this.color;
-        }
-        else {
-            c = is_hsptrack ? subtrack.fill_color : style.fill_color;
-        }
-
-        g.moveTo(xstart, h/2);
-        var m = new flash.geom.Matrix();
-        m.createGradientBox(tw, h/3, 290, 0, -h/6);
-        g.beginGradientFill(flash.display.GradientType.LINEAR,
-                         [Util.color_shift(c, -24), Util.color_shift(c, 24)],
-                         [style.fill_alpha, style.fill_alpha],
-                        [0x00, 0xFF], m);
-
-        g.lineTo(xstart, -h/2);
-        g.lineTo(xend - alen, -h/2);
-        g.lineTo(xend, 0);
-        g.lineTo(xend - alen, h/2);
-
-        g.endFill();
+        Glyph.draw(this);
     }
     public function onClick(e:MouseEvent){
         var te = this.edges;
@@ -185,6 +153,7 @@ class Annotation extends BaseAnnotation {
 
 class Style {
     public var ftype:String; // *LOWER*case feature type.
+    public var glyph:String; // arrow, box, diamond, ...
     public var fill_color:UInt;
     public var fill_alpha:Float;
     public var line_width:Float;
@@ -195,6 +164,7 @@ class Style {
 
     public function new(ftype:String, style_o:Dynamic){
         this.ftype = ftype.toLowerCase();
+        this.glyph = style_o.glyph ? style_o.glyph: "generic";
         this.fill_color = Util.color_string_to_uint(style_o.fill_color);
         this.fill_alpha = style_o.fill_alpha ?
                             Std.parseFloat(style_o.fill_alpha) : 1.0;
@@ -207,9 +177,10 @@ class Style {
         this.arrow_len = style_o.arrow_len ?
                             Std.parseFloat(style_o.arrow_len) : 0.0;
         this.zindex = style_o.z ? Std.parseInt(style_o.z) : 5;
+        //trace(this.toString());
     }
     public function toString(){
-        return "Style(" + this.ftype + "," + this.fill_color + "," + this.fill_alpha +")";
+        return "Style(" + this.ftype + "," + this.glyph + "," + this.fill_color + "," + this.fill_alpha +")";
     }
 }
 
