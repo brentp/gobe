@@ -3,6 +3,7 @@ import flash.display.Sprite;
 import flash.display.Bitmap;
 import flash.display.Loader;
 import flash.net.URLRequest;
+import HSP;
 
 /*
 extra graphics for Gobe, modeled after GBROWSE <http://gmod.org/wiki/Glyphs_and_Glyph_Options>
@@ -11,67 +12,69 @@ feature_type will maps to glyph in the stylesheet
 */
 
 class Glyph {
-    static public function draw(t:Dynamic) {
+    static public function draw(a:Annotation) {
         // factory method, dispatch draw function based on glyph type
-        var glyph = t.style.glyph;
+        var glyph = a.style.glyph;
         // TODO: use switch or hash later
-        if (glyph=="generic" || glyph=="arrow") { Box.draw(t); }
-        else if (glyph=="dot") { Dot.draw(t); }
+        if (glyph=="generic" || glyph=="arrow") { Box.draw(a); }
+        else if (glyph=="dot") { Dot.draw(a); }
+    }
+
+    public static inline function get_color(a:Annotation):UInt{
+        // try to get the color. if it's not set, then get it from the style.
+        var c:UInt;
+        if(a.color != 0x000001){
+            c = a.color;
+        }
+        else {
+            c = a.is_hsp ? a.subtrack.fill_color : a.style.fill_color;
+        }
+        return c;
+
     }
 }
 
 class Box {
-    static public function draw(t:Dynamic) {
-        var is_hsptrack = t.is_hsp; //Std.is(subtrack, HSPTrack);
-        var tw = t.pxmax - t.pxmin;
-        var alen = t.style.arrow_len * tw * t.strand;
-        var xstart = t.strand == 1 ? 0 : tw;
-        var xend = t.strand == 1 ? tw : 0;
-        var style = t.style;
-        var h = t.h;
-        var subtrack = t.subtrack;
-        var g = t.graphics;
 
-        // try to get the color. if it's not set, then get it from the style.
-        var c:UInt;
-        if(t.color != 0x000001){
-            c = t.color;
-        }
-        else {
-            c = is_hsptrack ? subtrack.fill_color : style.fill_color;
-        }
+    static public function draw(a:Annotation) {
+        var tw = a.pxmax - a.pxmin;
+        var alen = a.style.arrow_len * tw * a.strand;
+        var xstart = a.strand == 1 ? 0 : tw;
+        var xend = a.strand == 1 ? tw : 0;
+        var g = a.graphics;
+
+        var c = Glyph.get_color(a);
 
         g.clear();
-        g.lineStyle(style.line_width, is_hsptrack ? subtrack.fill_color : style.line_color, 0.3);
+        g.lineStyle(a.style.line_width, a.is_hsp ? a.subtrack.fill_color : a.style.line_color, 0.3);
 
-        g.moveTo(xstart, h/2);
+        g.moveTo(xstart, a.h/2);
         var m = new flash.geom.Matrix();
-        m.createGradientBox(tw, h/3, 290, 0, -h/6);
+        m.createGradientBox(tw, a.h/3, 290, 0, -a.h/6);
         g.beginGradientFill(flash.display.GradientType.LINEAR,
                          [Util.color_shift(c, -24), Util.color_shift(c, 24)],
-                         [style.fill_alpha, style.fill_alpha],
+                         [a.style.fill_alpha, a.style.fill_alpha],
                         [0x00, 0xFF], m);
 
-        g.lineTo(xstart, -h/2);
-        g.lineTo(xend - alen, -h/2);
+        g.lineTo(xstart, -a.h/2);
+        g.lineTo(xend - alen, -a.h/2);
         g.lineTo(xend, 0);
-        g.lineTo(xend - alen, h/2);
+        g.lineTo(xend - alen, a.h/2);
 
         g.endFill();
     }
 }
 
 class Dot {
-    static public function draw(t:Dynamic) {
-        var g = t.graphics;
-        var tw = t.pxmax - t.pxmin;
-        var xstart = t.strand == 1 ? 0 : tw;
-        var xend = t.strand == 1 ? tw : 0;
-        var x = xstart;
-        var h = t.h;
+    static public function draw(a:Annotation) {
+        var g = a.graphics;
+        var tw = a.pxmax - a.pxmin;
+        var xstart = a.strand == 1 ? 0 : tw;
+        var xend = a.strand == 1 ? tw : 0;
+        var c = Glyph.get_color(a);
 
-        g.beginFill(t.color, .5);
-        g.drawEllipse(x, -h/2, h, h);
+        g.beginFill(c, .5);
+        g.drawEllipse(xstart, -a.h/2, a.h, a.h);
         g.endFill();
     }
 }
