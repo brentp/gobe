@@ -94,14 +94,14 @@ class Cross {
         var g = a.graphics;
         var c = Glyph.get_color(a);
         var x = (a.pxmax - a.pxmin)/2;
-        
+
         g.beginFill(c, a.style.fill_alpha);
         g.drawRect(x-a.h/2, -a.h/6, a.h, a.h/3);
-        g.endFill(); 
+        g.endFill();
 
         g.beginFill(c, a.style.fill_alpha);
         g.drawRect(x-a.h/6, -a.h/2, a.h/3, a.h);
-        g.endFill(); 
+        g.endFill();
     }
 }
 
@@ -142,7 +142,7 @@ class Square {
 
         g.beginFill(c, a.style.fill_alpha);
         g.drawRoundRect(x-a.h/2, -a.h/2, a.h, a.h, .2*a.h);
-        g.endFill(); 
+        g.endFill();
     }
 }
 
@@ -157,8 +157,8 @@ class Avatar extends Sprite {
         this.y = -a.h/2;
         a.addChild(this);
     }
-    public function new(path:String, onLoaded:Bitmap->Void=null)
-    {
+
+    public function new(path:String, onLoaded:Bitmap->Void=null) {
         super();
         this._loader = new Loader();
         this._loader.load(new URLRequest(path));
@@ -166,12 +166,14 @@ class Avatar extends Sprite {
         this.path = path;
         this.onLoaded = onLoaded;
     }
-    private function onComplete(_)
-    {
+
+    private function onComplete(e:Event) {
         var image = cast(this._loader.content, Bitmap);
         image.smoothing = true;
 
         this.addChild(image);
-        this.onLoaded(image);
+        if (this.onLoaded != null){
+            this.onLoaded(image);
+        }
     }
 }
