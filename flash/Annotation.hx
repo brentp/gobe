@@ -78,7 +78,7 @@ class BaseAnnotation extends Sprite {
     public var id:String; // key for anntations hash.
     public var pxmin:Float;
     public var pxmax:Float;
-    public var strand:Int;
+    public var strand:Int; // -1, 0, or 1
     public var bpmin:Int;
     public var bpmax:Int;
     public var style:Style;
@@ -97,7 +97,7 @@ class BaseAnnotation extends Sprite {
         this.bpmin = Std.parseInt(l[2]);
         this.bpmax = Std.parseInt(l[3]);
         this.ftype = l[4].toLowerCase();
-        this.strand = l.length < 5 || l[5] == "+" ? 1 : -1;
+        this.strand = l[5] == '-' ? -1 : (l[5] == '+' ? 1 : 0);
         this.fname = l.length < 6 ? l[0] : l[6];
         this.addEventListener(Event.ADDED_TO_STAGE, added);
     }
@@ -136,6 +136,7 @@ class Annotation extends BaseAnnotation {
     public override function draw(){
         this.x = pxmin;
         this.y = -this.subtrack.track_height / 2;
+        trace(this + "," + this.y);
         this.h = style.feat_height * this.subtrack.track_height;
         Glyph.draw(this);
     }

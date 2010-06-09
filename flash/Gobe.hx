@@ -275,11 +275,16 @@ class Gobe extends Sprite {
     }
     public static function addPlot(plot:Plot){
         plot.track = Gobe.tracks.get(plot.track_id);
-        var st = plot.track.subtracks.get(plot.strand == 1 ? '+' : '-');
+        var st = plot.track.subtracks.get((plot.strand == 1) ? '+' : ((plot.strand == -1) ? '-' : '0'));
         plot.subtrack = st;
         // NOTE: always putting the plot at the bottom...
         st.addChildAt(plot, 0);
     }
+
+    public static inline function get_strand(a:Annotation):String {
+        return ((a.strand == 1) ? '+' : ((a.strand == -1) ? '-' : '0'));
+    }
+
     private function addAnnotations(arr:Array<Annotation>){
         var a:Annotation;
         arr.sort(function(a:Annotation, b:Annotation):Int {
@@ -287,7 +292,7 @@ class Gobe extends Sprite {
         });
         for(a in arr){
             if(! a.is_hsp){
-                var sub = a.track.subtracks.get(a.strand == 1 ? '+' : '-');
+                var sub = a.track.subtracks.get((a.strand == 1) ? '+' : ((a.strand == -1) ? '-' : '0'));
                 a.subtrack = sub;
                 sub.addChild(a);
             }
@@ -296,7 +301,7 @@ class Gobe extends Sprite {
                 for(edge_id in a.edges){
                     var edge = edges[edge_id];
                     var other:Annotation = edge.a == a ? edge.b : edge.a;
-                    var strand = other.strand == 1 ? '+' : '-';
+                    var strand = ((other.strand == 1) ? '+' : ((other.strand == -1) ? '-' : '0'));
                     var sub = a.track.subtracks.get(strand + other.track.id);
                     a.subtrack = sub;
                     sub.addChild(a);

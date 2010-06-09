@@ -63,10 +63,7 @@ class SubTrack extends Sprite {
         g.moveTo(off, 0);
         g.lineTo(sw - off, 0);
         g.lineStyle(0, 0.0, 0);
-        if(this.track == this.other){
-            g.beginFill(0, 0.1);
-        }
-        else { g.beginFill(0, 0); }
+        g.beginFill(0, 0); // TODO: allow setting track background via css or csv.
         g.moveTo(0, -this.track_height);
         g.lineTo(sw, -this.track_height);
         g.lineTo(sw, 0);
@@ -92,10 +89,24 @@ class AnnoTrack extends SubTrack {
         //minus.x = 19;
         track.subtracks.set('+', plus);
         track.subtracks.set('-', minus);
+        track.subtracks.set('0', this);
         track.addChildAt(this, 0);
 
     }
     public override function draw(){
+        var sw = flash.Lib.current.stage.stageWidth - 1;
+        var off = 3;
+        var g = this.graphics;
+        g.lineStyle(0.5, 0.2);
+        g.moveTo(off, 0);
+        g.lineTo(sw - off, 0);
+        g.lineStyle(0, 0.0, 0);
+        g.beginFill(0, 0.1); // TODO: allow setting track background via css or csv.
+        g.moveTo(0, -this.track_height/2);
+        g.lineTo(sw, -this.track_height/2);
+        g.lineTo(sw, this.track_height/2);
+        g.lineTo(0, this.track_height/2);
+        g.endFill();
     }
 
 }

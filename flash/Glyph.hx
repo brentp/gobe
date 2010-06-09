@@ -50,9 +50,9 @@ class Box {
 
     static public function draw(a:Annotation) {
         var tw = a.pxmax - a.pxmin;
-        var alen = a.style.arrow_len * tw * a.strand;
-        var xstart = a.strand == 1 ? 0 : tw;
-        var xend = a.strand == 1 ? tw : 0;
+        var alen = a.style.arrow_len * tw * (a.strand == 0 ? 1 : a.strand);
+        var xstart = (a.strand != -1) ? 0 : tw;
+        var xend = (a.strand != -1) ? tw : 0;
         var g = a.graphics;
 
         var c = Glyph.get_color(a);
