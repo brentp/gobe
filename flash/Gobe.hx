@@ -269,14 +269,8 @@ class Gobe extends Sprite {
 
             // now initialize the tracks for +/- annotations.
             i -= 1;
-            var plus  = new AnnoTrack(atrack, atrack, remaining/2);
-            var minus = new AnnoTrack(atrack, atrack, remaining/2);
-            plus.y = i * sub_height + remaining / 2;
-            minus.y = plus.y + remaining/ 2;
-            atrack.subtracks.set('+', plus);
-            atrack.subtracks.set('-', minus);
-            atrack.addChildAt(plus, 0);
-            atrack.addChildAt(minus, 0);
+            var at = new AnnoTrack(atrack, remaining);
+            at.y = i * sub_height + remaining / 2;
         }
     }
     public static function addPlot(plot:Plot){
@@ -356,6 +350,7 @@ class Gobe extends Sprite {
             else if (hsps.length != 0) {
                 Gobe.js_warn("non-consecutive hsps");
             }
+            trace(a);
         }
         //var t2 = haxe.Timer.stamp();
         //trace("seconds to reparse, make edges:" + (t2 - t1));

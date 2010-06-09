@@ -78,6 +78,29 @@ class SubTrack extends Sprite {
 }
 
 class AnnoTrack extends SubTrack {
+    public var plus:AnnoSubTrack;
+    public var minus:AnnoSubTrack;
+    public var both:AnnoSubTrack;
+
+    public function new(track:Track, track_height:Float){
+        super(track, track, track_height);
+        plus  = new AnnoSubTrack(track, track, track_height / 2);
+        minus = new AnnoSubTrack(track, track, track_height / 2);
+        addChild(plus);
+        addChild(minus);
+        minus.y = track_height / 2;
+        //minus.x = 19;
+        track.subtracks.set('+', plus);
+        track.subtracks.set('-', minus);
+        track.addChildAt(this, 0);
+
+    }
+    public override function draw(){
+    }
+
+}
+
+class AnnoSubTrack extends SubTrack {
     public function new(track:Track, other:Track, track_height:Float){
         super(track, other, track_height);
     }
@@ -143,6 +166,7 @@ class Track extends Sprite {
     public function clear(){
         this.graphics.clear();
         for(st in this.subtracks.iterator()){
+            if(Type.getClass(st) == AnnoSubTrack){ continue; }
             this.removeChild(st);
         }
         var i = this.numChildren;
