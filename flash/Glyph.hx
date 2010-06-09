@@ -3,6 +3,7 @@ import flash.display.Sprite;
 import flash.display.Bitmap;
 import flash.display.Loader;
 import flash.net.URLRequest;
+import StringTools;
 import HSP;
 
 /*
@@ -15,12 +16,19 @@ class Glyph {
     static public function draw(a:Annotation) {
         // factory method, dispatch draw function based on glyph type
         var glyph = a.style.glyph;
-        switch (glyph) {
-            case "circle": Circle.draw(a);
-            case "cross": Cross.draw(a);
-            case "square": Square.draw(a);
-            case "star": Star.draw(a);
-            default: Box.draw(a);
+        if (StringTools.startsWith(glyph, "avatar")) {
+            var img_src = glyph.split("(\"")[1].split("\")")[0];
+            var avatar = new Avatar(img_src, function(_){trace("loaded");});
+            avatar.draw(a);
+        }
+        else {
+            switch (glyph) {
+                case "circle": Circle.draw(a);
+                case "cross": Cross.draw(a);
+                case "square": Square.draw(a);
+                case "star": Star.draw(a);
+                default: Box.draw(a);
+            }
         }
     }
 
@@ -72,13 +80,11 @@ class Box {
 class Circle {
     static public function draw(a:Annotation) {
         var g = a.graphics;
-        var tw = a.pxmax - a.pxmin;
-        var xstart = a.strand == 1 ? 0 : tw;
-        var xend = a.strand == 1 ? tw : 0;
         var c = Glyph.get_color(a);
+        var x = (a.pxmax - a.pxmin)/2;
 
         g.beginFill(c, a.style.fill_alpha);
-        g.drawEllipse(xstart-a.h/2, -a.h/2, a.h, a.h);
+        g.drawCircle(x, 0, a.h/2);
         g.endFill();
     }
 }
@@ -86,17 +92,15 @@ class Circle {
 class Cross {
     static public function draw(a:Annotation) {
         var g = a.graphics;
-        var tw = a.pxmax - a.pxmin;
-        var xstart = a.strand == 1 ? 0 : tw;
-        var xend = a.strand == 1 ? tw : 0;
         var c = Glyph.get_color(a);
+        var x = (a.pxmax - a.pxmin)/2;
         
         g.beginFill(c, a.style.fill_alpha);
-        g.drawRect(xstart-a.h/2, -a.h/6, a.h, a.h/3);
+        g.drawRect(x-a.h/2, -a.h/6, a.h, a.h/3);
         g.endFill(); 
 
         g.beginFill(c, a.style.fill_alpha);
-        g.drawRect(xstart-a.h/6, -a.h/2, a.h/3, a.h);
+        g.drawRect(x-a.h/6, -a.h/2, a.h/3, a.h);
         g.endFill(); 
     }
 }
@@ -104,12 +108,9 @@ class Cross {
 class Star {
     static public function draw(a:Annotation) {
         var g = a.graphics;
-        var tw = a.pxmax - a.pxmin;
-        var xstart = a.strand == 1 ? 0 : tw;
-        var xend = a.strand == 1 ? tw : 0;
         var c = Glyph.get_color(a);
 
-        var x = xstart; // x-coordinate of center point
+        var x = (a.pxmax - a.pxmin)/2; // x-coordinate of center point
         var y = -a.h/2; // y-coordinate of top of the star
         var r = a.h/2; // radius of the star
 
@@ -119,7 +120,7 @@ class Star {
         r2 = Math.sqrt(r2*r2+Math.pow(Math.cos(phi)*r,2));
 
         g.beginFill(c, a.style.fill_alpha);
-        g.moveTo(x,y+r-r);
+        g.moveTo(x,y);
         g.lineTo(x+Math.sin(0.5*phi)*r2,y+r-Math.cos(0.5*phi)*r2);
         g.lineTo(x+Math.sin(1*phi)*r,y+r-Math.cos(1*phi)*r);
         g.lineTo(x+Math.sin(1.5*phi)*r2,y+r-Math.cos(1.5*phi)*r2);
@@ -129,7 +130,6 @@ class Star {
         g.lineTo(x+Math.sin(3.5*phi)*r2,y+r-Math.cos(3.5*phi)*r2);
         g.lineTo(x+Math.sin(4*phi)*r,y+r-Math.cos(4*phi)*r);
         g.lineTo(x+Math.sin(4.5*phi)*r2,y+r-Math.cos(4.5*phi)*r2);
-        g.lineTo(x,y+r-r);
         g.endFill();
     }
 }
@@ -137,41 +137,41 @@ class Star {
 class Square {
     static public function draw(a:Annotation) {
         var g = a.graphics;
-        var tw = a.pxmax - a.pxmin;
-        var xstart = a.strand == 1 ? 0 : tw;
-        var xend = a.strand == 1 ? tw : 0;
         var c = Glyph.get_color(a);
+        var x = (a.pxmax - a.pxmin)/2;
 
         g.beginFill(c, a.style.fill_alpha);
-        g.drawRoundRect(xstart-a.h/2, -a.h/2, a.h, a.h, .2*a.h);
+        g.drawRoundRect(x-a.h/2, -a.h/2, a.h, a.h, .2*a.h);
         g.endFill(); 
     }
 }
 
-// TODO: glyph: avatar("filename.jpg")
-class Avatar {
-    static public function draw(t:Dynamic) {
-        var img_src = "";
-        var im = new Image(img_src, function(_) {trace('loaded');});
-        im.x = 50;
-        im.y = 50;
-        t.addChild(im);
-    }
-}
-
-// brentp/learnflash
-class Image extends Sprite {
-
-    public var path:String;
-    public var bitmap:Bitmap;
-    public var onLoaded:Bitmap->Void;
+class Avatar extends Sprite {
+    var path:String;
+    var onLoaded:Bitmap->Void;
     private var _loader:Loader;
 
-    public function new(path:String, onLoaded:Bitmap->Void=null){
+    public function draw(a:Annotation) {
+        var x = (a.pxmax - a.pxmin)/2;
+        this.x = x-a.h/2;
+        this.y = -a.h/2;
+        a.addChild(this);
+    }
+    public function new(path:String, onLoaded:Bitmap->Void=null)
+    {
         super();
-        this.path = path;
         this._loader = new Loader();
         this._loader.load(new URLRequest(path));
+        this._loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
+        this.path = path;
         this.onLoaded = onLoaded;
+    }
+    private function onComplete(_)
+    {
+        var image = cast(this._loader.content, Bitmap);
+        image.smoothing = true;
+
+        this.addChild(image);
+        this.onLoaded(image);
     }
 }

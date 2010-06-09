@@ -77,30 +77,24 @@ mRNA {
     z: 2;
 }
 
+PI {
+    glyph: avatar("static/icons/mike.png");
+}
 motif_cross {
     glyph: cross;
     fill_color: #ff0000;
-    fill_alpha: 1.0;
 }
 motif_circle {
     glyph: circle;
     fill_color: #ff9900;
-    fill_alpha: 1.0;
 }
 motif_star {
     glyph: star;
-    fill_color: #00ff00;
-    fill_alpha: 1.0;
+    fill_color: #990066;
 }
 motif_square {
     glyph: square;
     fill_color: #3399cc;
-    fill_alpha: 1.0;
-}
-motif_xshape {
-    glyph: xshape;
-    fill_color: #ffcc33;
-    fill_alpha: 1.0;
 }
 
 exon {
