@@ -22,7 +22,7 @@ import flash.utils.Timer;
 import flash.events.TimerEvent;
 import flash.events.IOErrorEvent;
 import Util;
-import HSP;
+import Annotation;
 import Plot;
 
 

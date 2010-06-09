@@ -1,4 +1,4 @@
-import HSP;
+import Annotation;
 import Gobe;
 import Plot;
 

@@ -4,7 +4,7 @@ import flash.display.Bitmap;
 import flash.display.Loader;
 import flash.net.URLRequest;
 import StringTools;
-import HSP;
+import Annotation;
 
 /*
 extra graphics for Gobe, modeled after GBROWSE <http://gmod.org/wiki/Glyphs_and_Glyph_Options>
