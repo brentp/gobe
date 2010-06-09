@@ -24,6 +24,7 @@ import flash.events.IOErrorEvent;
 import Util;
 import Annotation;
 import Plot;
+import Track;
 
 
 class Gobe extends Sprite {
