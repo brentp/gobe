@@ -44,11 +44,6 @@ HSP {
     z: 20;
 }
 
-start_codon, stop_codon {
-    fill_color: #000000;
-    fill_alpha: 0;
-}
-
 gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno, gene.interruptor {
     glyph: arrow;
     fill_color: #bbbbbb;
@@ -82,9 +77,29 @@ mRNA {
     z: 2;
 }
 
-start_codon {
-    glyph: dot;
+motif_cross {
+    glyph: cross;
     fill_color: #ff0000;
+    fill_alpha: 1.0;
+}
+motif_circle {
+    glyph: circle;
+    fill_color: #ff9900;
+    fill_alpha: 1.0;
+}
+motif_star {
+    glyph: star;
+    fill_color: #00ff00;
+    fill_alpha: 1.0;
+}
+motif_square {
+    glyph: square;
+    fill_color: #3399cc;
+    fill_alpha: 1.0;
+}
+motif_xshape {
+    glyph: xshape;
+    fill_color: #ffcc33;
     fill_alpha: 1.0;
 }
 

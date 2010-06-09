@@ -15,9 +15,13 @@ class Glyph {
     static public function draw(a:Annotation) {
         // factory method, dispatch draw function based on glyph type
         var glyph = a.style.glyph;
-        // TODO: use switch or hash later
-        if (glyph=="generic" || glyph=="arrow") { Box.draw(a); }
-        else if (glyph=="dot") { Dot.draw(a); }
+        switch (glyph) {
+            case "circle": Circle.draw(a);
+            case "cross": Cross.draw(a);
+            case "square": Square.draw(a);
+            case "star": Star.draw(a);
+            default: Box.draw(a);
+        }
     }
 
     public static inline function get_color(a:Annotation):UInt{
@@ -65,7 +69,7 @@ class Box {
     }
 }
 
-class Dot {
+class Circle {
     static public function draw(a:Annotation) {
         var g = a.graphics;
         var tw = a.pxmax - a.pxmin;
@@ -73,9 +77,74 @@ class Dot {
         var xend = a.strand == 1 ? tw : 0;
         var c = Glyph.get_color(a);
 
-        g.beginFill(c, .5);
-        g.drawEllipse(xstart, -a.h/2, a.h, a.h);
+        g.beginFill(c, a.style.fill_alpha);
+        g.drawEllipse(xstart-a.h/2, -a.h/2, a.h, a.h);
         g.endFill();
+    }
+}
+
+class Cross {
+    static public function draw(a:Annotation) {
+        var g = a.graphics;
+        var tw = a.pxmax - a.pxmin;
+        var xstart = a.strand == 1 ? 0 : tw;
+        var xend = a.strand == 1 ? tw : 0;
+        var c = Glyph.get_color(a);
+        
+        g.beginFill(c, a.style.fill_alpha);
+        g.drawRect(xstart-a.h/2, -a.h/6, a.h, a.h/3);
+        g.endFill(); 
+
+        g.beginFill(c, a.style.fill_alpha);
+        g.drawRect(xstart-a.h/6, -a.h/2, a.h/3, a.h);
+        g.endFill(); 
+    }
+}
+
+class Star {
+    static public function draw(a:Annotation) {
+        var g = a.graphics;
+        var tw = a.pxmax - a.pxmin;
+        var xstart = a.strand == 1 ? 0 : tw;
+        var xend = a.strand == 1 ? tw : 0;
+        var c = Glyph.get_color(a);
+
+        var x = xstart; // x-coordinate of center point
+        var y = -a.h/2; // y-coordinate of top of the star
+        var r = a.h/2; // radius of the star
+
+        // code from <http://lionpath.com/haxeflashtutorial/release/library.html>
+        var phi : Float = 2*Math.PI/5; // 2/5 of a circle
+        var r2 : Float = ((Math.cos(phi*1)*r)-r)*((Math.sin(phi*2)*r)-0)/(Math.cos(phi*2)*r-r);
+        r2 = Math.sqrt(r2*r2+Math.pow(Math.cos(phi)*r,2));
+
+        g.beginFill(c, a.style.fill_alpha);
+        g.moveTo(x,y+r-r);
+        g.lineTo(x+Math.sin(0.5*phi)*r2,y+r-Math.cos(0.5*phi)*r2);
+        g.lineTo(x+Math.sin(1*phi)*r,y+r-Math.cos(1*phi)*r);
+        g.lineTo(x+Math.sin(1.5*phi)*r2,y+r-Math.cos(1.5*phi)*r2);
+        g.lineTo(x+Math.sin(2*phi)*r,y+r-Math.cos(2*phi)*r);
+        g.lineTo(x+Math.sin(2.5*phi)*r2,y+r-Math.cos(2.5*phi)*r2);
+        g.lineTo(x+Math.sin(3*phi)*r,y+r-Math.cos(3*phi)*r);
+        g.lineTo(x+Math.sin(3.5*phi)*r2,y+r-Math.cos(3.5*phi)*r2);
+        g.lineTo(x+Math.sin(4*phi)*r,y+r-Math.cos(4*phi)*r);
+        g.lineTo(x+Math.sin(4.5*phi)*r2,y+r-Math.cos(4.5*phi)*r2);
+        g.lineTo(x,y+r-r);
+        g.endFill();
+    }
+}
+
+class Square {
+    static public function draw(a:Annotation) {
+        var g = a.graphics;
+        var tw = a.pxmax - a.pxmin;
+        var xstart = a.strand == 1 ? 0 : tw;
+        var xend = a.strand == 1 ? tw : 0;
+        var c = Glyph.get_color(a);
+
+        g.beginFill(c, a.style.fill_alpha);
+        g.drawRoundRect(xstart-a.h/2, -a.h/2, a.h, a.h, .2*a.h);
+        g.endFill(); 
     }
 }
 
