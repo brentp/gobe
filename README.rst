@@ -6,7 +6,7 @@ Gobe: interactive comparative genomics viewer
 
 interactive, light-weight, customizable, web-based comparative genomics viewer with simple text input format.
 
-:Author: Brent Pedersen (brentp)
+:Authors: Brent Pedersen (brentp), Haibao Tang (tanghaibao)
 :Email: bpederse@gmail.com
 :License: MIT
 
@@ -79,6 +79,17 @@ Note the last 4 will all be drawn in a `Track`_ with id 4. The 5th will be
 drawn in track with id '5' and only the 3rd item is on the - strand. You may
 have thousands of annotations. The ids do not have to be numeric.
 Consecutive `HSP`_'s will be linked with an edge.
+
+Glyphs
+------
+Glyphs can be specified in the .css file as ::
+
+    { glyph: cross; fill_color: #fff000; fill_alpha: 1.0 }
+
+when a row in the annotations file has a type of 'cross', it will then be drawn
+with a glyph that appears as a cross a the specified as the x coordinate specified.
+For glyphs, the xmin, xmax columns will likely be the same, if not, the glyph will
+be rendered in the center of the specified range.
 
 Track
 =====
