@@ -97,6 +97,12 @@ motif_square {
     fill_color: #3399cc;
 }
 
+mask {
+    fill_color: #ff6600;
+    height: 1.0;
+    z: 0;
+}
+
 exon {
     fill_color: #00ff00;
     fill_alpha: 0.6;

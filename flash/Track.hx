@@ -75,7 +75,7 @@ class SubTrack extends Sprite {
 }
 
 class AnnoTrack extends SubTrack {
-    public var plus:AnnoSubTrack;
+    public var plus:AnnoSubTrack; 
     public var minus:AnnoSubTrack;
     public var both:AnnoSubTrack;
 
@@ -83,13 +83,15 @@ class AnnoTrack extends SubTrack {
         super(track, track, track_height);
         plus  = new AnnoSubTrack(track, track, track_height / 2);
         minus = new AnnoSubTrack(track, track, track_height / 2);
+        both = new AnnoSubTrack(track, track, track_height);
         addChild(plus);
         addChild(minus);
-        minus.y = track_height / 2;
+        addChild(both);
+        both.y = minus.y = track_height / 2;
         //minus.x = 19;
         track.subtracks.set('+', plus);
         track.subtracks.set('-', minus);
-        track.subtracks.set('0', this);
+        track.subtracks.set('0', both);
         track.addChildAt(this, 0);
 
     }

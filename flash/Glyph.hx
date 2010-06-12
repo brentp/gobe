@@ -27,6 +27,7 @@ class Glyph {
                 case "cross": Cross.draw(a);
                 case "square": Square.draw(a);
                 case "star": Star.draw(a);
+                case "mask": Mask.draw(a);
                 default: Box.draw(a);
             }
         }
@@ -145,6 +146,20 @@ class Square {
         g.endFill();
     }
 }
+
+
+class Mask {
+    static public function draw(a:Annotation) {
+        var g = a.graphics;
+        var c = Glyph.get_color(a);
+        var tw = a.pxmax - a.pxmin;
+
+        g.beginFill(c, a.style.fill_alpha);
+        g.drawRect(0, -a.h/2, tw, a.h);
+        g.endFill();
+    }
+}
+
 
 class Avatar extends Sprite {
     var path:String;

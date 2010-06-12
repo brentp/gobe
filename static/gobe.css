@@ -99,3 +99,8 @@ five_prime_UTR, three_prime_UTR {
     z: 5;
 }
 
+mask {
+    fill_color: #ff6600;
+    height: 1.0;
+    z: 0;
+}

@@ -2,4 +2,5 @@
 aaa,track1,1259,1467,CDS,+,At2g26540
 ccc,track1,1259,1467,CDS,-,At2g26540
 bbb,track2,21359,24467,CDS,+,At4g16240
-track2,track2,21259,25867,track
+ddd,track2,25001,26001,mask,0,added
+track2,track2,21259,26867,track
