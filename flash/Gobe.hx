@@ -48,13 +48,15 @@ class Gobe extends Sprite {
 
     private var _all:Bool;
     public static var tracks:Hash<Track>;
-    public var annotations:Hash<Annotation>;
+    public static var annotations:Hash<Annotation>;
     public static var plots:Hash<Plot>;
     public static var styles:Hash<Style>; // {'CDS': CDSINFO }
     public static var edges = new Array<Edge>();
 
     public var annotations_url:String;
     public var style_url:String;
+    // HSP track height relative to annotrack.
+    public static var subtrack_height_proportion:Float = 0.9;
 
     public function clearPanelGraphics(e:MouseEvent){
         while(panel.numChildren != 0){ panel.removeChildAt(0); }
@@ -208,23 +210,23 @@ class Gobe extends Sprite {
         });
     }
 
-    private function updateEdgeTracks(a:Annotation, b:Annotation, strength:Float, edge_tracks:Hash<Hash<Int>>){
-        // used in addAnnotation to add annos to edge_tracsk whic
-       // keeps track of unique track pairs.
+    public static function updateEdgeTracks(a:Annotation, b:Annotation, strength:Float, edge_tracks:Hash<Hash<Int>>){
+            // used in addAnnotation to add annos to edge_tracks which
+           // keeps track of unique track pairs.
             var edge = Util.add_edge_line(a, b, strength);
             if (edge == null){ return; }
 
             // so here we tabulate all the unique track pairs...
-            var aid = edge.a.track.id;
-            var bid = edge.b.track.id;
+            var aid = edge.a.track_id;
+            var bid = edge.b.track_id;
 
             // for each edge, need to see the annos.tracks it's associated with...
             if(! edge_tracks.exists(aid)) { edge_tracks.set(aid, new Hash<Int>()); }
             if(! edge_tracks.exists(bid)) { edge_tracks.set(bid, new Hash<Int>()); }
             edge_tracks.get(bid).set(aid, 1);
             edge_tracks.get(aid).set(bid, 1);
-
     }
+
     private function initializeSubTracks(edge_tracks:Hash<Hash<Int>>){
         // so here, it knows all the annotations and edges, so we figure out
         // the subtracks it needs to show the relationships.
@@ -309,9 +311,30 @@ class Gobe extends Sprite {
             }
         }
     }
+
     public function annotationReturn(e:Event){
         handleAnnotationData(e.target.data);
     }
+
+    public static function set_anno_style(a:Annotation){
+            var astyle = styles.get(a.ftype);
+            if (astyle == null && a.is_hsp){
+                astyle = styles.get('hsp');
+            }
+            if(astyle == null){
+                Gobe.js_warn("no style defined for:" + a.ftype);
+                a.style = styles.get('default');
+            }
+            else {
+                a.style = astyle;
+            }
+            if(Gobe.annotations.exists(a.id)) {
+                Gobe.js_warn(a.id + " is not a unique annotation id. overwriting");
+            }
+            Gobe.annotations.set(a.id, a);
+            // we set the edges implicitly based on consecutive hsps.
+    }
+
     public function handleAnnotationData(data:String){
         var t = haxe.Timer.stamp();
         var lines:Array<String> = StringTools.ltrim(data).split("\n");
@@ -321,51 +344,9 @@ class Gobe extends Sprite {
         var hsps = new Array<Annotation>();
         var edge_tracks = new Hash<Hash<Int>>();
 
-        // first get the tracks either implicitly or from feature type == track.
-        var t0 = haxe.Timer.stamp();
-        //trace("seconds to split:" + (t0 - t));
-        var anarr = Util.add_tracks_from_annos(anno_lines);
-        var t1 = haxe.Timer.stamp();
-        //trace("seconds to parse:" + (t1 - t0));
-
-        for(a in anarr){
-            var astyle = styles.get(a.ftype);
-            if (astyle == null && a.is_hsp){
-                astyle = styles.get('hsp');
-            }
-            if(astyle == null){
-                Gobe.js_warn("no style defined for:" + a.ftype);
-                a.style = styles.get('cds');
-            }
-            else {
-                a.style = astyle;
-            }
-            if(annotations.exists(a.id)) {
-                Gobe.js_warn(a.id + " is not a unique annotation id. overwriting");
-            }
-            annotations.set(a.id, a);
-            // we set the edges implicitly based on consecutive hsps.
-            if(a.is_hsp){
-                hsps.push(a);
-                if(hsps.length % 2 == 0){
-                    updateEdgeTracks(hsps[0], hsps[1], 1.0, edge_tracks);
-                    hsps = [];
-                }
-            }
-            else if (hsps.length != 0) {
-                Gobe.js_warn("non-consecutive hsps");
-            }
-            trace(a);
-        }
-        //var t2 = haxe.Timer.stamp();
-        //trace("seconds to reparse, make edges:" + (t2 - t1));
+        var anarr = Util.add_tracks_from_annos(anno_lines, edge_tracks);
         initializeSubTracks(edge_tracks);
-        //var t3 = haxe.Timer.stamp();
-        //trace("seconds to add subtracks:" + (t3 - t2));
         addAnnotations(anarr);
-        //var t4 = haxe.Timer.stamp();
-        //trace("seconds to add annotations:" + (t4 - t3));
-        //trace("seconds tototal:" + (t4 - t));
     }
 
     public function mouseMove(e:MouseEvent){

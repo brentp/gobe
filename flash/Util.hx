@@ -36,15 +36,18 @@ class Util {
         Util.track_colors = a;
     }
 
-    public static function add_tracks_from_annos(anno_lines:Array<Array<String>>):Array<Annotation>{
+
+    public static function add_tracks_from_annos(anno_lines:Array<Array<String>>, edge_tracks:Hash<Hash<Int>>):Array<Annotation>{
         // takes precedence if the limits are set explicitly.
-        // keep track of which tracks have had their bounds set explicitly.
+        // account for which tracks have had their bounds set explicitly.
+        //var edge_tracks = new Hash<Hash<Int>>();
         var explicit_set = new Hash<Int>();
         var anarr = new Array<Annotation>();
         var lims = new Hash<TInfo>();
         var al:Array<String>;
         var nexplicit = 0;
         var ntracks = 0;
+        var hsps = new Array<Annotation>();
         for(al in anno_lines){
             var track_id = al[1];
             var a:Annotation;
@@ -81,12 +84,31 @@ class Util {
                 var a = new Annotation(al);
                 anarr.push(a);
                 ntracks += set_track_info(a, lims, explicit_set);
+                Gobe.set_anno_style(a);
+                // handle hsp stuff.
+                if(a.is_hsp){
+                    hsps.push(a);
+                    if(hsps.length % 2 == 0){
+                        Gobe.updateEdgeTracks(hsps[0], hsps[1], 1.0, edge_tracks);
+                        hsps = [];
+                    }
+                }
+                else if (hsps.length != 0) {
+                    Gobe.js_warn("non-consecutive hsps");
+                }
             }
         }
         var arr:Array<TInfo> = Lambda.array(lims);
+
+        // count the number of subtracks. used in calcing track heights.
+        var nsubtracks:Int = 0;
+        Lambda.iter(edge_tracks, function(hi:Hash<Int>){ nsubtracks += Lambda.count(hi); });
+        nsubtracks *= 2; // for plus, minus strands.
+
         arr.sort(function(a:TInfo, b:TInfo){ return a.order < b.order ? -1 : 1; });
         var ntracks = arr.length;
         var track_height = Std.int(flash.Lib.current.stage.stage.stageHeight / ntracks);
+
         var tracks = new Hash<Track>();
         var k = 0;
         for (t in arr){
