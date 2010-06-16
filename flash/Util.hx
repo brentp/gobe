@@ -32,17 +32,33 @@ class Util {
         flash.Lib.current.addChild(edge);
         return edge;
     }
+
     public static function set_hsp_colors(colors:Array<String>){
         var a = [];
         for(c in colors){ a.push(Util.color_string_to_uint(c)); }
         Util.track_colors = a;
     }
 
+    private static function updateEdgeTracks(a:Annotation, b:Annotation, strength:Float, edge_tracks:Hash<Hash<Int>>){
+            // used in addAnnotation to add annos to edge_tracks which
+           // keeps track of unique track pairs.
+            var edge = Util.add_edge_line(a, b, strength);
+            if (edge == null){ return; }
+
+            // so here we tabulate all the unique track pairs...
+            var aid = edge.a.track_id;
+            var bid = edge.b.track_id;
+
+            // for each edge, need to see the annos.tracks it's associated with...
+            if(! edge_tracks.exists(aid)) { edge_tracks.set(aid, new Hash<Int>()); }
+            if(! edge_tracks.exists(bid)) { edge_tracks.set(bid, new Hash<Int>()); }
+            edge_tracks.get(bid).set(aid, 1);
+            edge_tracks.get(aid).set(bid, 1);
+    }
 
     public static function add_tracks_from_annos(anno_lines:Array<Array<String>>, edge_tracks:Hash<Hash<Int>>):Array<Annotation>{
         // takes precedence if the limits are set explicitly.
         // account for which tracks have had their bounds set explicitly.
-        //var edge_tracks = new Hash<Hash<Int>>();
         var explicit_set = new Hash<Int>();
         var anarr = new Array<Annotation>();
         var lims = new Hash<TInfo>();
@@ -91,7 +107,7 @@ class Util {
                 if(a.is_hsp){
                     hsps.push(a);
                     if(hsps.length % 2 == 0){
-                        Gobe.updateEdgeTracks(hsps[0], hsps[1], 1.0, edge_tracks);
+                        Util.updateEdgeTracks(hsps[0], hsps[1], 1.0, edge_tracks);
                         hsps = [];
                     }
                 }
@@ -103,16 +119,38 @@ class Util {
         var arr:Array<TInfo> = Lambda.array(lims);
 
         // count the number of subtracks. used in calcing track heights.
-        var nsubtracks:Int = 0;
-        Lambda.iter(edge_tracks, function(hi:Hash<Int>){ nsubtracks += Lambda.count(hi); });
-        nsubtracks *= 2; // for plus, minus strands.
+        var subtracks_by_track = new Hash<Int>();
+        var nsubtracks = 0;
+        for(parent_track_id in edge_tracks.keys()){
+            // multiply by 2 to account for plus and minus
+            var nt = 2 * Lambda.count(edge_tracks.get(parent_track_id));
+            subtracks_by_track.set(parent_track_id, nt);
+            nsubtracks += nt;
+        }
+        /* using sympy/sage:
+        H = var('H')     // total movie height
+        nst = var('nst') // number of subtracks.
+        th = var('th')   // track height
+        strat = var('strat') // ratio of subtrack height to track height
+        nt = var('nt')   // number of tracks
+        eqn = H == nst * (strat * th) + nt * th
+        eqn.solve(th)
 
+        [th == H/(nst*strat + nt)]
+        */
+
+        var H = flash.Lib.current.stage.stage.stageHeight;
+        ntracks = arr.length;
+        var th = Std.int(H / (nsubtracks * Gobe.sub_track_height_ratio + ntracks));
+        var sth = (Gobe.sub_track_height_ratio * th);
+        //trace("total:" + H + " th:" + th + " sth:" + sth);
         arr.sort(function(a:TInfo, b:TInfo){ return a.order < b.order ? -1 : 1; });
-        var ntracks = arr.length;
-        var track_height = Std.int(flash.Lib.current.stage.stage.stageHeight / ntracks);
+        Gobe.anno_track_height = Std.int(th);
+        Gobe.sub_track_height = Std.int(sth);
 
         var tracks = new Hash<Track>();
         var k = 0;
+        var h = 0;
         for (t in arr){
             var rng = t.bpmax - t.bpmin;
             var start = t.bpmin;
@@ -122,10 +160,14 @@ class Util {
                 start = Math.round(Math.max(1, Math.round(t.bpmin - rng * 0.05)));
                 end = Math.round(t.bpmax + rng * 0.05);
             }
+            // the track_height accounts for the anno track and the number of subtracks.
+            var track_height = Std.int(th + sth * subtracks_by_track.get(t.id));
+            //trace(t.id + ":" + track_height);
             var t = new Track(t.id, t.name, start, end, track_height);
             t.i = k;
             tracks.set(t.id, t);
-            t.y = k * track_height;
+            t.y = h;
+            h += track_height;
             flash.Lib.current.addChildAt(t, 0);
             k += 1;
         }
@@ -133,6 +175,7 @@ class Util {
         for(a in anarr){ a.track = tracks.get(a.track_id); }
         return anarr;
     }
+
     public static function set_track_info(a:BaseAnnotation, lims:Hash<TInfo>, explicit_set:Hash<Int>):Int{
         var ntracks = 0;
         if(explicit_set.exists(a.track_id)) { return 0; }
@@ -149,6 +192,7 @@ class Util {
         }
         return ntracks;
     }
+
     public static function sorted_keys(keys:Iterator<String>):Array<String>{
         var skeys = new Array<String>();
         for(k in keys){ skeys.push(k); }

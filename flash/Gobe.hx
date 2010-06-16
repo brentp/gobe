@@ -55,8 +55,14 @@ class Gobe extends Sprite {
 
     public var annotations_url:String;
     public var style_url:String;
-    // HSP track height relative to annotrack.
-    public static var subtrack_height_proportion:Float = 0.9;
+    // HSP track height relative to anno_track. note that anno_track is actually 2 tracks,
+    // so this should be 0.5 to make it equal to a single strand. and < 0.5 to make it smaller.
+    public static var sub_track_height_ratio:Float = 0.4;
+
+    // these are set programmatically based on sub_track_height_ratio;
+    public static var anno_track_height:Int;
+    public static var sub_track_height:Int;
+
 
     public function clearPanelGraphics(e:MouseEvent){
         while(panel.numChildren != 0){ panel.removeChildAt(0); }
@@ -211,23 +217,6 @@ class Gobe extends Sprite {
         });
     }
 
-    public static function updateEdgeTracks(a:Annotation, b:Annotation, strength:Float, edge_tracks:Hash<Hash<Int>>){
-            // used in addAnnotation to add annos to edge_tracks which
-           // keeps track of unique track pairs.
-            var edge = Util.add_edge_line(a, b, strength);
-            if (edge == null){ return; }
-
-            // so here we tabulate all the unique track pairs...
-            var aid = edge.a.track_id;
-            var bid = edge.b.track_id;
-
-            // for each edge, need to see the annos.tracks it's associated with...
-            if(! edge_tracks.exists(aid)) { edge_tracks.set(aid, new Hash<Int>()); }
-            if(! edge_tracks.exists(bid)) { edge_tracks.set(bid, new Hash<Int>()); }
-            edge_tracks.get(bid).set(aid, 1);
-            edge_tracks.get(aid).set(bid, 1);
-    }
-
     private function initializeSubTracks(edge_tracks:Hash<Hash<Int>>){
         // so here, it knows all the annotations and edges, so we figure out
         // the subtracks it needs to show the relationships.
@@ -242,8 +231,10 @@ class Gobe extends Sprite {
             var ntracks = btrack_ids.length;
 
             // the height used per HSP row.
-            var sub_height = 0.95 * atrack.track_height / (2 * (ntracks + 1));
-            var remaining = atrack.track_height - (sub_height * 2 * ntracks);
+            // var sub_height = Gobe.subtrack_height_ratio * atrack.track_height; // / (2 * (ntracks + 1));
+            //trace(sub_height);
+            //var remaining = atrack.track_height - (Gobe.sub_height * 2 * ntracks);
+            trace(Gobe.sub_track_height);
             for(bid in btrack_ids){
                 var color_key = aid < bid ? aid + "|" + bid : bid + "|" + aid;
                 // TODO: allow getting this from css.
@@ -251,18 +242,18 @@ class Gobe extends Sprite {
                 var btrack = tracks.get(bid);
                 for(strand in ['+', '-']){
 
-                    var sub = new HSPTrack(atrack, btrack, sub_height);
+                    var sub = new HSPTrack(atrack, btrack, Gobe.sub_track_height);
                     //sub.fill_color = Util.track_colors[btrack.i];
                     sub.fill_color = track_color;
                     atrack.subtracks.set(strand + bid, sub);
                     atrack.addChildAt(sub, 0);
                     if (strand == '+'){
                         // start from top, goes to middle
-                        sub.y = i * sub_height;
+                        sub.y = i * Gobe.sub_track_height;
                     }
                     else {
                         // start from bottom, goes to middle
-                        sub.y = atrack.track_height - (ntracks - i) * sub_height;
+                        sub.y = atrack.track_height - (ntracks - i) * Gobe.sub_track_height;
                     }
                     sub.draw();
                 }
@@ -272,8 +263,9 @@ class Gobe extends Sprite {
 
             // now initialize the tracks for +/- annotations.
             i -= 1;
-            var at = new AnnoTrack(atrack, remaining);
-            at.y = i * sub_height + remaining / 2;
+            var at = new AnnoTrack(atrack, Gobe.anno_track_height);
+            // why does this work? i dont know. 
+            at.y = i * Gobe.sub_track_height + Gobe.anno_track_height / 2;
         }
     }
     public static function addPlot(plot:Plot){

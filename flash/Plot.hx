@@ -135,7 +135,7 @@ class PlotHist extends Plot {
             if(y < ymin) { ymin = y; }
             if(y > ymax) { ymax = y; }
         }
-        trace('hist data return ok');
+        //trace('hist data return ok');
     }
 
     public override function added(e:Event){
@@ -150,6 +150,6 @@ class PlotHist extends Plot {
         for(d in data){
             d.y = (d.yraw - ymin) / rng * h;
         }
-        trace('rescaled hist');
+        //trace('rescaled hist');
     }
 }

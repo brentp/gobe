@@ -136,7 +136,6 @@ class Annotation extends BaseAnnotation {
     public override function draw(){
         this.x = pxmin;
         this.y = -this.subtrack.track_height / 2;
-        trace(this + "," + this.y);
         this.h = style.feat_height * this.subtrack.track_height;
         Glyph.draw(this);
     }

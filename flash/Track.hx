@@ -75,7 +75,7 @@ class SubTrack extends Sprite {
 }
 
 class AnnoTrack extends SubTrack {
-    public var plus:AnnoSubTrack; 
+    public var plus:AnnoSubTrack;
     public var minus:AnnoSubTrack;
     public var both:AnnoSubTrack;
 
