@@ -150,6 +150,7 @@ class Gobe extends Sprite {
 
         stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
         stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
+        stage.addEventListener(MouseEvent.MOUSE_UP, mouseUp);
         flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyPress);
         this.stage_width = flash.Lib.current.stage.stage.stageWidth;
         this.stage_height = flash.Lib.current.stage.stage.stageHeight;
@@ -361,6 +362,9 @@ class Gobe extends Sprite {
         d.graphics.clear();
         d.startx = e.stageX;
         d.starty = e.stageY;
+    }
+    public function mouseUp(e:MouseEvent){
+        this.drag_sprite.graphics.clear();
     }
 
     public function drawEdgesInRect(r:Rectangle){
