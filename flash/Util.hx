@@ -18,8 +18,10 @@ class TInfo {
 }
 
 class Util {
-    public static var track_colors:Array<UInt> = [0xff9900, 0x330000, 0x99cc00, 0x009966, 0x9933cc, 0x3300ff, 0xffcc99];
+    public static var track_colors:Array<UInt> = [0xff9900, 0x330000, 0x99cc00, 0x009966, 0x9933cc, 0x3300ff, 0xffcc99, 0xcccccc, 0x3333dd];
+
     public static function add_edge_line(a:Annotation, b:Annotation, strength:Float):Null<Edge>{
+        // add an edge between a an b.
         if (a == null || b == null){ return null; }
 
         var edge = new Edge(a, b, strength);
