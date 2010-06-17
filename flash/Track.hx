@@ -219,9 +219,10 @@ class Track extends Sprite {
         var sw = flash.Lib.current.stage.stageWidth - 1;
         var px_posns = [0, sw/2, sw];
         var bp_posns = [this.bpmin, Math.round((this.bpmin + this.bpmax)/2), this.bpmax];
+        var precision = Math.round (Math.log(bp_posns[1] - bp_posns[0]) / 2.30258509) + 1;
         for(i in 0 ... 3){
             var t = new MTextField();
-            t.htmlText = (bp_posns[i] + "");
+            t.htmlText = (Util.human_readable(bp_posns[i], precision));
             t.y = mid;
             t.x = px_posns[i];
             t.autoSize         = flash.text.TextFieldAutoSize.LEFT;

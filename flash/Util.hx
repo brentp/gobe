@@ -233,4 +233,12 @@ class Util {
         return r << 16 | g << 8 | b;
 
     }
+
+    public static function human_readable(n:UInt, precision:Int):String {
+        // to hide in-significant digits, we check if can shorten Kb or Mb
+        // however, e.g. if both start and stop are 72Mb, it is not very informative
+        if (precision > 6) return Math.round(n/1000000) + "Mb";
+        if (precision > 3) return Math.round(n/1000) + "Kb";
+        return n + "";
+    }
 }
