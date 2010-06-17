@@ -193,11 +193,9 @@ class AnnoSubTrack extends SubTrack {
 }
 
 class HSPTrack extends SubTrack {
-
     public function new(track:Track, other:Track, track_height:Float){
         super(track, other, track_height);
     }
-
 }
 
 class Track extends Sprite {
@@ -211,6 +209,9 @@ class Track extends Sprite {
     public var track_height:Int;
     // key is id of other track.
     public var subtracks:Hash<SubTrack>;
+
+    public static var border_thickness:Float = 3.5;
+    public static var border_color = 0x333333;
 
     public  var mouse_down:Bool;
     public  var ttf:MTextField;
@@ -229,8 +230,9 @@ class Track extends Sprite {
         //trace("bpmin-bpmax(rng):" + bpmin +"-" + bpmax + "(" + (bpmax - bpmin) + "), bpp:" + this.bpp);
     }
     public inline function set_bpp(){
-        this.bpp = (bpmax - bpmin)/(1.0 * flash.Lib.current.stage.stageWidth);
+        this.bpp = (bpmax - bpmin)/(flash.Lib.current.stage.stageWidth - Track.border_thickness);
     }
+
     public function clear(){
         this.graphics.clear();
         for(st in this.subtracks.iterator()){
@@ -243,14 +245,15 @@ class Track extends Sprite {
         }
         this.subtracks = new Hash<SubTrack>();
     }
+
     public function draw(){
         var g = this.graphics;
         var mid = track_height/2;
         g.clear();
-        var sw = flash.Lib.current.stage.stageWidth - 1;
-        g.lineStyle(3.5, 0.6);
+        var sw = flash.Lib.current.stage.stageWidth;
+        g.lineStyle(Track.border_thickness, Track.border_color);
         // the border around this track.
-        g.drawRoundRect(1, 1, sw - 2, track_height - 2, 22);
+        g.drawRoundRect(Track.border_thickness/2, Track.border_thickness/2, sw - Track.border_thickness, track_height, 22);
 
         // the dotted line in the middle.
         g.lineStyle(1, 0x444444, 0.9, false,
@@ -269,7 +272,7 @@ class Track extends Sprite {
     }
 
     public inline function rw2pix(bp:Int){
-        return (bp - this.bpmin) / this.bpp;
+        return ((bp - this.bpmin) / this.bpp) + Track.border_thickness;
     }
 
 }
