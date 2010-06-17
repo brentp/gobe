@@ -76,7 +76,75 @@ class SubTrack extends Sprite {
 }
 
 class TitleTrack extends SubTrack {
+    public  var title:String;
+    public  var bpmin:Int;
+    public  var bpmax:Int;
+    public  var ttf:MTextField;
+    public function setUpTitleTextField(){
+        this.ttf = new MTextField();
 
+        ttf.htmlText   = '<p>' + this.title + ' (' + 
+                        this.bpmin+'-' + this.bpmax + ')</p>';
+        ttf.y      = y + 3;
+        ttf.x      = 5;
+        ttf.multiline = true;
+
+        ttf.border = true;
+        ttf.borderColor      = 0xcccccc;
+        ttf.opaqueBackground = 0xf4f4f4;
+        ttf.autoSize         = flash.text.TextFieldAutoSize.LEFT;
+        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
+                                    fontFamily: '_sans'});
+
+        this.addChild(ttf);
+        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
+                                    fontFamily: '_sans'});
+    }
+
+    public function setUpTextField(){
+        this.ttf = new MTextField();
+
+        ttf.htmlText   = '<p>' + other.title + '</p>';
+        ttf.multiline = true;
+
+        ttf.border = false;
+        ttf.borderColor      = 0xcccccc;
+        //ttf.opaqueBackground = 0xf4f4f4;
+        ttf.autoSize         = flash.text.TextFieldAutoSize.LEFT;
+        this.addChildAt(ttf, this.numChildren);
+        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize - 2, display: 'inline', fontColor: '0xcccccc',
+                                    fontFamily: '_sans'});
+        ttf.x      = flash.Lib.current.stage.stageWidth - ttf.width - 10;
+        ttf.y      = -track_height; // - ttf.height;
+    }
+
+    public override function draw() {
+        this.draw_ruler();
+    }
+    public function draw_ruler(){
+        var g = this.graphics;
+        var mid = track_height/2;
+        var sw = flash.Lib.current.stage.stageWidth - 1;
+        var px_posns = [0, sw/2, sw];
+        //var bp_posns = [this.bpmin, Math.round((this.bpmin + this.bpmax)/2), this.bpmax];
+        var tw = this.bpmax - this.bpmin;
+        var bp_posns = [0, Math.round(tw/2), tw];
+
+        var precision = Math.round (Math.log(bp_posns[1] - bp_posns[0]) / 2.30258509) + 1;
+        for(i in 0 ... 3){
+            var t = new MTextField();
+            t.htmlText = (Util.human_readable(bp_posns[i], precision));
+            t.y = mid;
+            t.x = px_posns[i];
+            t.autoSize         = flash.text.TextFieldAutoSize.LEFT;
+            t.opaqueBackground = 0xf2f2f2;
+            addChild(t);
+            if(i == 2){ t.x -= (t.width + 4); }
+            if(i == 0){ t.x += 4; }
+            t.y -= 0.60 * t.height;
+        }
+    }
+ 
 }
 
 class AnnoTrack extends SubTrack {
@@ -125,28 +193,11 @@ class AnnoSubTrack extends SubTrack {
 }
 
 class HSPTrack extends SubTrack {
-    public  var ttf:MTextField;
 
     public function new(track:Track, other:Track, track_height:Float){
         super(track, other, track_height);
-        //this.setUpTextField();
     }
-    public function setUpTextField(){
-        this.ttf = new MTextField();
 
-        ttf.htmlText   = '<p>' + other.title + '</p>';
-        ttf.multiline = true;
-
-        ttf.border = false;
-        ttf.borderColor      = 0xcccccc;
-        //ttf.opaqueBackground = 0xf4f4f4;
-        ttf.autoSize         = flash.text.TextFieldAutoSize.LEFT;
-        this.addChildAt(ttf, this.numChildren);
-        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize - 2, display: 'inline', fontColor: '0xcccccc',
-                                    fontFamily: '_sans'});
-        ttf.x      = flash.Lib.current.stage.stageWidth - ttf.width - 10;
-        ttf.y      = -track_height; // - ttf.height;
-    }
 }
 
 class Track extends Sprite {
@@ -173,7 +224,6 @@ class Track extends Sprite {
         this.bpmin = bpmin;
         this.bpmax = bpmax;
         this.mouse_down = false;
-        this.setUpTextField();
         this.set_bpp();
         this.draw();
         //trace("bpmin-bpmax(rng):" + bpmin +"-" + bpmax + "(" + (bpmax - bpmin) + "), bpp:" + this.bpp);
@@ -216,54 +266,10 @@ class Track extends Sprite {
             g.moveTo(dx, mid);
             dx += dash_w;
         }
-        this.draw_ruler();
-    }
-    public function draw_ruler(){
-        var g = this.graphics;
-        var mid = track_height/2;
-        var sw = flash.Lib.current.stage.stageWidth - 1;
-        var px_posns = [0, sw/2, sw];
-        //var bp_posns = [this.bpmin, Math.round((this.bpmin + this.bpmax)/2), this.bpmax];
-        var tw = this.bpmax - this.bpmin;
-        var bp_posns = [0, Math.round(tw/2), tw];
-
-        var precision = Math.round (Math.log(bp_posns[1] - bp_posns[0]) / 2.30258509) + 1;
-        for(i in 0 ... 3){
-            var t = new MTextField();
-            t.htmlText = (Util.human_readable(bp_posns[i], precision));
-            t.y = mid;
-            t.x = px_posns[i];
-            t.autoSize         = flash.text.TextFieldAutoSize.LEFT;
-            t.opaqueBackground = 0xf2f2f2;
-            addChild(t);
-            if(i == 2){ t.x -= (t.width + 4); }
-            if(i == 0){ t.x += 4; }
-            t.y -= 0.60 * t.height;
-        }
     }
 
     public inline function rw2pix(bp:Int){
         return (bp - this.bpmin) / this.bpp;
     }
 
-    public function setUpTextField(){
-        this.ttf = new MTextField();
-
-        ttf.htmlText   = '<p>' + this.title + ' (' + 
-                        this.bpmin+'-' + this.bpmax + ')</p>';
-        ttf.y      = y + 3;
-        ttf.x      = 5;
-        ttf.multiline = true;
-
-        ttf.border = true;
-        ttf.borderColor      = 0xcccccc;
-        ttf.opaqueBackground = 0xf4f4f4;
-        ttf.autoSize         = flash.text.TextFieldAutoSize.LEFT;
-        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
-                                    fontFamily: '_sans'});
-
-        this.addChild(ttf);
-        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
-                                    fontFamily: '_sans'});
-    }
 }
