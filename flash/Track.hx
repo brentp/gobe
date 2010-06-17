@@ -56,13 +56,14 @@ class SubTrack extends Sprite {
     }
 
     public function draw(){
-        /*
         var sw = flash.Lib.current.stage.stageWidth - 1;
         var off = 3;
         var g = this.graphics;
+        /*
         g.lineStyle(0.5, 0.2);
         g.moveTo(off, 0);
         g.lineTo(sw - off, 0);
+        */
         g.lineStyle(0, 0, 0.0);
         g.beginFill(0, 0); // TODO: allow setting track background via css or csv.
         g.moveTo(0, -this.track_height);
@@ -70,8 +71,6 @@ class SubTrack extends Sprite {
         g.lineTo(sw, 0);
         g.lineTo(0, 0);
         g.endFill();
-        */
-
     }
 
 }
