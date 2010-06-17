@@ -18,7 +18,7 @@ class Glyph {
         var glyph = a.style.glyph;
         if (StringTools.startsWith(glyph, "avatar")) {
             var img_src = glyph.split("(\"")[1].split("\")")[0];
-            var avatar = new Avatar(img_src, function(_){trace("loaded");});
+            var avatar = new Avatar(a, img_src);
             avatar.draw(a);
         }
         else {
@@ -162,33 +162,28 @@ class Mask {
 
 
 class Avatar extends Sprite {
-    var path:String;
-    var onLoaded:Bitmap->Void;
+    var feature:Annotation;
     private var _loader:Loader;
+
+    public function new(a:Annotation, path:String) {
+        super();
+        this._loader = new Loader();
+        this._loader.load(new URLRequest(path));
+        this._loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
+        this.feature = a;
+    }
+
+    private function onComplete(e:Event) {
+        var image = cast(this._loader.content, Bitmap);
+        image.smoothing = true;
+        image.width = image.height = this.feature.h;
+        this.addChild(image);
+    }
 
     public function draw(a:Annotation) {
         var x = (a.pxmax - a.pxmin)/2;
         this.x = x-a.h/2;
         this.y = -a.h/2;
         a.addChild(this);
-    }
-
-    public function new(path:String, onLoaded:Bitmap->Void=null) {
-        super();
-        this._loader = new Loader();
-        this._loader.load(new URLRequest(path));
-        this._loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
-        this.path = path;
-        this.onLoaded = onLoaded;
-    }
-
-    private function onComplete(e:Event) {
-        var image = cast(this._loader.content, Bitmap);
-        image.smoothing = true;
-
-        this.addChild(image);
-        if (this.onLoaded != null){
-            this.onLoaded(image);
-        }
     }
 }
