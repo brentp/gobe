@@ -97,9 +97,14 @@ motif_square {
     fill_color: #3399cc;
 }
 
-mask {
-    fill_color: #ff6600;
-    height: 1.0;
+mask_n {
+    fill_color: #ff6600; /* orange */
+    height: 0.95;
+    z: 0;
+}
+mask_repeat {
+    fill_color: #faafbe; /* pink */
+    height: 0.95;
     z: 0;
 }
 

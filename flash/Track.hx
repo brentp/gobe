@@ -56,21 +56,27 @@ class SubTrack extends Sprite {
     }
 
     public function draw(){
+        /*
         var sw = flash.Lib.current.stage.stageWidth - 1;
         var off = 3;
         var g = this.graphics;
         g.lineStyle(0.5, 0.2);
         g.moveTo(off, 0);
         g.lineTo(sw - off, 0);
-        g.lineStyle(0, 0.0, 0);
+        g.lineStyle(0, 0, 0.0);
         g.beginFill(0, 0); // TODO: allow setting track background via css or csv.
         g.moveTo(0, -this.track_height);
         g.lineTo(sw, -this.track_height);
         g.lineTo(sw, 0);
         g.lineTo(0, 0);
         g.endFill();
+        */
 
     }
+
+}
+
+class TitleTrack extends SubTrack {
 
 }
 
@@ -124,7 +130,7 @@ class HSPTrack extends SubTrack {
 
     public function new(track:Track, other:Track, track_height:Float){
         super(track, other, track_height);
-        this.setUpTextField();
+        //this.setUpTextField();
     }
     public function setUpTextField(){
         this.ttf = new MTextField();
@@ -201,8 +207,8 @@ class Track extends Sprite {
         g.lineStyle(1, 0x444444, 0.9, false,
                     flash.display.LineScaleMode.NORMAL,
                     flash.display.CapsStyle.ROUND);
-        var dash_w = 20;
-        var gap_w = 10;
+        var dash_w = 4;
+        var gap_w = 2;
         g.moveTo(gap_w / 2, mid);
         var dx = dash_w;
         while(dx < sw + dash_w) {
@@ -218,7 +224,10 @@ class Track extends Sprite {
         var mid = track_height/2;
         var sw = flash.Lib.current.stage.stageWidth - 1;
         var px_posns = [0, sw/2, sw];
-        var bp_posns = [this.bpmin, Math.round((this.bpmin + this.bpmax)/2), this.bpmax];
+        //var bp_posns = [this.bpmin, Math.round((this.bpmin + this.bpmax)/2), this.bpmax];
+        var tw = this.bpmax - this.bpmin;
+        var bp_posns = [0, Math.round(tw/2), tw];
+
         var precision = Math.round (Math.log(bp_posns[1] - bp_posns[0]) / 2.30258509) + 1;
         for(i in 0 ... 3){
             var t = new MTextField();
@@ -241,7 +250,8 @@ class Track extends Sprite {
     public function setUpTextField(){
         this.ttf = new MTextField();
 
-        ttf.htmlText   = '<p>' + this.title + '</p>';
+        ttf.htmlText   = '<p>' + this.title + ' (' + 
+                        this.bpmin+'-' + this.bpmax + ')</p>';
         ttf.y      = y + 3;
         ttf.x      = 5;
         ttf.multiline = true;
