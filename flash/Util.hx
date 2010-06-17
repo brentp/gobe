@@ -141,7 +141,8 @@ class Util {
 
         var H = flash.Lib.current.stage.stage.stageHeight;
         ntracks = arr.length;
-        var th = Std.int(H / (nsubtracks * Gobe.sub_track_height_ratio + ntracks));
+        // this is the height of an anno_track. it's the total height minus the space for the info tracks.
+        var th = Std.int((H - ntracks * Gobe.info_track_height) / (nsubtracks * Gobe.sub_track_height_ratio + ntracks));
         var sth = (Gobe.sub_track_height_ratio * th);
         //trace("total:" + H + " th:" + th + " sth:" + sth);
         arr.sort(function(a:TInfo, b:TInfo){ return a.order < b.order ? -1 : 1; });
@@ -161,7 +162,7 @@ class Util {
                 end = Math.round(t.bpmax + rng * 0.05);
             }
             // the track_height accounts for the anno track and the number of subtracks.
-            var track_height = Std.int(th + sth * subtracks_by_track.get(t.id));
+            var track_height = Std.int(th + sth * subtracks_by_track.get(t.id) + Gobe.info_track_height);
             //trace(t.id + ":" + track_height);
             var t = new Track(t.id, t.name, start, end, track_height);
             t.i = k;
