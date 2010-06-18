@@ -14,9 +14,6 @@
     </script>
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="static/gobe.js"></script>
-<style>
-#querybox, #flashcontent { width:1010px; height 700px; }
-</style>
 </head>
 <body>
     <h1>Gobe examples</h1>
@@ -27,7 +24,7 @@
     <a href="index.html?annotations=data/glyph.txt&h=260&style=static/glyph.css">glyphs</a>
 
     <button class="submit" onclick="Gobe.clear()">Clear</button><br/>
-<div id="flashcontent" name="flashcontent" style="z-index=0;position:absolute">
+<div id="flashcontent" name="flashcontent">
     <strong>You need to install <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> (or turn it back on in your browser settings).</strong>
 </div>
 <div id="querybox"></div>
@@ -39,9 +36,10 @@
 <script type="text/javascript">
         // <![CDATA[
         var get = swfobject.getQueryParamValue;
-        var width = get('w') || "1010";
-        var height = get('h') || "700";
+        var width = get('w') || 1010;
+        var height = get('h') || 700;
         var params = {'bgcolor': '#FFFFFF'};
+        jQuery('#flashcontent').css({width: width});
         // only var is config=/web/path/to/config.js
         var flashVars = {
             'annotations'   : get('annotations') || 'data/annotations.txt',
@@ -49,8 +47,7 @@
         };
         swfobject.embedSWF("flash/gobe.swf?d=" + Math.random(), "flashcontent", width, height, "9.0.0"
                 , "static/swfobject/expresssinstall.swf", flashVars, params, {}
-                , function(){ Gobe.swf = Gobe.get_movie(); });
-
+                , function(){ Gobe.swf = Gobe.get_movie(); }); 
         // ]]>
     </script>
 </body>
