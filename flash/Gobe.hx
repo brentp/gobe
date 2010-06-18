@@ -198,7 +198,7 @@ class Gobe extends Sprite {
             if(e.keyCode == 40 && Gobe.fontSize < 8){ return; }
             Gobe.fontSize += (e.keyCode == 38 ? 1 : - 1);
             for(k in tracks.keys()){
-                tracks.get(k).info_track.ttf.styleSheet.setStyle('p', {fontSize:Gobe.fontSize});
+                tracks.get(k).anno_track.ttf.styleSheet.setStyle('p', {fontSize:Gobe.fontSize});
             }
         }
     }

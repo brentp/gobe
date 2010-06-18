@@ -14,5 +14,10 @@ class Options {
     public static var optimal_ticks:Int = 12;
 
 
+    // color of the annotrack background.
+    //public static var anno_track_background_color:UInt = 0xdcdcdc;
+    public static var anno_track_background_color:UInt = 0xf0f0d7;
+    //public static var anno_track_background_color:UInt = 0x000000;
+
 
 }

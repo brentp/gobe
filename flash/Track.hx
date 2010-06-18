@@ -81,35 +81,12 @@ class SubTrack extends Sprite {
 }
 
 class InfoTrack extends Sprite {
-    public var ttf:MTextField;
     public var track:Track;
     public function new(track:Track){
         super();
         this.track = track;
         this.draw();
-        this.setUpTitleTextField();
     }
-
-    public function setUpTitleTextField(){
-        this.ttf = new MTextField();
-
-        ttf.htmlText   = '<p>' + track.title + '</p>';
-        ttf.y      = y + 4;
-        ttf.x      = 80;
-        ttf.multiline = true;
-
-        ttf.border = true;
-        ttf.borderColor      = 0xcccccc;
-        ttf.opaqueBackground = 0xf4f4f4;
-        ttf.autoSize         = flash.text.TextFieldAutoSize.LEFT;
-        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
-                                    fontFamily: '_sans'});
-
-        this.addChild(ttf);
-        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
-                                    fontFamily: '_sans'});
-    }
-
 
     public function draw() {
         this.draw_ruler();
@@ -176,9 +153,11 @@ class AnnoTrack extends SubTrack {
     public var plus:AnnoSubTrack;
     public var minus:AnnoSubTrack;
     public var both:AnnoSubTrack;
+    public var ttf:MTextField;
 
     public function new(track:Track, track_height:Float){
         super(track, track, track_height);
+        track.anno_track = this;
         plus  = new AnnoSubTrack(track, track_height / 2);
         minus = new AnnoSubTrack(track, track_height / 2);
         both = new AnnoSubTrack(track,  track_height);
@@ -191,18 +170,39 @@ class AnnoTrack extends SubTrack {
         track.subtracks.set('-', minus);
         track.subtracks.set('0', both);
         track.addChildAt(this, 0);
+        this.setUpTitleTextField();
 
     }
+
+    public function setUpTitleTextField(){
+        this.ttf = new MTextField();
+
+        ttf.htmlText   = '<p>' + track.title + '</p>';
+        ttf.y      = -both.y;
+        ttf.x      = 6;
+
+        ttf.border = true;
+        ttf.borderColor      = 0xcccccc;
+        ttf.opaqueBackground = 0xf4f4f4;
+        ttf.autoSize         = flash.text.TextFieldAutoSize.LEFT;
+        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
+                                    fontFamily: '_sans'});
+
+        this.addChild(ttf);
+        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
+                                    fontFamily: '_sans'});
+    }
+
     public override function draw(){
-        var sw = flash.Lib.current.stage.stageWidth - 1;
+        var sw = flash.Lib.current.stage.stageWidth - Track.border_thickness - 1;
         var off = 3;
         var g = this.graphics;
         g.lineStyle(0, 0.0, 0);
-        g.beginFill(0, 0.1); // TODO: allow setting track background via css or csv.
-        g.moveTo(0, -this.track_height/2);
+        g.beginFill(Options.anno_track_background_color); // TODO: allow setting track background via css or csv.
+        g.moveTo(Track.border_thickness, -this.track_height/2);
         g.lineTo(sw, -this.track_height/2);
         g.lineTo(sw, this.track_height/2);
-        g.lineTo(0, this.track_height/2);
+        g.lineTo(Track.border_thickness, this.track_height/2);
         g.endFill();
 
         var mid = 0;
@@ -278,6 +278,7 @@ class Track extends Sprite {
     public  var bpp:Float;
     public var track_height:Int;
     public var info_track:InfoTrack;
+    public var anno_track:AnnoTrack;
     // key is id of other track.
     public var subtracks:Hash<SubTrack>;
 
