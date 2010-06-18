@@ -59,11 +59,7 @@ class SubTrack extends Sprite {
         var sw = flash.Lib.current.stage.stageWidth - 1;
         var off = 3;
         var g = this.graphics;
-        /*
-        g.lineStyle(0.5, 0.2);
-        g.moveTo(off, 0);
-        g.lineTo(sw - off, 0);
-        */
+
         g.lineStyle(0, 0, 0.0);
         g.beginFill(0, 0); // TODO: allow setting track background via css or csv.
         g.moveTo(0, -this.track_height);
@@ -109,6 +105,8 @@ class InfoTrack extends Sprite {
     public function draw() {
         this.draw_ruler();
         var g = this.graphics;
+        var height = Gobe.info_track_height;
+        var border = Track.border_thickness / 2;
         /*
         g.moveTo(0, 0);
         g.beginFill(0, 0.1); 
@@ -119,33 +117,49 @@ class InfoTrack extends Sprite {
         g.lineTo(0, 0);
         g.endFill();
         */
-        g.lineStyle(1, 0);
-        g.moveTo(Track.border_thickness/2, Gobe.info_track_height - Track.border_thickness / 2);
-        g.lineTo(flash.Lib.current.stage.stageWidth, Gobe.info_track_height - Track.border_thickness / 2);
+        g.lineStyle(border, 0);
+        g.moveTo(border, height - border);
+        g.lineTo(flash.Lib.current.stage.stageWidth, height - border);
     }
 
     public function draw_ruler(){
         var g = this.graphics;
-        var ymid = Track.border_thickness;// + Gobe.info_track_height/2;
+        var ymid = Track.border_thickness;
+
+        var height = Gobe.info_track_height / 2;
+        var border = Track.border_thickness / 2;
         var sw = flash.Lib.current.stage.stageWidth;
-        var px_posns = [Track.border_thickness / 2, sw/2, sw - Track.border_thickness];
-
         var tw = track.bpmax - track.bpmin;
-        var bp_posns = [0, Math.round(tw/2), tw];
+        var baseline_lw = 2;
+        var major_tick_lw = 2;
+        var minor_tick_lw = 1;
 
-        var precision = Math.round (Math.log(bp_posns[1] - bp_posns[0]) / 2.30258509) + 1;
-        for(i in 0 ... 3){
+        // baseline
+        g.lineStyle(baseline_lw, 0x0000ff, .2);
+        g.moveTo(border, height - border);
+        g.lineTo(flash.Lib.current.stage.stageWidth, height - border);
+
+        var stride = Util.autoscale(tw);
+        // major ticks
+        var xpos = stride;
+        var xpos_px:Float;
+        while (xpos < tw) {
+            xpos_px = border + xpos * (sw - 2*border) / tw; 
+            g.lineStyle(major_tick_lw, 0x0000ff);
+            g.moveTo(xpos_px, .4*height);
+            g.lineTo(xpos_px, 1.4*height);
+            // tick labels
             var t = new MTextField();
-            t.htmlText = (Util.human_readable(bp_posns[i], precision));
+            t.htmlText = (Util.human_readable(xpos));
             t.y = ymid;
-            t.x = px_posns[i];
-            t.autoSize         = flash.text.TextFieldAutoSize.LEFT;
-            t.opaqueBackground = 0xf2f2f2;
+            t.x = xpos_px;
+            t.autoSize = flash.text.TextFieldAutoSize.LEFT;
             addChild(t);
-            if(i == 2){ t.x -= (t.width + Track.border_thickness); }
-            if(i == 0){ t.x += Track.border_thickness; }
-            //t.y -= 0.60 * t.height;
+
+            xpos += stride;
         }
+
+        // minor ticks
     }
 }
 

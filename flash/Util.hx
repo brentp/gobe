@@ -235,10 +235,46 @@ class Util {
 
     }
 
-    public static function human_readable(n:UInt, precision:Int):String {
+    public static function human_readable(n:UInt):String {
         // to hide in-significant digits, we check if can shorten Kb or Mb
-        if (precision > 6) return Math.round(n/1000000) + "M";
-        if (precision > 3) return Math.round(n/1000) + "K";
-        return n + "";
+        var sn = Std.string(n);
+        if (StringTools.endsWith(sn, "000000")) return sn.substr(0, sn.length-6) + "M";
+        if (StringTools.endsWith(sn, "000")) return sn.substr(0, sn.length-3) + "K";
+        return sn;
     }
+    
+    public static function autoscale(bp_len:UInt):Int {
+        // used by the ruler graphics to determine an array of tick locs in bp
+        // the algorithm used here attempts to make the array close to 'optimal' size
+        var optimal_ticks:Int = 20;
+        var stride:Int = 1;
+
+        // scale `bp_len` to range [0, 100]
+        var slen = Std.string(bp_len);
+        var tlen = slen.charAt(0);
+        if (slen.length > 1) {
+            tlen += slen.charAt(1);
+        }
+        var precision = slen.length - 2; // how many zeros we need to pad?
+        var bp_len_scaled = Std.parseInt(tlen);
+        
+        // stride length 1, 2, 5 -- pick the stride with the number of ticks close to optimal 
+        var best_stride = 1;
+        var best_tick_diff = optimal_ticks * 1.;
+        for (stride in [1, 2, 5]) {
+            var tick_diff = Math.abs(bp_len_scaled / stride - optimal_ticks);
+            if (tick_diff < best_tick_diff) {
+                best_stride = stride;
+                best_tick_diff = tick_diff;
+            }
+        }
+
+        while (precision > 0) {
+            best_stride*=10;
+            precision-=1;
+        }
+
+        return best_stride;
+    }
+
 }
