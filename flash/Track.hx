@@ -20,6 +20,15 @@ class SubTrack extends Sprite {
         this.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 
     }
+
+    public override function toString(){
+        var s = "SubTrack(" + this.track.title;
+        if(this.track != this.other){
+            s += ", " + this.other.title;
+        }
+        return s + ")";
+    }
+
     public function clear(){
         var i = this.numChildren;
         while(i-- > 0){
@@ -170,12 +179,12 @@ class AnnoTrack extends SubTrack {
 
     public function new(track:Track, track_height:Float){
         super(track, track, track_height);
-        plus  = new AnnoSubTrack(track, track, track_height / 2);
-        minus = new AnnoSubTrack(track, track, track_height / 2);
-        both = new AnnoSubTrack(track, track, track_height);
+        plus  = new AnnoSubTrack(track, track_height / 2);
+        minus = new AnnoSubTrack(track, track_height / 2);
+        both = new AnnoSubTrack(track,  track_height);
+        addChild(both);
         addChild(plus);
         addChild(minus);
-        addChild(both);
         both.y = minus.y = track_height / 2;
         //minus.x = 19;
         track.subtracks.set('+', plus);
@@ -212,12 +221,27 @@ class AnnoTrack extends SubTrack {
             dx += dash_w;
         }
     }
+    public override function onClick(e:MouseEvent){
+        /* since events dont get propagated to the both subtrack, here we
+        do it manually, checking if each feature in the both subtrack contains
+        the click.
+        */
+        super.onClick(e);
+        var n:Int = both.numChildren;
+        var i:Int;
+        for(i in 0 ... n){
+            var a_sprite = both.getChildAt(i);
+            if(a_sprite.hitTestPoint(e.stageX, e.stageY)){
+                cast(a_sprite, Annotation).onClick(e);
+            }
+        }
+    }
 
 }
 
 class AnnoSubTrack extends SubTrack {
-    public function new(track:Track, other:Track, track_height:Float){
-        super(track, other, track_height);
+    public function new(track:Track, track_height:Float){
+        super(track, track, track_height);
     }
 }
 
@@ -262,6 +286,9 @@ class Track extends Sprite {
 
     public  var mouse_down:Bool;
     //public  var ttf:MTextField;
+    public override function toString(){
+        return "Track(" + this.id + ", " + this.title + ")";
+    }
 
     public function new(id:String, title:String, bpmin:Int, bpmax:Int, track_height:Int){
         super();
