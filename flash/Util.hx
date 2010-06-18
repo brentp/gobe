@@ -142,8 +142,8 @@ class Util {
         var H = flash.Lib.current.stage.stage.stageHeight;
         ntracks = arr.length;
         // this is the height of an anno_track. it's the total height minus the space for the info tracks.
-        var th = Std.int((H - ntracks * Gobe.info_track_height) / (nsubtracks * Gobe.sub_track_height_ratio + ntracks));
-        var sth = (Gobe.sub_track_height_ratio * th);
+        var th = Std.int((H - ntracks * Options.info_track_height) / (nsubtracks * Options.sub_track_height_ratio + ntracks));
+        var sth = (Options.sub_track_height_ratio * th);
         //trace("total:" + H + " th:" + th + " sth:" + sth);
         arr.sort(function(a:TInfo, b:TInfo){ return a.order < b.order ? -1 : 1; });
         Gobe.anno_track_height = Std.int(th);
@@ -162,7 +162,7 @@ class Util {
                 end = Math.round(t.bpmax + rng * 0.05);
             }
             // the track_height accounts for the anno track and the number of subtracks.
-            var track_height = Std.int(th + sth * subtracks_by_track.get(t.id) + Gobe.info_track_height);
+            var track_height = Std.int(th + sth * subtracks_by_track.get(t.id) + Options.info_track_height);
             //trace(t.id + ":" + track_height);
             var t = new Track(t.id, t.name, start, end, track_height);
             t.i = k;
@@ -244,9 +244,6 @@ class Util {
     }
     
     public static function autoscale(bp_len:UInt):Int {
-        // used by the ruler graphics to determine an array of tick locs in bp
-        // the algorithm used here attempts to make the array close to 'optimal' size
-        var optimal_ticks:Int = 20;
         var stride:Int = 1;
 
         // scale `bp_len` to range [0, 100]
@@ -260,9 +257,9 @@ class Util {
         
         // stride length 1, 2, 5 -- pick the stride with the number of ticks close to optimal 
         var best_stride = 1;
-        var best_tick_diff = optimal_ticks * 1.;
+        var best_tick_diff = Options.optimal_ticks * 1.;
         for (stride in [1, 2, 5]) {
-            var tick_diff = Math.abs(bp_len_scaled / stride - optimal_ticks);
+            var tick_diff = Math.abs(bp_len_scaled / stride - Options.optimal_ticks);
             if (tick_diff < best_tick_diff) {
                 best_stride = stride;
                 best_tick_diff = tick_diff;

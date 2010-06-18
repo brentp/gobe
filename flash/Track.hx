@@ -114,7 +114,7 @@ class InfoTrack extends Sprite {
     public function draw() {
         this.draw_ruler();
         var g = this.graphics;
-        var height = Gobe.info_track_height;
+        var height = Options.info_track_height;
         var border = Track.border_thickness / 2;
         /*
         g.moveTo(0, 0);
@@ -135,7 +135,7 @@ class InfoTrack extends Sprite {
         var g = this.graphics;
         var ymid = Track.border_thickness;
 
-        var height = Gobe.info_track_height / 2;
+        var height = Options.info_track_height / 2;
         var border = Track.border_thickness / 2;
         var sw = flash.Lib.current.stage.stageWidth;
         var tw = track.bpmax - track.bpmin;

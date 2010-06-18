@@ -56,15 +56,6 @@ class Gobe extends Sprite {
     public var annotations_url:String;
     public var style_url:String;
 
-    // height in pixels of info/title track. dont use proprotion because it
-    // must have some minimum height regardless of the height of the movie.
-    public static var info_track_height:Float = 28;
-
-
-    // HSP track height relative to anno_track. note that anno_track is actually 2 tracks,
-    // so this should be 0.5 to make it equal to a single strand. and < 0.5 to make it smaller.
-    public static var sub_track_height_ratio:Float = 0.4;
-
     // these are set programmatically based on sub_track_height_ratio;
     public static var anno_track_height:Int;
     public static var sub_track_height:Int;
@@ -250,7 +241,7 @@ class Gobe extends Sprite {
                     atrack.addChildAt(sub, 0);
                     if (strand == '+'){
                         // start from top, goes to middle
-                        sub.y = Gobe.info_track_height + i * Gobe.sub_track_height;
+                        sub.y = Options.info_track_height + i * Gobe.sub_track_height;
                     }
                     else {
                         // start from bottom, goes to middle
@@ -265,8 +256,8 @@ class Gobe extends Sprite {
             // now initialize the tracks for +/- annotations.
             i -= 1;
             var at = new AnnoTrack(atrack, Gobe.anno_track_height);
-            // why does this work? i dont know. 
-            at.y = Gobe.info_track_height + i * Gobe.sub_track_height + Gobe.anno_track_height / 2;
+            // why does this work? i dont know.
+            at.y = Options.info_track_height + i * Gobe.sub_track_height + Gobe.anno_track_height / 2;
         }
     }
     public static function addPlot(plot:Plot){
