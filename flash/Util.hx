@@ -127,25 +127,19 @@ class Util {
             subtracks_by_track.set(parent_track_id, nt);
             nsubtracks += nt;
         }
-        /* using sympy/sage:
-        H = var('H')     // total movie height
-        nst = var('nst') // number of subtracks.
-        th = var('th')   // track height
-        strat = var('strat') // ratio of subtrack height to track height
-        nt = var('nt')   // number of tracks
-        eqn = H == nst * (strat * th) + nt * th
-        eqn.solve(th)
-
-        [th == H/(nst*strat + nt)]
-        */
 
         var H = flash.Lib.current.stage.stage.stageHeight;
         ntracks = arr.length;
         // this is the height of an anno_track. it's the total height minus the space for the info tracks.
         var th = Std.int((H - ntracks * Options.info_track_height) / (nsubtracks * Options.sub_track_height_ratio + ntracks));
         var sth = (Options.sub_track_height_ratio * th);
-        //trace("total:" + H + " th:" + th + " sth:" + sth);
-        arr.sort(function(a:TInfo, b:TInfo){ return a.order < b.order ? -1 : 1; });
+        // if the track was set explicitly, go by order, otherwise, go by track_id.
+        arr.sort(function(a:TInfo, b:TInfo){ 
+                if (a.order == b.order){
+                    return a.id < b.id ? -1 : 1;
+                }
+                return a.order < b.order ? -1 : 1;
+            });
         Gobe.anno_track_height = Std.int(th);
         Gobe.sub_track_height = Std.int(sth);
 
