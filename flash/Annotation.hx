@@ -162,8 +162,10 @@ class Style {
     public var arrow_len:Float;
     public var feat_height:Float; // in pct;
     public var zindex:Int;
+    public var style_object:Dynamic;
 
     public function new(ftype:String, style_o:Dynamic){
+        this.style_object = style_o;
         this.ftype = ftype.toLowerCase();
         this.glyph = style_o.glyph ? style_o.glyph: "generic";
         this.fill_color = Util.color_string_to_uint(style_o.fill_color);

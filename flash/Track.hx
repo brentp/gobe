@@ -189,8 +189,6 @@ class AnnoTrack extends SubTrack {
                                     fontFamily: '_sans'});
 
         this.addChild(ttf);
-        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
-                                    fontFamily: '_sans'});
     }
 
     public override function draw(){

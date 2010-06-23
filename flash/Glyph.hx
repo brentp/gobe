@@ -5,6 +5,7 @@ import flash.display.Loader;
 import flash.net.URLRequest;
 import StringTools;
 import Annotation;
+import Gobe;
 
 /*
 extra graphics for Gobe, modeled after GBROWSE <http://gmod.org/wiki/Glyphs_and_Glyph_Options>
@@ -28,6 +29,7 @@ class Glyph {
                 case "square": Square.draw(a);
                 case "star": Star.draw(a);
                 case "mask": Mask.draw(a);
+                case "text_glyph": TextGlyph.draw(a);
                 default: Box.draw(a);
             }
         }
@@ -147,6 +149,24 @@ class Square {
     }
 }
 
+class TextGlyph extends Sprite {
+    public static function draw(a:Annotation){
+        var t = new MTextField();
+        a.addChild(t);
+        t.htmlText = "<p>" + a.fname + "</p>";
+        //t.y = -a.h/2;
+        t.autoSize = flash.text.TextFieldAutoSize.LEFT;
+        // start at the left edge.
+        //t.x = -t.width;
+        t.multiline = false;
+        var s = a.style;
+        var color = s.style_object.color ? s.style_object.color : "#" + StringTools.hex(s.line_color);
+        var fw = s.style_object.fontWeight ? s.style_object.fontWeight : 'normal';
+        var fs = s.style_object.fontSize ? Std.parseInt(s.style_object.fontSize) : Gobe.fontSize;
+        t.styleSheet.setStyle('p', {fontSize: fs, display: 'inline', color: color, fontWeight: fw});
+        t.y -= t.height / 2;
+    }
+}
 
 class Mask {
     static public function draw(a:Annotation) {
@@ -187,3 +207,4 @@ class Avatar extends Sprite {
         a.addChild(this);
     }
 }
+
