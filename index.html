@@ -28,6 +28,7 @@
     <strong>You need to install <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> (or turn it back on in your browser settings).</strong>
 </div>
 <div id="querybox"></div>
+<div id="dialog" title="dialog"></div>
 <ul>
     <li>click a gray HSP to see its pair.</li>
     <li>shift-click in a track to draw lines to all HSPs.</li>
@@ -38,7 +39,7 @@
         var get = swfobject.getQueryParamValue;
         var width = get('w') || 1010;
         var height = get('h') || 700;
-        var params = {'bgcolor': '#FFFFFF'};
+        var params = {'bgcolor': '#FFFFFF', 'wmode': 'opaque'};
         jQuery('#flashcontent').css({width: width});
         // only var is config=/web/path/to/config.js
         var flashVars = {

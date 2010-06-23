@@ -3,6 +3,10 @@ var Gobe = {
     },
     'onclick': function(args){
         console.log(args);
+        var text = "<b>Type:</b>" + args[2] + "<br />";
+        text += "<b>Start:</b>" + args[3] + "<br />";
+        text += "<b>Stop:</b>" + args[4] + "<br />";
+        $('#dialog').html(text).dialog({title: args[1]});
     },
     'warn': function(msg){
         console.error("Flash msg:" + msg);

@@ -1,4 +1,8 @@
-SRC=Gobe.hx Track.hx Glyph.hx Util.hx Plot.hx
+MOVIE=gobe.swf
+SRC=Gobe.hx Track.hx Glyph.hx Util.hx Plot.hx Options.hx
 
-gobe.swf: gobe.hxml ${SRC}
+${MOVIE}: gobe.hxml ${SRC}
 	haxe $< 
+
+clean:
+	rm -f ${MOVIE} 
