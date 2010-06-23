@@ -7,7 +7,7 @@ default {
     z: 12;
 }
 
-sorghum_brachy_cns {
+sorghum_brachy_cns, cns_brachy_v1_sorghum_v1.4 {
     fill_color: #ff0000;
     fill_alpha: 0.7;
     line_width: 0.0;
@@ -16,7 +16,7 @@ sorghum_brachy_cns {
     z: 21;
 }
 
-sorghum_rice_cns, rice_rice_cns {
+sorghum_rice_cns, rice_rice_cns, cns_rice_v6_sorghum_v1.4 {
     fill_color: #0000ff;
     fill_alpha: 0.9;
     line_width: 0.0;
@@ -70,6 +70,15 @@ gene.localdup {
    line_width: 0.0;
    z: 20;
 }
+
+snrna {
+    fill_color: #0000ff;
+    line_color: #0000ff;
+    height: 0.8;
+    z:20;
+    line_width: 1.0;
+}
+
 
 mRNA {
     fill_color: #00aa00;
