@@ -136,7 +136,7 @@ class Gobe extends Sprite {
         this.drag_sprite = new DragSprite();
         this.wedge_alpha = 0.3;
         this.annotations_url = p.annotations;
-        this.style_url = p.style;
+        this.style_url = Reflect.field(p, 'style') ? p.style : p.default_style ;
 
         panel = new Sprite();
         addChild(panel);
@@ -157,7 +157,11 @@ class Gobe extends Sprite {
         flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyPress);
         this.stage_width = flash.Lib.current.stage.stage.stageWidth;
         this.stage_height = flash.Lib.current.stage.stage.stageHeight;
-        geturl(this.style_url, styleReturn);
+        feature_stylesheet = new StyleSheet();
+
+        // loads style 2x if default style is same as style...
+        Reflect.field(p, 'default_style') ?  geturl(p.default_style, _defaultStyleReturn)
+                        : geturl(this.style_url, styleReturn);
         /*
         var cm = new flash.ui.ContextMenu();
         cm.hideBuiltInItems();
@@ -171,9 +175,12 @@ class Gobe extends Sprite {
         */
 
     }
+    private function _defaultStyleReturn(e:Event){
+        feature_stylesheet.parseCSS(e.target.data);
+        geturl(this.style_url, styleReturn);
+    }
 
     public function styleReturn(e:Event) {
-        feature_stylesheet = new StyleSheet();
         feature_stylesheet.parseCSS(e.target.data);
         styles = new Hash<Style>();
         for(ftype in feature_stylesheet.styleNames){
