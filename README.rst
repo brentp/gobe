@@ -1,7 +1,7 @@
 Gobe: interactive comparative genomics viewer
 =============================================
 
-.. image:: http://lh4.ggpht.com/_uU_kLC5AdTc/S9Oz2FAE0MI/AAAAAAAAAz0/o9bOod42qA4/s800/screen1.png
+.. image:: http://lh5.ggpht.com/_uU_kLC5AdTc/TCJP77hL_HI/AAAAAAAAA2E/LwVimCjeoUs/gobe.png
     :align: right
 
 interactive, light-weight, customizable, web-based comparative genomics viewer with simple text input format.
@@ -90,6 +90,17 @@ when a row in the annotations file has a type of 'cross', it will then be drawn
 with a glyph that appears as a cross a the specified as the x coordinate specified.
 For glyphs, the xmin, xmax columns will likely be the same, if not, the glyph will
 be rendered in the center of the specified range.
+
+Text
+----
+
+when the glyph is specified as glyph: text_glyph, the text in the `name` field will
+be rendered as is. The text can contain any markup that flash can understand.
+`See here <http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/flash/text/TextField.html#htmlText>`_
+for a description of the supported tags. This allows arbitrary labelling,
+coloring, and sizing for each feature.
+See the example in `glyph.txt <http://github.com/brentp/gobe/blob/master/data/glyph.txt>`_
+
 
 Track
 =====
