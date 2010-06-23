@@ -1,7 +1,7 @@
 Gobe: interactive comparative genomics viewer
 =============================================
 
-.. image:: http://lh5.ggpht.com/_uU_kLC5AdTc/TCJP77hL_HI/AAAAAAAAA2E/LwVimCjeoUs/gobe.png
+.. image:: http://lh5.ggpht.com/_uU_kLC5AdTc/TCJP77hL_HI/AAAAAAAAA2E/LwVimCjeoUs/s800/gobe.png
     :align: right
 
 interactive, light-weight, customizable, web-based comparative genomics viewer with simple text input format.
@@ -235,10 +235,8 @@ TODO
 ====
 
   * improve docs.
-  * nicer ticks, axis labelling
   * customizable fonts
   * move HSP colors to CSS.
-  * wiggle tracks.
 
 .. image:: http://lh4.ggpht.com/_uU_kLC5AdTc/S9O1wilCMBI/AAAAAAAAA0A/NniSF6OhTps/s800/screen2.png
 

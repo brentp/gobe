@@ -10,18 +10,26 @@ default {
 sorghum_brachy_cns, cns_brachy_v1_sorghum_v1.4 {
     fill_color: #ff0000;
     fill_alpha: 0.7;
-    line_width: 0.0;
+    line_width: 1.0;
     line_color: #ff0000;
-    height: 0.8;
+    height: 0.6;
+    z: 21;
+}
+cns_sorghum_v1.4_sorghum_v1.4 {
+    fill_color: #00ff00;
+    fill_alpha: 0.7;
+    line_width: 1.0;
+    line_color: #00ff00;
+    height: 0.6;
     z: 21;
 }
 
 sorghum_rice_cns, rice_rice_cns, cns_rice_v6_sorghum_v1.4 {
     fill_color: #0000ff;
-    fill_alpha: 0.9;
-    line_width: 0.0;
-    line_color: #ffff66;
-    height: 0.8;
+    fill_alpha: 1.0;
+    line_width: 1.0;
+    line_color: #0000ff;
+    height: 0.6;
     z: 21;
 }
 
@@ -48,7 +56,7 @@ start_codon, stop_codon {
     fill_alpha: 0;
 }
 
-gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno, gene.interruptor {
+gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno, gene.interruptor, pseudogene {
     fill_color: #bbbbbb;
     fill_alpha: 0.6;
     line_width: 1.0;
@@ -56,6 +64,10 @@ gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno, gene.inte
     height: 0.4;
     z:3;
     arrow_len: 0.05;
+}
+pseudogene, pre-trna {
+    fill_color: #dadada;
+    line_width: 2.0;
 }
 
 gene.rna, gene.protein {

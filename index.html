@@ -43,6 +43,7 @@
         // only var is config=/web/path/to/config.js
         var flashVars = {
             'annotations'   : get('annotations') || 'data/annotations.txt',
+            'default_style'  : get('default_style') || 'static/gobe.css',
             'style'  : get('style') || 'static/gobe.css'
         };
         swfobject.embedSWF("flash/gobe.swf?d=" + Math.random(), "flashcontent", width, height, "9.0.0"
