@@ -128,11 +128,12 @@ class Util {
             nsubtracks += nt;
         }
 
-        var H = flash.Lib.current.stage.stage.stageHeight;
+        var H = flash.Lib.current.stage.stage.stageHeight;// - Track.border_thickness;
         ntracks = arr.length;
         // this is the height of an anno_track. it's the total height minus the space for the info tracks.
-        var th = Std.int((H - ntracks * Options.info_track_height) / (nsubtracks * Options.sub_track_height_ratio + ntracks));
-        var sth = (Options.sub_track_height_ratio * th);
+        var th = ((H - ntracks * (Options.info_track_height + Track.border_thickness / ntracks)) / (nsubtracks * Options.sub_track_height_ratio + ntracks));
+        //th += Std.int((ntracks - 1) * Track.border_thickness/(ntracks + 1));
+        var sth = (Options.sub_track_height_ratio * th);// + Track.border_thickness / nsubtracks;
         // if the track was set explicitly, go by order, otherwise, go by track_id.
         arr.sort(function(a:TInfo, b:TInfo){ 
                 if (a.order == b.order){
