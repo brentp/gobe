@@ -132,10 +132,9 @@ class Util {
         ntracks = arr.length;
         // this is the height of an anno_track. it's the total height minus the space for the info tracks.
         var th = ((H - ntracks * (Options.info_track_height + Track.border_thickness / ntracks)) / (nsubtracks * Options.sub_track_height_ratio + ntracks));
-        //th += Std.int((ntracks - 1) * Track.border_thickness/(ntracks + 1));
-        var sth = (Options.sub_track_height_ratio * th);// + Track.border_thickness / nsubtracks;
+        var sth = (Options.sub_track_height_ratio * th);
         // if the track was set explicitly, go by order, otherwise, go by track_id.
-        arr.sort(function(a:TInfo, b:TInfo){ 
+        arr.sort(function(a:TInfo, b:TInfo){
                 if (a.order == b.order){
                     return a.id < b.id ? -1 : 1;
                 }
