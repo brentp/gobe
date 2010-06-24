@@ -66,8 +66,22 @@ class Util {
         var nexplicit = 0;
         var ntracks = 0;
         var hsps = new Array<Annotation>();
+        var sidx:Int;
+        var track_id:String;
+        var subanno:String;
         for(al in anno_lines){
-            var track_id = al[1];
+            track_id = al[1];
+            // see if it's a subanno track:
+            sidx = track_id.indexOf(":");
+            if(sidx != -1){
+                subanno = track_id.substr(sidx + 1);
+                track_id = track_id.substr(0, sidx);
+            }
+            else {
+                subanno = "";
+            }
+            // end subannotrack.
+
             var a:Annotation;
             if (al[4] == "track"){ // explicitly specified track extents.
                 var start = Std.parseInt(al[2]);
@@ -89,19 +103,19 @@ class Util {
                     continue;
                 }
                 // if a plot is specified, its limits are used as the explicit extents.
-                if(! explicit_set.exists(al[1])){
-                    var info = new TInfo(al[1], al[1], p.bpmin, p.bpmax, nexplicit);
+                if(! explicit_set.exists(track_id)){
+                    var info = new TInfo(track_id, track_id, p.bpmin, p.bpmax, nexplicit);
                     lims.set(info.id, info);
                     nexplicit += 1;
                     explicit_set.set(info.id, nexplicit);
                 }
                 Gobe.plots.set(p.track_id, p);
-                ntracks += set_track_info(p, lims, explicit_set);
+                ntracks += set_track_info(p, lims, explicit_set, track_id, subanno);
             }
             else {
                 var a = new Annotation(al);
                 anarr.push(a);
-                ntracks += set_track_info(a, lims, explicit_set);
+                ntracks += set_track_info(a, lims, explicit_set, track_id, subanno);
                 Gobe.set_anno_style(a);
                 // handle hsp stuff.
                 if(a.is_hsp){
@@ -167,21 +181,24 @@ class Util {
             k += 1;
         }
         Gobe.tracks = tracks;
-        for(a in anarr){ a.track = tracks.get(a.track_id); }
+        trace('tracking');
+        for(a in anarr){ a.track = tracks.get(a.track_id); trace(a.track_id); }
+        trace("ok");
         return anarr;
     }
 
-    public static function set_track_info(a:BaseAnnotation, lims:Hash<TInfo>, explicit_set:Hash<Int>):Int{
+    public static function set_track_info(a:BaseAnnotation, lims:Hash<TInfo>, explicit_set:Hash<Int>,
+                track_id:String, subanno:String):Int{
         var ntracks = 0;
-        if(explicit_set.exists(a.track_id)) { return 0; }
+        if(explicit_set.exists(track_id)) { return 0; }
 
-        if (! lims.exists(a.track_id)){
-            var info = new TInfo(a.track_id, a.track_id, a.bpmin, a.bpmax, ntracks);
+        if (! lims.exists(track_id)){
+            var info = new TInfo(track_id, a.track_id, a.bpmin, a.bpmax, ntracks);
             ntracks = 1;
-            lims.set(a.track_id, info);
+            lims.set(track_id, info);
         }
         else {
-            var lim = lims.get(a.track_id);
+            var lim = lims.get(track_id);
             if(a.bpmin < lim.bpmin){lim.bpmin = a.bpmin; }
             if(a.bpmax > lim.bpmax){lim.bpmax = a.bpmax; }
         }
