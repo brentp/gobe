@@ -19,9 +19,11 @@ class Plot extends BaseAnnotation {
     public var data_url:String;
     public var ymin:Float;
     public var ymax:Float;
+    public var from_center:Bool;
 
     public function new(aline:Array<String>){
         super(aline);
+        this.from_center = false;
         this.data_url = aline[6];
         Gobe.geturl(this.data_url, _dataReturn);
         ymin = Math.POSITIVE_INFINITY;
@@ -98,17 +100,33 @@ class PlotHist extends Plot {
         var lw:Float = 1, lc:Int = 0;
         var rw2pix = this.track.rw2pix;
         var st = this.subtrack;
+        var h = st.height;
         var g = this.graphics;
         x = 0; y = 0;
-        for(d in data){
-            var x0 = rw2pix(d.xmin), x1 = rw2pix(d.xmax);
-            g.lineStyle(lw, d.color, 0.6);
-            g.beginFill(d.color);
-            g.moveTo(x0, -h);
-            g.lineTo(x0, -d.y);
-            g.lineTo(x1, -d.y);
-            g.lineTo(x1, -h);
-            g.endFill();
+        if (! this.from_center){
+            for(d in data){
+                var x0 = rw2pix(d.xmin), x1 = rw2pix(d.xmax);
+                g.lineStyle(lw, d.color, 0.6);
+                g.beginFill(d.color);
+                g.moveTo(x0, 0);
+                g.lineTo(x0, -d.y);
+                g.lineTo(x1, -d.y);
+                g.lineTo(x1, 0);
+                g.endFill();
+            }
+        }
+        else {
+            trace(h);
+            for(d in data){
+                var x0 = rw2pix(d.xmin), x1 = rw2pix(d.xmax);
+                g.lineStyle(lw, d.color, 0.6);
+                g.beginFill(d.color);
+                g.moveTo(x0, -h/2);
+                g.lineTo(x0, -h/2 -d.y);
+                g.lineTo(x1, -h/2 -d.y);
+                g.lineTo(x1, -h/2);
+                g.endFill();
+            }
         }
     }
     /*
@@ -135,7 +153,13 @@ class PlotHist extends Plot {
             if(y < ymin) { ymin = y; }
             if(y > ymax) { ymax = y; }
         }
-        //trace('hist data return ok');
+        // make it plot up for > 0, down for < 0
+        if(ymin < 0 && ymax > 0 && this.strand == 0){
+            var amax = Math.max(Math.abs(ymin), ymax);
+            ymin = -amax;
+            ymax = amax;
+            this.from_center = true;
+        }
     }
 
     public override function added(e:Event){
@@ -145,10 +169,12 @@ class PlotHist extends Plot {
 
     public function rescale(){
         var d:Data;
+        //var rng = this.from_center ? ymax : ymax - ymin;
         var rng = ymax - ymin;
+        var tmin = this.from_center ? 0 : ymin;
         var h = this.subtrack.height;
         for(d in data){
-            d.y = (d.yraw - ymin) / rng * h;
+            d.y = (d.yraw - tmin) / rng * h;
         }
         //trace('rescaled hist');
     }
