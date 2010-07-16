@@ -198,7 +198,8 @@ class AnnoTrack extends SubTrack {
         var sw = flash.Lib.current.stage.stageWidth - Track.border_thickness - 1;
         var off = 3;
         var g = this.graphics;
-        g.lineStyle(0, 0.0, 0);
+        // the lines around the sub-anno tracks.
+        g.lineStyle(0.9, 0xffffff, 1);
         g.beginFill(Options.anno_track_background_color); // TODO: allow setting track background via css or csv.
         g.moveTo(Track.border_thickness, -this.track_height/2);
         g.lineTo(sw, -this.track_height/2);

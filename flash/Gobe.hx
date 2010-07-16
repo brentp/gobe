@@ -292,12 +292,9 @@ class Gobe extends Sprite {
         });
         for(a in arr){
             if(! a.is_hsp){
-                trace(a.track_id + "," + a.subanno_id);
-                var s = "[";
-                for(k in a.track.subtracks.keys()){
-                    s += k + ", ";
-                }
-                trace(s + "]");
+                /*for(k in a.track.subtracks.keys()){
+                    trace(k);
+                }*/
                 var sub = a.track.subtracks.get(a.subanno_id + ((a.strand == 1) ? '+' : ((a.strand == -1) ? '-' : '0')));
                 a.subtrack = sub;
                 sub.addChild(a);
