@@ -115,6 +115,8 @@ class BaseAnnotation extends Sprite {
 class Annotation extends BaseAnnotation {
     public var edges:Array<Int>;
     public var color:UInt;
+    public var subanno_id:String; // whatever's after the ":"
+
     // empty_color is just a sentinel to show the color
     // hasn't been set since a uint can't be undefined.
     public static var empty_color:UInt = 0x000001;
@@ -126,6 +128,7 @@ class Annotation extends BaseAnnotation {
         this.is_hsp = this.ftype.substr(0, 3) == "hsp";
         this.addEventListener(MouseEvent.CLICK, onClick);
         // this only happens once its track is set.
+        this.subanno_id = (this.track_id.indexOf(":") == -1) ? "" : this.track_id.split(":")[1];
 
         if (l.length > 7){
             //trace('setting color');

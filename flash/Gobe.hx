@@ -265,6 +265,12 @@ class Gobe extends Sprite {
             var at = new AnnoTrack(atrack, Gobe.anno_track_height);
             // why does this work? i dont know.
             at.y = Options.info_track_height + i * Gobe.sub_track_height + Gobe.anno_track_height / 2;
+            var eidx = 0;
+
+            for(eti in atrack.extra_anno_track_ids){
+                var extra_anno = new AnnoTrack(atrack, Gobe.anno_track_height, eti);
+                extra_anno.y = at.y + (Gobe.anno_track_height * ++eidx);
+            }
         }
     }
     public static function addPlot(plot:Plot){
@@ -286,7 +292,13 @@ class Gobe extends Sprite {
         });
         for(a in arr){
             if(! a.is_hsp){
-                var sub = a.track.subtracks.get((a.strand == 1) ? '+' : ((a.strand == -1) ? '-' : '0'));
+                trace(a.track_id + "," + a.subanno_id);
+                var s = "[";
+                for(k in a.track.subtracks.keys()){
+                    s += k + ", ";
+                }
+                trace(s + "]");
+                var sub = a.track.subtracks.get(a.subanno_id + ((a.strand == 1) ? '+' : ((a.strand == -1) ? '-' : '0')));
                 a.subtrack = sub;
                 sub.addChild(a);
             }

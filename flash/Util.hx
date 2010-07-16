@@ -187,21 +187,21 @@ class Util {
             var t = new Track(t.id, t.name, start, end, track_height);
             t.i = k;
             tracks.set(t.id, t);
-            /*
+
             if(subannos.exists(t.id)){
                 for(sa in subannos.get(t.id).keys()){
                     t.extra_anno_track_ids.push(sa);
                 }
-            }*/
+            }
             t.y = h;
             h += track_height;
             flash.Lib.current.addChildAt(t, 0);
             k += 1;
         }
         Gobe.tracks = tracks;
-        trace('tracking');
-        for(a in anarr){ a.track = tracks.get(a.track_id); }
-        trace("ok");
+        // so the track is always the right track, but then need to dispatch to the correct
+        // sub anno track.
+        for(a in anarr){ a.track = tracks.get(a.track_id.split(":")[0]); }
         return anarr;
     }
 

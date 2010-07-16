@@ -154,10 +154,12 @@ class AnnoTrack extends SubTrack {
     public var minus:AnnoSubTrack;
     public var both:AnnoSubTrack;
     public var ttf:MTextField;
+    public var subanno_id:String;
 
-    public function new(track:Track, track_height:Float){
+    public function new(track:Track, track_height:Float, subanno_id:String=""){
         super(track, track, track_height);
         track.anno_track = this;
+        this.subanno_id = subanno_id;
         plus  = new AnnoSubTrack(track, track_height / 2);
         minus = new AnnoSubTrack(track, track_height / 2);
         both = new AnnoSubTrack(track,  track_height);
@@ -166,12 +168,13 @@ class AnnoTrack extends SubTrack {
         addChild(minus);
         both.y = minus.y = track_height / 2;
         //minus.x = 19;
-        track.subtracks.set('+', plus);
-        track.subtracks.set('-', minus);
-        track.subtracks.set('0', both);
+        track.subtracks.set(subanno_id + '+', plus);
+        track.subtracks.set(subanno_id + '-', minus);
+        track.subtracks.set(subanno_id + '0', both);
         track.addChildAt(this, 0);
-        this.setUpTitleTextField();
-
+        if (subanno_id == ""){
+            this.setUpTitleTextField();
+        }
     }
 
     public function setUpTitleTextField(){
