@@ -63,12 +63,18 @@ class Util {
         var anarr = new Array<Annotation>();
         var lims = new Hash<TInfo>();
         var al:Array<String>;
-        var nexplicit = 0;
-        var ntracks = 0;
+
+        var nexplicit = 0,
+            ntracks = 0,
+            sidx:Int,
+            track_id:String,
+            subanno:String;
+
         var hsps = new Array<Annotation>();
-        var sidx:Int;
-        var track_id:String;
-        var subanno:String;
+
+        // subannos is { trackid => {hash, of, subannos} }
+        var subannos = new Hash<Hash<Int>>();
+
         for(al in anno_lines){
             track_id = al[1];
             // see if it's a subanno track:
@@ -76,14 +82,14 @@ class Util {
             if(sidx != -1){
                 subanno = track_id.substr(sidx + 1);
                 track_id = track_id.substr(0, sidx);
+                if(!subannos.exists(track_id)){ subannos.set(track_id, new Hash<Int>()); }
+                subannos.get(track_id).set(subanno, 1);
             }
-            else {
-                subanno = "";
-            }
-            // end subannotrack.
+
 
             var a:Annotation;
-            if (al[4] == "track"){ // explicitly specified track extents.
+            // explicitly specified track extents.
+            if (al[4] == "track"){
                 var start = Std.parseInt(al[2]);
                 var end  = Std.parseInt(al[3]);
                 var info = new TInfo(al[0], al[1], start, end, nexplicit);
@@ -110,12 +116,12 @@ class Util {
                     explicit_set.set(info.id, nexplicit);
                 }
                 Gobe.plots.set(p.track_id, p);
-                ntracks += set_track_info(p, lims, explicit_set, track_id, subanno);
+                ntracks += set_track_info(p, lims, explicit_set, track_id);
             }
             else {
                 var a = new Annotation(al);
                 anarr.push(a);
-                ntracks += set_track_info(a, lims, explicit_set, track_id, subanno);
+                ntracks += set_track_info(a, lims, explicit_set, track_id);
                 Gobe.set_anno_style(a);
                 // handle hsp stuff.
                 if(a.is_hsp){
@@ -135,15 +141,20 @@ class Util {
         // count the number of subtracks. used in calcing track heights.
         var subtracks_by_track = new Hash<Int>();
         var nsubtracks = 0;
+        var subanno_tracks = 0;
         for(parent_track_id in edge_tracks.keys()){
             // multiply by 2 to account for plus and minus
             var nt = 2 * Lambda.count(edge_tracks.get(parent_track_id));
             subtracks_by_track.set(parent_track_id, nt);
             nsubtracks += nt;
+
+            if(subannos.exists(parent_track_id)){
+                subanno_tracks += Lambda.count(subannos.get(parent_track_id));
+            }
         }
 
         var H = flash.Lib.current.stage.stage.stageHeight;// - Track.border_thickness;
-        ntracks = arr.length;
+        ntracks = arr.length + subanno_tracks;
         // this is the height of an anno_track. it's the total height minus the space for the info tracks.
         var th = ((H - ntracks * (Options.info_track_height + Track.border_thickness / ntracks)) / (nsubtracks * Options.sub_track_height_ratio + ntracks));
         var sth = (Options.sub_track_height_ratio * th);
@@ -182,15 +193,16 @@ class Util {
         }
         Gobe.tracks = tracks;
         trace('tracking');
-        for(a in anarr){ a.track = tracks.get(a.track_id); trace(a.track_id); }
+        for(a in anarr){ a.track = tracks.get(a.track_id); }
         trace("ok");
         return anarr;
     }
 
     public static function set_track_info(a:BaseAnnotation, lims:Hash<TInfo>, explicit_set:Hash<Int>,
-                track_id:String, subanno:String):Int{
+                track_id:String):Int{
         var ntracks = 0;
         if(explicit_set.exists(track_id)) { return 0; }
+
 
         if (! lims.exists(track_id)){
             var info = new TInfo(track_id, a.track_id, a.bpmin, a.bpmax, ntracks);
