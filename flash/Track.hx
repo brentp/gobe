@@ -208,8 +208,8 @@ class AnnoTrack extends SubTrack {
         g.lineStyle(1, 0x444444, 0.9, false,
                     flash.display.LineScaleMode.NORMAL,
                     flash.display.CapsStyle.ROUND);
-        var dash_w = 4;
-        var gap_w = 2;
+        var dash_w:Float = 4;
+        var gap_w:Float = 3.5;
         g.moveTo(gap_w / 2, mid);
         var dx = dash_w;
         while(dx < sw + dash_w) {
@@ -277,6 +277,8 @@ class Track extends Sprite {
     public var track_height:Int;
     public var info_track:InfoTrack;
     public var anno_track:AnnoTrack;
+    public var extra_anno_tracks:Array<AnnoTrack>;
+    public var extra_anno_track_ids:Array<String>;
     // key is id of other track.
     public var subtracks:Hash<SubTrack>;
 
@@ -292,6 +294,8 @@ class Track extends Sprite {
     public function new(id:String, title:String, bpmin:Int, bpmax:Int, track_height:Int){
         super();
         subtracks = new Hash<SubTrack>();
+        extra_anno_tracks = new Array<AnnoTrack>();
+        extra_anno_track_ids = new Array<String>();
         this.id = id;
         this.title = title;
         this.track_height = track_height;

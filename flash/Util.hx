@@ -181,11 +181,18 @@ class Util {
                 end = Math.round(t.bpmax + rng * 0.05);
             }
             // the track_height accounts for the anno track and the number of subtracks.
-            var track_height = Std.int(th + sth * subtracks_by_track.get(t.id) + Options.info_track_height);
+            var nsubanno_tracks = subannos.exists(t.id) ? Lambda.count(subannos.get(t.id)) : 0;
+            var track_height = Std.int(th + sth * subtracks_by_track.get(t.id) + Options.info_track_height + nsubanno_tracks * th);
             //trace(t.id + ":" + track_height);
             var t = new Track(t.id, t.name, start, end, track_height);
             t.i = k;
             tracks.set(t.id, t);
+            /*
+            if(subannos.exists(t.id)){
+                for(sa in subannos.get(t.id).keys()){
+                    t.extra_anno_track_ids.push(sa);
+                }
+            }*/
             t.y = h;
             h += track_height;
             flash.Lib.current.addChildAt(t, 0);
