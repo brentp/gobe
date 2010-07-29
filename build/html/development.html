@@ -1,0 +1,164 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>For Developers &mdash; gobe v0.3 documentation</title>
+    <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="gobe v0.3 documentation" href="index.html" />
+    <link rel="next" title="Real-world Examples" href="examples.html" />
+    <link rel="prev" title="Gobe: interactive comparative genomics viewer" href="README.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="examples.html" title="Real-world Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="README.html" title="Gobe: interactive comparative genomics viewer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">gobe v0.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">For Developers</a><ul>
+<li><a class="reference internal" href="#get-the-source">Get The Source</a></li>
+<li><a class="reference internal" href="#install-haxe">Install Haxe</a></li>
+<li><a class="reference internal" href="#build-gobe-swf">Build gobe.swf</a></li>
+<li><a class="reference internal" href="#view-index-html">View index.html</a></li>
+<li><a class="reference internal" href="#write-some-code">Write some code</a></li>
+<li><a class="reference internal" href="#code-layout">Code Layout</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="README.html"
+                        title="previous chapter">Gobe: interactive comparative genomics viewer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">Real-world Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/development.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="for-developers">
+<h1>For Developers<a class="headerlink" href="#for-developers" title="Permalink to this headline">¶</a></h1>
+<p>The gobe binary is a swf flash movie. It does not use the Adobe compiler. Instead it uses
+<a class="reference external" href="http://haxe.org/">haxe</a> , an open source language that can compile for the flash player.
+It has a syntax very similar to actionscript 3.</p>
+<div class="section" id="get-the-source">
+<h2>Get The Source<a class="headerlink" href="#get-the-source" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+git clone git://github.com/brentp/gobe.git</blockquote>
+</div>
+<div class="section" id="install-haxe">
+<h2>Install Haxe<a class="headerlink" href="#install-haxe" title="Permalink to this headline">¶</a></h2>
+<p>Download the appropriate installer <a class="reference external" href="http://haxe.org/download">here</a>.</p>
+</div>
+<div class="section" id="build-gobe-swf">
+<h2>Build gobe.swf<a class="headerlink" href="#build-gobe-swf" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+cd gobe/flash
+haxe gobe.hxml</blockquote>
+<p>and you should see no output, but a new <tt class="docutils literal"><span class="pre">gobe.swf</span></tt> file will be created. If it does not, make sure haxe is installed correctly.</p>
+</div>
+<div class="section" id="view-index-html">
+<h2>View index.html<a class="headerlink" href="#view-index-html" title="Permalink to this headline">¶</a></h2>
+<p>put the gobe directory in a web directory and point your browser to: <tt class="docutils literal"><span class="pre">http://yourhost/web/path/to/gobe/</span></tt> and you should see a page with several demo links. You may have to have Firebug or some console enabled as the movie will try to log events to the console and your browser may error if there&#8217;s no console to write to.</p>
+</div>
+<div class="section" id="write-some-code">
+<h2>Write some code<a class="headerlink" href="#write-some-code" title="Permalink to this headline">¶</a></h2>
+<p>you do <strong>not</strong> need an IDE to write haxe, simply edit any of the .hx files in the <a class="reference external" href="http://github.com/brentp/gobe/tree/master/flash/">flash directory</a> and re-run <tt class="docutils literal"><span class="pre">haxe</span> <span class="pre">gobe.hxml</span></tt></p>
+<p>For debugging, <tt class="docutils literal"><span class="pre">trace()</span></tt> messages will go to the browser console (either FireBug in firefox or the developer console <tt class="docutils literal"><span class="pre">[ctrl+shift+j]</span></tt> in chrome).</p>
+</div>
+<div class="section" id="code-layout">
+<h2>Code Layout<a class="headerlink" href="#code-layout" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://github.com/brentp/gobe/tree/master/flash/Gobe.hx">Gobe.hx</a> contains the code simply to load the annotations data and distribute work to the <tt class="docutils literal"><span class="pre">Track</span></tt>, <tt class="docutils literal"><span class="pre">SubTrack</span></tt>, and <tt class="docutils literal"><span class="pre">Annotation</span></tt> classes in <tt class="docutils literal"><span class="pre">HSP.hx</span></tt>.</p>
+<p><a class="reference external" href="http://github.com/brentp/gobe/tree/master/flash/Track.hx">Track.hx</a> contains the <tt class="docutils literal"><span class="pre">Track</span></tt>, <tt class="docutils literal"><span class="pre">SubTrack</span></tt>, <tt class="docutils literal"><span class="pre">Edge</span></tt> and <tt class="docutils literal"><span class="pre">Annotation</span></tt> classes. a <tt class="docutils literal"><span class="pre">Track</span></tt> contains data from a single dataset. It has <tt class="docutils literal"><span class="pre">bpmin</span></tt> and <tt class="docutils literal"><span class="pre">bpmax</span></tt> that determine its extent&#8211;these are used for drawing and scaling. Each <tt class="docutils literal"><span class="pre">Track</span></tt> has at least 2 subtracks&#8211;<tt class="docutils literal"><span class="pre">AnnoTracks</span></tt>. One for the + strand, and one for the minus. For each HSP between a given track and another track there will be 2 additional subtracks, one for the + and one for the - strand. These subtracks are stored in a Hash called <tt class="docutils literal"><span class="pre">subtracks</span></tt> for each Track. Tracks are stored in the static hash <tt class="docutils literal"><span class="pre">Gobe.tracks</span></tt>.</p>
+<p>An <tt class="docutils literal"><span class="pre">Annotation</span></tt> is any feature that is drawn in the flash movie other than a track (e.g. HSP, CDS, gene, etc). The <tt class="docutils literal"><span class="pre">draw()</span></tt> method on the <tt class="docutils literal"><span class="pre">Annotation</span></tt> class contains the logic for rendering all feature types. It depends on the information parsed from the stylesheet (default is <a class="reference external" href="http://github.com/brentp/gobe/tree/master/static/gobe.css">gobe.css</a> ). The information in the stylesheet tells the <tt class="docutils literal"><span class="pre">Annotation</span></tt> class how to render each feature type. For example, the stylesheet contains a CDS block that indicates the <tt class="docutils literal"><span class="pre">line_color</span></tt>, <tt class="docutils literal"><span class="pre">width</span></tt> and <tt class="docutils literal"><span class="pre">fill_color</span></tt> to be used when rendering an Annotation with a type of CDS. This allows the user to specify any feature type as long as they also specify a corresponding entry in the stylesheet.</p>
+<p><a class="reference external" href="http://github.com/brentp/gobe/tree/master/flash/Util.hx">Util.hx</a> contains miscellaneous code for doing stuff. Any code that is repeated or general or hacky should be made as clean as possible and put into <tt class="docutils literal"><span class="pre">Util.hx</span></tt> as a static method.</p>
+<p><a class="reference external" href="http://github.com/brentp/gobe/tree/master/flash/Glyph.hx">Glyph.hx</a> handles most of the drawing of features. <tt class="docutils literal"><span class="pre">Glyph</span></tt> class will dispatch the drawing method based on the glyph style. Define your own glyph style in the css file.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="http://haxe.org/api/">haxe api docs</a> are pretty good. For flash stuff, use the flash9 (not flash). For much of the code, you can probably find existing examples in the codebase of using <tt class="docutils literal"><span class="pre">Hash</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> or looping.</p>
+<p>The adobe docs are good when they come up on a google search for a particular class or method.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="examples.html" title="Real-world Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="README.html" title="Gobe: interactive comparative genomics viewer"
+             >previous</a> |</li>
+        <li><a href="index.html">gobe v0.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Brent Pedersen, Haibao Tang.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
