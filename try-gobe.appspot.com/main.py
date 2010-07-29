@@ -36,20 +36,24 @@ class Index(webapp.RequestHandler):
         if a is None: a = Annotation()
         user_tmpl = user_stuff(self.request.uri)
         history = Annotation.all().order("-date").fetch(20)
-        name = user and user.nickname() or "anonymous"
+        name = user and user.nickname() or ""
+        user_history = Annotation.gql("WHERE author = :author", author=user).fetch(20) if user else None
+
         self.response.out.write(render("index.html", user_tmpl, anno_name=name, anno_id=a.anno_id or "",
                                        anno_content=a.content or "", anno_title=a.title or "",
-                                       history=history))
+                                       history=history, user_history=user_history))
 
     def post(self, unused):
         self.response.headers['Content-type'] = 'text/javascript';
         user = users.get_current_user()
+        import sys
         annos = self.request.get('annos', '').strip()
         if not annos:
             simplejson.dumps({'status': 'fail'})
             return
-        name = user and user.nickname() or "anonymous"
-        title = self.request.get('title', name + "|" + str(datetime.datetime.now()))
+        name = user and user.nickname() or ""
+        print >>sys.stderr, name
+        title = self.request.get('title') or name + "|" + str(datetime.datetime.now())
         id = hashlib.md5(annos + title).hexdigest()
 
         # dont save unless it's new.
