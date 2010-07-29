@@ -51,8 +51,14 @@ class Index(webapp.RequestHandler):
         name = user and user.nickname() or "anonymous"
         title = self.request.get('title', name + "|" + str(datetime.datetime.now()))
         id = hashlib.md5(annos + title).hexdigest()
-        a = Annotation(title=title, author=user, content=annos.strip(), anno_id=id)
-        a.put()
+
+        # dont save unless it's new.
+        a = Annotation.gql("WHERE anno_id = :id AND title = :title",
+                           id=id, title=title).get()
+        if a is None:
+            a = Annotation(title=title, author=user, content=annos.strip(), anno_id=id)
+            a.put()
+
         self.response.out.write(simplejson.dumps({'status':'success', 'id': id}))
 
 class Anno(webapp.RequestHandler):

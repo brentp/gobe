@@ -36,9 +36,10 @@ You need to install <a href="http://www.adobe.com/shockwave/download/download.cg
 
 <div id="right">
     <div id="global-history"><!-- holds the links to everyone's annos -->
+        Recently Added Annotations:
         {% for a in history %}
             <p class='history'>
-                <a href="#{{ a.title }}!!{{ a.anno_id }}">{{ a.title }}</a>
+            ({{ forloop.counter }})<a href="#{{ a.title }}!!{{ a.anno_id }}">{{ a.title }}</a>
             </p>
         {% endfor %}
     </div>
