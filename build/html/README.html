@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,16 +12,18 @@
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
+        URL_ROOT:    '',
         VERSION:     '0.3',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="gobe v0.3 documentation" href="index.html" />
+    <link rel="next" title="For Developers" href="development.html" />
     <link rel="prev" title="Welcome to gobe’s documentation!" href="index.html" /> 
   </head>
   <body>
@@ -30,6 +34,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="development.html" title="For Developers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
           <a href="index.html" title="Welcome to gobe’s documentation!"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">gobe v0.3 documentation</a> &raquo;</li> 
@@ -37,50 +44,53 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Gobe: interactive comparative genomics viewer</a></li>
-<li><a class="reference external" href="#summary">Summary</a></li>
-<li><a class="reference external" href="#annotations">Annotations</a><ul>
-<li><a class="reference external" href="#annotation">Annotation</a></li>
-<li><a class="reference external" href="#glyphs">Glyphs</a></li>
-<li><a class="reference external" href="#text">Text</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Gobe: interactive comparative genomics viewer</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#annotations">Annotations</a><ul>
+<li><a class="reference internal" href="#annotation">Annotation</a></li>
+<li><a class="reference internal" href="#glyphs">Glyphs</a></li>
+<li><a class="reference internal" href="#text">Text</a></li>
 </ul>
 </li>
-<li><a class="reference external" href="#track">Track</a></li>
-<li><a class="reference external" href="#hsp">HSP</a></li>
-<li><a class="reference external" href="#style">Style</a></li>
-<li><a class="reference external" href="#plots">Plots</a><ul>
-<li><a class="reference external" href="#lineplots">LinePlots</a></li>
-<li><a class="reference external" href="#histograms">Histograms</a></li>
+<li><a class="reference internal" href="#track">Track</a></li>
+<li><a class="reference internal" href="#hsp">HSP</a></li>
+<li><a class="reference internal" href="#style">Style</a></li>
+<li><a class="reference internal" href="#plots">Plots</a><ul>
+<li><a class="reference internal" href="#lineplots">LinePlots</a></li>
+<li><a class="reference internal" href="#histograms">Histograms</a></li>
 </ul>
 </li>
-<li><a class="reference external" href="#javascript-callbacks">Javascript Callbacks</a></li>
-<li><a class="reference external" href="#getting-started">Getting Started</a></li>
-<li><a class="reference external" href="#todo">TODO</a></li>
+<li><a class="reference internal" href="#javascript-callbacks">Javascript Callbacks</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li><a class="reference internal" href="#todo">TODO</a></li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="index.html"
-                                  title="previous chapter">Welcome to gobe&#8217;s documentation!</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/README.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to gobe&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="development.html"
+                        title="next chapter">For Developers</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/README.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -108,25 +118,25 @@
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#gobe-interactive-comparative-genomics-viewer" id="id2">Gobe: interactive comparative genomics viewer</a></li>
-<li><a class="reference internal" href="#summary" id="id3">Summary</a></li>
-<li><a class="reference internal" href="#annotations" id="id4">Annotations</a><ul>
-<li><a class="reference internal" href="#annotation" id="id5">Annotation</a></li>
-<li><a class="reference internal" href="#glyphs" id="id6">Glyphs</a></li>
-<li><a class="reference internal" href="#text" id="id7">Text</a></li>
+<li><a class="reference external" href="#gobe-interactive-comparative-genomics-viewer" id="id2">Gobe: interactive comparative genomics viewer</a></li>
+<li><a class="reference external" href="#summary" id="id3">Summary</a></li>
+<li><a class="reference external" href="#annotations" id="id4">Annotations</a><ul>
+<li><a class="reference external" href="#annotation" id="id5">Annotation</a></li>
+<li><a class="reference external" href="#glyphs" id="id6">Glyphs</a></li>
+<li><a class="reference external" href="#text" id="id7">Text</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#track" id="id8">Track</a></li>
-<li><a class="reference internal" href="#hsp" id="id9">HSP</a></li>
-<li><a class="reference internal" href="#style" id="id10">Style</a></li>
-<li><a class="reference internal" href="#plots" id="id11">Plots</a><ul>
-<li><a class="reference internal" href="#lineplots" id="id12">LinePlots</a></li>
-<li><a class="reference internal" href="#histograms" id="id13">Histograms</a></li>
+<li><a class="reference external" href="#track" id="id8">Track</a></li>
+<li><a class="reference external" href="#hsp" id="id9">HSP</a></li>
+<li><a class="reference external" href="#style" id="id10">Style</a></li>
+<li><a class="reference external" href="#plots" id="id11">Plots</a><ul>
+<li><a class="reference external" href="#lineplots" id="id12">LinePlots</a></li>
+<li><a class="reference external" href="#histograms" id="id13">Histograms</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#javascript-callbacks" id="id14">Javascript Callbacks</a></li>
-<li><a class="reference internal" href="#getting-started" id="id15">Getting Started</a></li>
-<li><a class="reference internal" href="#todo" id="id16">TODO</a></li>
+<li><a class="reference external" href="#javascript-callbacks" id="id14">Javascript Callbacks</a></li>
+<li><a class="reference external" href="#getting-started" id="id15">Getting Started</a></li>
+<li><a class="reference external" href="#todo" id="id16">TODO</a></li>
 </ul>
 </div>
 </div>
@@ -150,11 +160,11 @@ have a look at the examples in the
 <h2><a class="toc-backref" href="#id5">Annotation</a><a class="headerlink" href="#annotation" title="Permalink to this headline">¶</a></h2>
 <p>An annotation is anything to be drawn. These will be things like CDSs,
 genes, mRNAs, UTRs or any feature you define and style.
-There are 2 special types: <a class="reference internal" href="#hsp">HSP</a>&#8216;s and <a class="reference internal" href="#track">Track</a>
-Briefly, an <a class="reference internal" href="#hsp">HSP</a> allows one to draw relationships between features. The
+There are 2 special types: <a class="reference external" href="#hsp">HSP</a>&#8216;s and <a class="reference external" href="#track">Track</a>
+Briefly, an <a class="reference external" href="#hsp">HSP</a> allows one to draw relationships between features. The
 relationship is inferred between consecutive annotations with type &#8216;HSP&#8217;
 in the file.
-<a class="reference internal" href="#track">Track</a> s allow one to explicitly set the limits for each track (otherwise
+<a class="reference external" href="#track">Track</a> s allow one to explicitly set the limits for each track (otherwise
 inferred by the extent of the features in that track).</p>
 <p>The annotation file is a text file with 7 <strong>comma-delimited</strong> columns per row:</p>
 <blockquote>
@@ -162,11 +172,11 @@ inferred by the extent of the features in that track).</p>
 <li><cite>id</cite>: a unique identifier for this annotation. this is anything you
 want, can be your own database id or gene name or just an enumeration.</li>
 <li><cite>track_id</cite>: the id of the track on which to draw this feature.
-See <a class="reference internal" href="#track">Track</a>.</li>
+See <a class="reference external" href="#track">Track</a>.</li>
 <li><cite>start</cite>: the start of the feature.</li>
 <li><cite>end</cite>: the end of the feature.</li>
 <li><cite>type</cite>: a feature type (CDS, gene etc). If not specified, &#8216;default&#8217; is used.</li>
-<li><cite>strand</cite>: either &#8216;+&#8217; or &#8216;-&#8216;, the strand of the feature. <a class="reference internal" href="#hsp">HSP</a>&#8216;s with a
+<li><cite>strand</cite>: either &#8216;+&#8217; or &#8216;-&#8216;, the strand of the feature. <a class="reference external" href="#hsp">HSP</a>&#8216;s with a
 +/- match should both be assigned - as the strand. If not specified &#8216;+&#8217; is used.</li>
 <li><em>optional</em> <cite>name</cite>: the name of the feature e.g. &#8216;At2g26540&#8217;. Can be anything. If not specified
 <cite>id</cite> is used.</li>
@@ -181,10 +191,10 @@ At2g26540,4,1110,1683,gene,+,feature name
 3,4,1210,1653,CDS,+,name3
 4,4,1210,1653,CDS,-,name4</pre>
 </div>
-<p>Note the last 4 will all be drawn in a <a class="reference internal" href="#track">Track</a> with id 4. The 5th will be
+<p>Note the last 4 will all be drawn in a <a class="reference external" href="#track">Track</a> with id 4. The 5th will be
 drawn in track with id &#8216;5&#8217; and only the 3rd item is on the - strand. You may
 have thousands of annotations. The ids do not have to be numeric.
-Consecutive <a class="reference internal" href="#hsp">HSP</a>&#8216;s will be linked with an edge.</p>
+Consecutive <a class="reference external" href="#hsp">HSP</a>&#8216;s will be linked with an edge.</p>
 </div>
 <div class="section" id="glyphs">
 <h2><a class="toc-backref" href="#id6">Glyphs</a><a class="headerlink" href="#glyphs" title="Permalink to this headline">¶</a></h2>
@@ -214,7 +224,7 @@ referenced by other anntations) and the 2nd column is used as the display name.
 The start and end indicate the bounds of the track. Annotations outside of
 these bounds will not be rendered.</p>
 <p>an example looks like (note this is the same format and same file as
-<a class="reference internal" href="#annotations">Annotations</a>)</p>
+<a class="reference external" href="#annotations">Annotations</a>)</p>
 <div class="highlight-python"><pre>track_1,Track 1,9,1999,track</pre>
 </div>
 <p>So in that example, the bounds are from 9 to 1999 in basepair coordinates and
@@ -225,7 +235,7 @@ each track will be padded slightly to calculate the extent of the track.</p>
 </div>
 <div class="section" id="hsp">
 <h1><a class="toc-backref" href="#id9">HSP</a><a class="headerlink" href="#hsp" title="Permalink to this headline">¶</a></h1>
-<p>Consecutive HSP&#8217;s specified in the <a class="reference internal" href="#annotations">Annotations</a> file are related.
+<p>Consecutive HSP&#8217;s specified in the <a class="reference external" href="#annotations">Annotations</a> file are related.
 Inside the flash movie, clicking either part of an HSP will result in
 a wedge being drawn between it and its pair (as in the example images).</p>
 <p>edges are inferred between consecutive HSP&#8217;s.  So that hsp annotation
@@ -278,7 +288,7 @@ and <a class="reference external" href="http://github.com/brentp/gobe/blob/maste
 </div>
 <div class="section" id="histograms">
 <h2><a class="toc-backref" href="#id13">Histograms</a><a class="headerlink" href="#histograms" title="Permalink to this headline">¶</a></h2>
-<p>Histograms are specified in the same manner as <a class="reference internal" href="#lineplots">LinePlots</a> except the style type must be:
+<p>Histograms are specified in the same manner as <a class="reference external" href="#lineplots">LinePlots</a> except the style type must be:
 &#8216;plot_hist&#8217;. An example annotations line looks like:</p>
 <div class="highlight-python"><pre>#id,track_id,xmin,xmax,style,strand,data-source
 plot2,q,71630143,71695587,plot_hist,-,data/pair/hist_data.txt</pre>
@@ -345,14 +355,17 @@ interactive flash movie.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="development.html" title="For Developers"
+             >next</a> |</li>
+        <li class="right" >
           <a href="index.html" title="Welcome to gobe’s documentation!"
              >previous</a> |</li>
         <li><a href="index.html">gobe v0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2010, Brent Pedersen, Haibao Tang.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+        &copy; Copyright 2010, Brent Pedersen, Haibao Tang.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
     </div>
   </body>
 </html>
