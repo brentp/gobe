@@ -7,10 +7,11 @@
     <link rel="stylesheet" type="text/css" href="/static/site.css">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/site.js"></script>
     <script src="/static/gobe.js"></script>
+    <script type="text/javascript" src="/static/site.js"></script>
+    <script type="text/javascript" src="/static/libs.js"></script>
     <script type="text/javascript">
-        var flashVars = {
+        Gobe.flashVars = {
             'annotations': '/annos/{{ anno_id }}',
             'style'  : '/static/gobe.css'
         };
@@ -20,12 +21,12 @@
 <div id="box">
 
 <div id="head">
-    <a href="{{ login_url }}">{{ login_url_text }}</a> {{ name }}
+    <a href="{{ login_url }}">{{ login_url_text }}</a> {{ anno_name }}
 </div>
 
 <div id="left">
-    <p>Title: <input class="iform" type="text" name="title" id="title"/>{{ title }}</p>
-    Data:<p><textarea class="iform" id="annotations" name="annotations" rows="34">{{ annotations }}</textarea></p>
+    <p>Title: <input class="iform" type="text" name="title" id="title" value="{{ anno_title }}" /></p>
+    Data:<p><textarea class="iform" id="annotations" name="annotations" rows="34">{{ anno_content }}</textarea></p>
     <button id="submit">Draw These Annotations</button>
 </div>
 
@@ -33,7 +34,18 @@
 You need to install <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> (or turn it back on in your browser settings).
 </div>
 
-<div id="right">right</div>
+<div id="right">
+    <div id="global-history"><!-- holds the links to everyone's annos -->
+        {% for a in history %}
+            <p class='history'>
+                <a href="#{{ a.title }}!!{{ a.anno_id }}">{{ a.title }}</a>
+            </p>
+        {% endfor %}
+    </div>
+
+    <div id="user-history"><!-- holds the links to current user's annos -->
+    </div>
+</div>
 
 </div> <!-- box -->
 </body>
