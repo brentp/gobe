@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <title>Gobe-Demo</title>
+    <link rel="stylesheet" type="text/css" href="/static/site.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/site.js"></script>
+    <script src="/static/gobe.js"></script>
+    <script type="text/javascript">
+        var flashVars = {
+            'annotations': '/annos/{{ anno_id }}',
+            'style'  : '/static/gobe.css'
+        };
+    </script>
+</head>
+<body>
+<div id="box">
+
+<div id="head">
+    <a href="{{ login_url }}">{{ login_url_text }}</a> {{ name }}
+</div>
+
+<div id="left">
+    <p>Title: <input class="iform" type="text" name="title" id="title"/>{{ title }}</p>
+    Data:<p><textarea class="iform" id="annotations" name="annotations" rows="34">{{ annotations }}</textarea></p>
+    <button id="submit">Draw These Annotations</button>
+</div>
+
+<div id="content">
+You need to install <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> (or turn it back on in your browser settings).
+</div>
+
+<div id="right">right</div>
+
+</div> <!-- box -->
+</body>
+</html>

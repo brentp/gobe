@@ -1,0 +1,127 @@
+default {
+    fill_color: #cccccc;
+    fill_alpha: 0.8;
+    line_width: 0.2;
+    line_color: #222222;
+    height: 0.7;
+    z: 12;
+}
+
+sorghum_brachy_cns, cns_brachy_v1_sorghum_v1.4 {
+    fill_color: #ff0000;
+    fill_alpha: 0.7;
+    line_width: 1.0;
+    line_color: #ff0000;
+    height: 0.6;
+    z: 21;
+}
+cns_sorghum_v1.4_sorghum_v1.4 {
+    fill_color: #00ff00;
+    fill_alpha: 0.7;
+    line_width: 1.0;
+    line_color: #00ff00;
+    height: 0.6;
+    z: 21;
+}
+
+sorghum_rice_cns, rice_rice_cns, cns_rice_v6_sorghum_v1.4 {
+    fill_color: #0000ff;
+    fill_alpha: 1.0;
+    line_width: 1.0;
+    line_color: #0000ff;
+    height: 0.6;
+    z: 21;
+}
+
+CDS {
+    fill_color: #00aa00;
+    fill_alpha: 0.4;
+    line_width: 0.0;
+    line_color: #222222;
+    height: 0.9;
+    z: 16;
+}
+
+HSP {
+    fill_color: #0000ff;
+    fill_alpha: 0.8;
+    line_width: 0.00;
+    line_color: #000000;
+    height: 0.5;
+    z: 20;
+}
+
+start_codon, stop_codon {
+    fill_color: #000000;
+    fill_alpha: 0;
+}
+
+gene, gene.parent, gene.rna, gene.protein, gene.localdup, gene.coanno, gene.interruptor, pseudogene {
+    fill_color: #bbbbbb;
+    fill_alpha: 0.6;
+    line_width: 1.0;
+    line_color: #000000;
+    height: 0.4;
+    z:3;
+    arrow_len: 0.05;
+}
+pseudogene, pre-trna {
+    fill_color: #dadada;
+    line_width: 2.0;
+}
+
+gene.rna, gene.protein {
+    line_width: 2.0;
+    line_color: #0000ff;
+    z: 20;
+}
+
+gene.localdup {
+   fill_color: #000000;
+   height: 0.7;
+   line_width: 0.0;
+   z: 20;
+}
+
+snrna {
+    fill_color: #0000ff;
+    line_color: #0000ff;
+    height: 0.8;
+    z:20;
+    line_width: 1.0;
+}
+
+
+mRNA {
+    fill_color: #00aa00;
+    fill_alpha: 0.8;
+    line_width: 0.0;
+    line_color: #000000;
+    height: 0.6;
+    z: 2;
+}
+
+exon {
+    fill_color: #00ff00;
+    fill_alpha: 0.6;
+    line_width: 0.0;
+    line_color: #0000ff;
+    height: 0.66;
+    z: 2;
+}
+
+five_prime_UTR, three_prime_UTR {
+    fill_color: #0000ff;
+    fill_alpha: 0.8;
+    line_width: 0.0;
+    line_color: #0000ff;
+    height: 0.5;
+    arrow_len: 0.15;
+    z: 5;
+}
+
+mask {
+    fill_color: #ff6600;
+    height: 1.0;
+    z: 0;
+}
