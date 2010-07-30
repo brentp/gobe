@@ -29,7 +29,8 @@ class Glyph {
                 case "square": Square.draw(a);
                 case "star": Star.draw(a);
                 case "mask": Mask.draw(a);
-                case "text_glyph": TextGlyph.draw(a);
+                case "text": TextGlyph.draw(a);
+                case "caret": Caret.draw(a);
                 default: Box.draw(a);
             }
         }
@@ -61,7 +62,7 @@ class Box {
         var c = Glyph.get_color(a);
 
         g.clear();
-        g.lineStyle(a.style.line_width, a.is_hsp ? a.subtrack.fill_color : a.style.line_color, 0.3);
+        g.lineStyle(a.style.line_width, c, 0.3);
 
         g.moveTo(xstart, a.h/2);
         var m = new flash.geom.Matrix();
@@ -205,6 +206,22 @@ class Avatar extends Sprite {
         this.x = x-a.h/2;
         this.y = -a.h/2;
         a.addChild(this);
+    }
+}
+
+class Caret {
+    static public function draw(a:Annotation) {
+        var g = a.graphics;
+        var c = Glyph.get_color(a);
+        var tw = a.pxmax - a.pxmin;
+        var xstart = 0;
+        var xend = tw;
+        var xmiddle = tw / 2;
+
+        g.lineStyle(a.style.line_width, c);
+        g.moveTo(0, -a.h / 2);
+        g.lineTo(xmiddle, -a.h);
+        g.lineTo(xend, -a.h / 2);
     }
 }
 

@@ -9,9 +9,9 @@ default {
 }
 
 /* http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/flash/text/StyleSheet.html */
-text_glyph {
+text {
     color: #0000ff;
-    glyph: text_glyph;
+    glyph: text;
     font-weight: bold;
     font-size: 14px;
 }
@@ -107,6 +107,10 @@ exon {
     line_color: #0000ff;
     height: 0.66;
     z: 2;
+}
+
+intron {
+    glyph: caret;
 }
 
 five_prime_UTR, three_prime_UTR {
