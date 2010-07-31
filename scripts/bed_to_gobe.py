@@ -10,6 +10,10 @@ seqid  start  stop  name  type  strand
 
 Note that the first three fields are required, per bed format specification. The next
 two columns are optional. Use "--features" to select subset of the types.
+
+or gff files are also accepted (with columns processed similarly in another
+order)
+
 """
 
 import sys
@@ -23,8 +27,14 @@ class BedLine(object):
     """
     __slots__ = ("seqid", "start", "end", "name", "type", "strand")
 
-    def __init__(self, sline):
+    def __init__(self, sline, format="bed"):
         args = sline.strip().split("\t")
+        if format=="bed":
+            self._bedline(args)
+        else:
+            self._gffline(args)
+
+    def _bedline(self, args):
         self.seqid = args[0]
         self.start = int(args[1])
         self.end = int(args[2])
@@ -32,22 +42,29 @@ class BedLine(object):
         self.type = args[4] if len(args) > 4 else None
         self.strand = args[5] if len(args) > 5 else None
 
+    def _gffline(self, args):
+        self.seqid = args[0]
+        self.start = int(args[3])
+        self.end = int(args[4])
+        self.name = args[-1].split(";")[0].split("=")[1].split(",")[0].strip()
+        self.type = args[2]
+        self.strand = args[6]
+
 
 class Bed(list):
-    """ 
-    >>>
-    """
-    def __init__(self, lines, include_features=None):
+
+    def __init__(self, lines, format="bed", include_features=None):
         # list of BedLines
         for line in lines:
             if line[0] == "#" or line.strip()=="": continue
             if line.startswith("track"): continue
-            self.append(BedLine(line))
+            self.append(BedLine(line, format=format))
 
         self.include_features = include_features
     
     def iter_tracks(self):
-        # returns an ordered dictionary with seqid => (seqid_start, seqid_end)
+
+        # first get an ordered dictionary with seqid => (seqid_start, seqid_end)
         # this is useful to generate track info
         track_order = []
         track_extents = collections.defaultdict(lambda: [sys.maxint, 0]) 
@@ -81,11 +98,11 @@ class Bed(list):
 
 
 
-def bed_to_gobe(lines, include_features=None):
+def bed_to_gobe(lines, format="bed", include_features=None):
     """
-    >>>
+    This calls the conversion and puts two sections (tracks and features)
     """
-    bed = Bed(lines, include_features=include_features)
+    bed = Bed(lines, format=format, include_features=include_features)
     output = cStringIO.StringIO()
     print >>output, "### Tracks "
     print >>output, "\n".join(bed.iter_tracks())
@@ -94,10 +111,14 @@ def bed_to_gobe(lines, include_features=None):
     return output.getvalue()
 
 
-def main(bed_file, include_features=None):
+def main(bed_file, opts):
+
+    format = opts.format
+    include_features = set(opts.features.split(",")) if opts.features else None 
 
     contents = open(bed_file).readlines()
-    gobe_contents = bed_to_gobe(contents, include_features=include_features)
+    gobe_contents = bed_to_gobe(contents, format=format, 
+            include_features=include_features)
     print gobe_contents
 
 
@@ -109,6 +130,10 @@ if __name__ == '__main__':
     from optparse import OptionParser
 
     parser = OptionParser(__doc__)
+    supported_fmts = ("bed", "gff")
+    parser.add_option("--format", dest="format", default="bed",
+            choices=supported_fmts,
+            help="choose one of %s" % (supported_fmts,) + " [default: %default]")
     parser.add_option("--features", dest="features", default=None,
             help="include list of features (separated by comma); features not "
             "in the list are excluded")
@@ -118,7 +143,6 @@ if __name__ == '__main__':
         sys.exit(parser.print_help())
     
     bed_file = args[0]
-    include_features = set(opts.features.split(",")) if opts.features else None 
 
-    main(bed_file, include_features)
+    main(bed_file, opts)
 
