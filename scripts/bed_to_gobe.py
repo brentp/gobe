@@ -17,8 +17,8 @@ order)
 """
 
 import sys
-import cStringIO
 import collections
+import os.path as op
 
 
 class BedLine(object):
@@ -98,27 +98,35 @@ class Bed(list):
 
 
 
-def bed_to_gobe(lines, format="bed", include_features=None):
+def bed_to_gobe(lines, format="bed", include_features=None, title=None):
     """
     This calls the conversion and puts two sections (tracks and features)
     """
     bed = Bed(lines, format=format, include_features=include_features)
-    output = cStringIO.StringIO()
-    print >>output, "### Tracks "
-    print >>output, "\n".join(bed.iter_tracks())
-    print >>output, "### Features " 
-    print >>output, "\n".join(bed.iter_features())
-    return output.getvalue()
+    output = ["### Tracks "]
+    output.extend(bed.iter_tracks())
+    output.append("### Features ")
+    output.extend(bed.iter_features())
+    r = "\n".join(output)
+    if title is None:
+        return r
+
+    import urllib
+    import simplejson
+    post_data = urllib.urlencode({"annos": r, "title": title})
+    response = urllib.urlopen("http://try-gobe.appspot.com/", post_data).read()
+    response = simplejson.loads(response)
+    return "#http://try-gobe.appspot.com/#!!%s\n%s" % (response["anno_id"], r)
 
 
 def main(bed_file, opts):
 
     format = opts.format
-    include_features = set(opts.features.split(",")) if opts.features else None 
+    include_features = set(opts.features.split(",")) if opts.features else None
 
     contents = open(bed_file).readlines()
-    gobe_contents = bed_to_gobe(contents, format=format, 
-            include_features=include_features)
+    gobe_contents = bed_to_gobe(contents, format=format,
+            include_features=include_features, title=op.basename(bed_file))
     print gobe_contents
 
 
