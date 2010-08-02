@@ -32,15 +32,18 @@ class Index(webapp.RequestHandler):
         if anno_id == "":
             a = Annotation.all().order("-date").get()
         else:
-            a = Annotation.all().filter('id = ', anno_id).get()
+            a = Annotation.all().filter('anno_id = ', anno_id).get()
         if a is None: a = Annotation()
         user_tmpl = user_stuff(self.request.uri)
         history = Annotation.all().order("-date").fetch(20)
         name = user and user.nickname() or ""
         user_history = Annotation.gql("WHERE author = :author", author=user).fetch(20) if user else None
 
+        bar_hists = a.get_bar_hists()
+
         self.response.out.write(render("index.html", user_tmpl, anno_name=name, anno_id=a.anno_id or "",
                                        anno_content=a.content or "", anno_title=a.title or "",
+                                       bar_hists = bar_hists,
                                        history=history, user_history=user_history))
 
     def post(self, unused):
@@ -63,16 +66,14 @@ class Index(webapp.RequestHandler):
             a = Annotation(title=title, author=user, content=annos.strip(), anno_id=id)
             a.put()
 
-        self.response.out.write(simplejson.dumps({'status':'success', 'id': id}))
+        self.response.out.write(simplejson.dumps({'status':'success', 'anno_id': id}))
 
 class Anno(webapp.RequestHandler):
     def get(self, anno_id):
         self.response.headers['Content-type'] = 'text/plain';
         if anno_id == "":
             a = Annotation.all().order("-date").get()
-        elif anno_id == "all":
-            pass
-        else:
+        elif anno_id != "all":
             a = Annotation.all().filter('anno_id = ', anno_id).get()
         if a is None: a = Annotation()
 

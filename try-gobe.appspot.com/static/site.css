@@ -50,6 +50,6 @@ margin:3px;
 float:left;
 }
 
-#annotations, #title {
+#annotations, #title, .bar-hist {
     width: 95%;
 }

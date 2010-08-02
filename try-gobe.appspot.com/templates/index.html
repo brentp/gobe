@@ -25,9 +25,17 @@
 </div>
 
 <div id="left">
-    <p>Title: <input class="iform" type="text" name="title" id="title" value="{{ anno_title }}" /></p>
-    Data:<p><textarea class="iform" id="annotations" name="annotations" rows="34">{{ anno_content }}</textarea></p>
-    <button id="submit">Draw These Annotations</button>
+    <div id="main-anno">
+        <p>Title: <input class="iform" type="text" name="title" id="title" value="{{ anno_title }}" /></p>
+        Data:<textarea class="iform" id="annotations" name="annotations" rows="34">{{ anno_content }}</textarea>
+        <br/><button id="submit">Draw These Annotations</button>
+    </div>
+    <hr/>
+    <div id="bar-hist-anno">
+        <p>Enter Bar or Histogram Data</p>
+        <textarea class="iform bar-hist" id="bar-hist" name="bar-hist" rows="14" >{{ bar_content }}</textarea>
+        <br/><button class="add-bar-hist">Add This Data</button>
+    </div>
 </div>
 
 <div id="content">

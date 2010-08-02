@@ -6,3 +6,13 @@ class Annotation(db.Model):
     author = db.UserProperty()
     content = db.TextProperty()
     date = db.DateTimeProperty(auto_now=True)
+
+    # store the anno_ids of the plots associated with this one.
+    bar_hist_ids = db.StringListProperty()
+
+
+    def get_bar_hists(self):
+        bhs = []
+        for anno_id in self.bar_hist_ids:
+            bhs.append(Annotation.all().filter('anno_id = ', anno_id).get())
+        return bhs
