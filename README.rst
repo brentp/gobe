@@ -24,6 +24,8 @@ Interaction is customizable via javascript callbacks, css, and the input data.
 No server-side rendering is required. `haxe`_ programming language is used for
 development, but it is not required to use the library.
 
+Use an existing web-service at `try-gobe.appspot.com <http://try-gobe.appspot.com>`_.
+
 Annotations
 ===========
 
