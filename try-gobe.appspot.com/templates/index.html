@@ -15,7 +15,7 @@
     <script type="text/javascript">
         Gobe.flashVars = {
             'annotations': '/annos/{{ anno_id }}',
-            'style'  : '/static/gobe.css'
+            'style'  : get_style()
         };
     </script>
 </head>
@@ -44,6 +44,7 @@
     <h1> Gobe: interactive comparative genomics viewer 
     (<a href="http://brentp.github.com/gobe/" target="_blank">Documentation</a>, 
     <a href="http://github.com/brentp/gobe/" target="_blank">Source</a>)
+    <span style="float:right"><a id="gobe-style" href="#">alternate gobe style</a></span>
     </h1>
     <br />
     <div class="panel" id="content">

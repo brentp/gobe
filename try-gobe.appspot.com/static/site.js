@@ -36,6 +36,17 @@ jQuery(function(){
         });
     });
 
+    var gs = jQuery('#gobe-style');
+    gs.click(function(){
+        var current_style = get_style();
+        if(current_style == "/static/gobe.css"){
+            gs.attr('href', '?style=/static/blue.css');
+        }
+        else {
+            gs.attr('href', '?style=/static/gobe.css');
+        }
+    });
+    gs.click();
 
     jQuery('#submit').click(function(){
         var annos = jQuery('#annotations').val();
