@@ -94,14 +94,17 @@ def bed_to_gobe(lines, format="bed", feature_types=None, title=None):
         return r
 
     import urllib
-    from django.utils import simplejson
+    try:
+        from django.utils import simplejson
+    except:
+        import simplejson
     post_data = urllib.urlencode({"annos": r, "title": title})
     response = urllib.urlopen("http://try-gobe.appspot.com/", post_data).read()
     response = simplejson.loads(response)
     return "# http://try-gobe.appspot.com/#!!%s\n%s" % (response["anno_id"], r)
 
 
-def main(bed_file, format='bed', feature_types=None):
+def main(bed_file, format='bed', feature_types=None, title=None):
 
     if not isinstance(feature_types, list):
         feature_types = [x.strip() for x in feature_types.split(",")] \
@@ -110,17 +113,15 @@ def main(bed_file, format='bed', feature_types=None):
     # they sent in a filepath.
     if isinstance(bed_file, basestring):
         contents = open(bed_file).readlines()
-        title = op.basename(bed_file)
     else:
         # they sent in a list of lines.
         contents = bed_file
-        title = contents[0]
 
-    if feature_types:
+    if feature_types and title:
         title += (" (%s)" % ", ".join(feature_types))
 
     gobe_contents = bed_to_gobe(contents, format=format,
-            feature_types=feature_types, title=None)
+            feature_types=feature_types, title=title)
     return gobe_contents
 
 def guess_format(annos_str):

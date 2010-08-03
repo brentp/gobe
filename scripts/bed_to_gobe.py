@@ -32,10 +32,14 @@ if __name__ == '__main__':
     parser.add_option("--format", dest="format", default="bed",
             choices=supported_fmts,
             help="choose one of %s" % (supported_fmts,) + " [default: %default]")
-    parser.add_option("-t", "--feature-types", dest="feature_types",
+    parser.add_option("--feature-types", dest="feature_types",
                       default=None, help=
             "include list of feature types (separated by comma); types not "
-            "in the list are excluded")
+            "in the list are excluded (e.g. --feature-types CDS,exon,gene ")
+    parser.add_option("--title", dest="title", help="optional descriptor for"
+                      " this dataset. if specified, the data will be uploaded to"
+                      " try-gobe.appspot.com and a url will be printed where you"
+                      " can view your data")
 
     opts, args = parser.parse_args()
     if len(args) != 1:
@@ -43,5 +47,5 @@ if __name__ == '__main__':
 
     bed_file = args[0]
 
-    print utils.main(bed_file, opts.format, opts.feature_types)
+    print utils.main(bed_file, opts.format, opts.feature_types, title=opts.title)
 
