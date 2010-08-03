@@ -94,7 +94,7 @@ def bed_to_gobe(lines, format="bed", feature_types=None, title=None):
         return r
 
     import urllib
-    import simplejson
+    from django.utils import simplejson
     post_data = urllib.urlencode({"annos": r, "title": title})
     response = urllib.urlopen("http://try-gobe.appspot.com/", post_data).read()
     response = simplejson.loads(response)
@@ -120,32 +120,44 @@ def main(bed_file, format='bed', feature_types=None):
         title += (" (%s)" % ", ".join(feature_types))
 
     gobe_contents = bed_to_gobe(contents, format=format,
-            feature_types=feature_types, title=title)
-    print gobe_contents
+            feature_types=feature_types, title=None)
+    return gobe_contents
 
+def guess_format(annos_str):
+    r"""
+    guess gff3/bed/gobe given an input string of
+    annotations
+    >>> guess_format("##gff-version")
+    'gff3'
+    >>> guess_format("1,2,3,4,5")
+    'gobe'
+    >>> guess_format("1\n2")
+    'gobe'
+    >>> guess_format("seqid\tstart\tstop\taccn\ttype\tstrand")
+    'bed'
+    >>> guess_format("seqid\tstart\tstop\taccn\ttype\tstrand")
+    'bed'
+    >>> guess_format("chr22\t.\tBED_feature\t20100001\t20100100\t.\t.\t.\t.")
+    'gff3'
 
-if __name__ == '__main__':
+    """
+    alist = annos_str.split("\n")
+    if alist[0].startswith("##gff-version"):
+        return "gff3"
+    alist = [a for a in alist if not a[0] == "#"]
 
+    if alist[0].count(",") > alist[0].count("\t"):
+        return "gobe"
+
+    # it's gobe line data with only 1 column.
+    if alist[0].count(",") + alist[0].count("\t") == 0:
+        return "gobe"
+
+    if len(alist[0].split("\t")) != 9:
+        return "bed"
+
+    return "gff3"
+
+if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
-    from optparse import OptionParser
-
-    parser = OptionParser(__doc__)
-    supported_fmts = ("bed", "gff")
-    parser.add_option("--format", dest="format", default="bed",
-            choices=supported_fmts,
-            help="choose one of %s" % (supported_fmts,) + " [default: %default]")
-    parser.add_option("-t", "--feature-types", dest="feature_types",
-                      default=None, help=
-            "include list of feature types (separated by comma); types not "
-            "in the list are excluded")
-
-    opts, args = parser.parse_args()
-    if len(args) != 1:
-        sys.exit(parser.print_help())
-
-    bed_file = args[0]
-
-    main(bed_file, opts.format, opts.feature_types)
-

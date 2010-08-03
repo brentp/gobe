@@ -4,10 +4,13 @@ from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from django.utils import simplejson
 import hashlib
-import datetime
+import utils
+
 
 import os.path as op
 from models import Annotation
+
+FORMATS = ("gff3", "bed", "gobe")
 
 template_dir = op.join(op.dirname(__file__), "templates")
 def render(path, vals=None, **kwargs):
@@ -51,6 +54,7 @@ class Index(webapp.RequestHandler):
         self.response.headers['Content-type'] = 'text/javascript';
         user = users.get_current_user()
         annos = self.request.get('annos', '').strip()
+        format = self.request.get('format', utils.guess_format(annos))
         if not annos:
             simplejson.dumps({'status': 'fail'})
             return
@@ -59,24 +63,34 @@ class Index(webapp.RequestHandler):
         anno_id = hashlib.md5(annos + title).hexdigest()
 
         # dont save unless it's new.
-        a = Annotation.gql("WHERE anno_id = :anno_id AND title = :title",
-                           anno_id=anno_id, title=title).get()
+        a = Annotation.gql("WHERE anno_id = :anno_id AND title = :title AND author = :author",
+                           anno_id=anno_id, title=title, author=user).get()
         if a is None:
-            a = Annotation(title=title, author=user, content=annos.strip(), anno_id=anno_id)
+            a = Annotation(title=title, author=user, content=annos.strip(), anno_id=anno_id,
+                          format=format)
             a.put()
 
         self.response.out.write(simplejson.dumps({'status':'success', 'anno_id': anno_id}))
 
 class Anno(webapp.RequestHandler):
     def get(self, anno_id):
+        # they can request a certain format by ending with .gobe whatever.
+        import sys
         self.response.headers['Content-type'] = 'text/plain';
+
         if anno_id == "":
             a = Annotation.all().order("-date").get()
         elif anno_id != "all":
             a = Annotation.all().filter('anno_id = ', anno_id).get()
         if a is None: a = Annotation()
+        content = a.content
 
-        self.response.out.write(a.content or "")
+        if a.format and a.format != "gobe":
+            print >>sys.stderr, "converting!!!!!!!!!!!"
+            content = [x.strip() for x in content.split("\n")]
+            content = utils.main(content, a.format)
+
+        self.response.out.write(content or "")
 
 urls = (
     ('/annos/(.*)', Anno),

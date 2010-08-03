@@ -43,5 +43,5 @@ if __name__ == '__main__':
 
     bed_file = args[0]
 
-    utils.main(bed_file, opts.format, opts.feature_types)
+    print utils.main(bed_file, opts.format, opts.feature_types)
 

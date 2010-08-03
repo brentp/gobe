@@ -23,7 +23,8 @@ jQuery(function(){
     jQuery(window).hashchange( function(){
         var anno_id = location.hash.substr(1).split(/!!/); // remove #
         var title = anno_id[0]
-        anno_id = anno_id[1];
+        // add .gobe to get the right format to the flash movie.
+        anno_id = anno_id[1]; // + ".gobe";
 
 
         jQuery.get('/annos/' + anno_id, function(anno_txt){

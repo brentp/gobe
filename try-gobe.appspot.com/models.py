@@ -7,6 +7,8 @@ class Annotation(db.Model):
     content = db.TextProperty()
     date = db.DateTimeProperty(auto_now=True)
 
+    format = db.StringProperty(choices=set(("gff3", "bed", "gobe")))
+
     # store the anno_ids of the plots associated with this one.
     bar_hist_ids = db.StringListProperty()
 
