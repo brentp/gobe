@@ -75,7 +75,6 @@ class Index(webapp.RequestHandler):
 class Anno(webapp.RequestHandler):
     def get(self, anno_id):
         # they can request a certain format by ending with .gobe whatever.
-        import sys
         self.response.headers['Content-type'] = 'text/plain';
 
         if anno_id == "":
@@ -86,7 +85,6 @@ class Anno(webapp.RequestHandler):
         content = a.content
 
         if a.format and a.format != "gobe":
-            print >>sys.stderr, "converting!!!!!!!!!!!"
             content = [x.strip() for x in content.split("\n")]
             content = utils.main(content, a.format)
 
