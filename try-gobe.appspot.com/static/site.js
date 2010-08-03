@@ -1,3 +1,4 @@
+
 Gobe.embed = function(width, height){
     swfobject.embedSWF("/static/gobe.swf?d=" + Math.random(), Gobe.DIV, width, height, "9.0.0"
                 , null, Gobe.flashVars, Gobe.params, {}
@@ -9,6 +10,10 @@ jQuery(function(){
     var get = swfobject.getQueryParamValue;
     var height = get('h') || "500";
     var w = jQuery('#content').width();
+
+    /* use jquery ui to style buttons */
+    $("button").button();
+
     Gobe.params = {'bgcolor': '#FFFFFF'};
     Gobe.DIV = "content"
 
@@ -73,6 +78,3 @@ jQuery(function(){
     });
 });
 
-Gobe.onclick = function(args){
-    console.log(args);
-}

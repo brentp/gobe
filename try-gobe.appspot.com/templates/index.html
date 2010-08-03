@@ -4,10 +4,12 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
     <title>Gobe-Demo</title>
+    <link rel="stylesheet" type="text/css" href="static/trontastic/jquery-ui-1.8.2.custom.css" /> 
     <link rel="stylesheet" type="text/css" href="/static/site.css">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script src="/static/gobe.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/static/gobe.js"></script>
     <script type="text/javascript" src="/static/site.js"></script>
     <script type="text/javascript" src="/static/libs.js"></script>
     <script type="text/javascript">
@@ -18,32 +20,43 @@
     </script>
 </head>
 <body>
-<div id="box">
-
 <div id="head">
-    <a href="{{ login_url }}">{{ login_url_text }}</a> {{ anno_name }}
 </div>
 
 <div id="left">
-    <div id="main-anno">
-        <p>Title: <input class="iform" type="text" name="title" id="title" value="{{ anno_title }}" /></p>
-        Data:<textarea class="iform" id="annotations" name="annotations" rows="34">{{ anno_content }}</textarea>
+    <div class="panel" id="main-anno">
+        <h4>Title</h4> 
+        <input class="iform" type="text" name="title" id="title" value="{{ anno_title }}" />
+        <h4>Data</h4>
+        <textarea class="iform" id="annotations" name="annotations" rows="34">{{ anno_content }}</textarea>
         <br/><button id="submit">Draw These Annotations</button>
     </div>
-    <hr/>
-    <div id="bar-hist-anno">
-        <p>(Optional) Enter Line or Histogram Data</p>
+    <br />
+    <div class="panel" id="bar-hist-anno">
+        <h4>(Optional) Enter Line or Histogram Data</h4>
         <textarea class="iform bar-hist" id="bar-hist" name="bar-hist" rows="14" >{{ bar_content }}</textarea>
         <br/><button class="add-bar-hist">Add This Data</button>
     </div>
 </div>
 
-<div id="content">
+
+<div id="center">
+    <h1> Gobe: interactive comparative genomics viewer 
+    (<a href="http://brentp.github.com/gobe/" target="_blank">Documentation</a>, 
+    <a href="http://brentp.github.com/gobe/" target="_blank">Source</a>)
+    </h1>
+    <br />
+    <div class="panel" id="content">
 You need to install <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> (or turn it back on in your browser settings).
+    </div>
 </div>
 
 <div id="right">
-    <div id="global-history"><!-- holds the links to everyone's annos -->
+    <div class="panel">
+        <a id="login" href="{{ login_url }}">{{ login_url_text }}</a> {{ anno_name }}
+    </div>
+    <br />
+    <div class="panel" id="global-history"><!-- holds the links to everyone's annos -->
         <h4>Recently Added Annotations</h4>
         {% for a in history %}
             <p class='history'>
@@ -53,8 +66,8 @@ You need to install <a href="http://www.adobe.com/shockwave/download/download.cg
     </div>
 
     {% if user_history %}
-    <hr/>
-    <div id="user-history"><!-- holds the links to current user's annos -->
+    <br />
+    <div class="panel" id="user-history"><!-- holds the links to current user's annos -->
         <h4>Your Recent Annotations</h4>
         {% for a in user_history %}
             <p class='history'>
@@ -65,6 +78,5 @@ You need to install <a href="http://www.adobe.com/shockwave/download/download.cg
     {% endif %}
 </div>
 
-</div> <!-- box -->
 </body>
 </html>

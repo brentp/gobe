@@ -1,55 +1,80 @@
 /* friendlybit.com/css/simple-css-templates/ */
 
+button {
+padding: 8px;
+}
+.ui-widget { 
+font-family: Helvetica,Verdana,Arial,sans-serif; font-size: 1em; 
+}
+.ui-icon { 
+display: inline-block; 
+}
+
 html { 
 padding:0px;
 margin:0px;
 }
 
 body {
-background-color: #e6dfdb;
-font-size: 17px;
+font-family:Helvetica,Verdana,Arial;
+font-size:90%;
+background:#f8f8f8;
 color:#564b47;
-text-align:center;
 margin:0px;
 padding:0px;
 }
 
-#box {
-width:1240;
-margin: 0px auto;
-padding:0px;
-text-align:left;
-}
-
-#content {
-margin:3px;
-width:734px;
-padding:0px;
-float:left;
-background-color:#fff;
-overflow: auto;
-}
-
 #head {
-background-color:transparent;
-text-align:center;
-}
-
-
-#right {
-background-color:#fff;
-width:220px;
-margin:3px;
-float:left;
+position:absolute;
+top:0;
+left:0;
+width:100%;
+/*background-color:slategray;*/
+padding:.5%;
 }
 
 #left {
-background-color:#fff;
-width:300px;
-margin:3px;
+width:20%;
+padding:.75%;
+position:relative;
 float:left;
+}
+
+#center {
+width:60%;
+float:left;
+padding:.75%;
+position:relative;
+overflow: auto;
+}
+
+#right {
+width:15%;
+padding:.75%;
+position:relative;
+float:right;
 }
 
 #annotations, #title, .bar-hist {
     width: 95%;
 }
+
+.panel {
+    background-color: lavender;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding: 10px;
+    -moz-box-shadow:0 3px 30px black;
+    -webkit-box-shadow:0 3px 30px black;
+}
+
+.shadow {
+    -moz-box-shadow:0 3px 30px black;
+    -webkit-box-shadow:0 3px 30px black;
+}
+a:link,a:visited,a:active{color:gray;}
+h1,h2,h3,h4{color:#023858; font-size:100%;}
+hr{border:none;height:0px;border-bottom:dotted #303030 1px;}
+th{text-align:left;}
+select,textarea,input[type="text"],input[type="file"],input[type="password"]{-webkit-box-sizing:border-box;}
