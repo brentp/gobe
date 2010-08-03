@@ -3,10 +3,10 @@ var Gobe = {
     },
     'onclick': function(args){
         console.log(args);
-        var text = "<b>Type:</b>" + args[2] + "<br />";
-        text += "<b>Start:</b>" + args[3] + "<br />";
-        text += "<b>Stop:</b>" + args[4] + "<br />";
-        jQuery('#dialog').html(text).dialog({title: args[1]});
+        var text = "<b>Type: </b>" + args[2] + "<br />";
+        text += "<b>Start: </b>" + args[3] + "<br />";
+        text += "<b>Stop: </b>" + args[4] + "<br />";
+        jQuery('#dialog').addClass("dialog").html(text);
     },
     'warn': function(msg){
         console.log("Flash msg:" + msg);

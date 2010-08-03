@@ -59,7 +59,7 @@ float:right;
     width: 95%;
 }
 
-.panel {
+.panel, .dialog {
     background-color: lavender;
     border-radius: 10px;
     -moz-border-radius: 10px;
@@ -67,6 +67,10 @@ float:right;
     padding: 10px;
     -moz-box-shadow:0 3px 30px black;
     -webkit-box-shadow:0 3px 30px black;
+}
+
+.dialog {
+    color: midnightblue;
 }
 
 .shadow {

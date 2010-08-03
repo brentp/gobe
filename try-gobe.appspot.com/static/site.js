@@ -15,7 +15,7 @@ jQuery(function(){
     $("button").button();
 
     Gobe.params = {'bgcolor': '#FFFFFF'};
-    Gobe.DIV = "content"
+    Gobe.DIV = "content";
 
     Gobe.embed(w, height);
 
