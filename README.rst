@@ -186,7 +186,7 @@ and it will be drawn in it's own track.
 The line-color and width are specified in the css file under plot_line.
 See the example `data <http://github.com/brentp/gobe/blob/master/data/pair/gc_content.txt>`_
 , `annotations file <http://github.com/brentp/gobe/blob/master/data/pair/annos.txt>`_ (the line with id of 'plot1')
-and `css <http://github.com/brentp/gobe/blob/master/static/gobe2.css>`_
+and `css <http://github.com/brentp/gobe/blob/master/static/blue.css>`_
 
 Histograms
 ----------
