@@ -100,7 +100,7 @@ class FeatureList(list):
     def iter_features(self):
 
         for i, b in enumerate(self):
-            is_blast = not not b.qseqid
+            is_blast = hasattr(b, "qseqid")
             if self.feature_types and not b.type in self.feature_types: continue
             # (@gobe doc) id, track_id, start, end, type, strand, name
             if is_blast:
