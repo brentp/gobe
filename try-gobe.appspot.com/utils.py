@@ -10,9 +10,11 @@ class FeatureLine(object):
     __slots__ = ("seqid", "start", "end", "name", "type", "strand",
                 'qseqid', 'sseqid', 'pctid', 'hitlen', 'nmismatch', 'ngaps',
                  'qstart', 'qstop', 'sstart', 'sstop', 'evalue', 'score',
-                 'qseqid', 'sseqid')
+                 'qseqid', 'sseqid', 'qadjust', 'sadjust')
 
-    def __init__(self, sline, format="bed"):
+    def __init__(self, sline, format="bed", qadjust=0, sadjust=0):
+        self.qadjust = qadjust
+        self.sadjust = sadjust
         args = sline.strip().split("\t")
         method = getattr(self, "_%sline" % format)
         method(args)
@@ -40,22 +42,23 @@ class FeatureLine(object):
         self.hitlen = int(args[3])
         self.nmismatch = int(args[4])
         self.ngaps = int(args[5])
-        self.qstart = int(args[6])
-        self.qstop = int(args[7])
-        self.sstart = int(args[8])
-        self.sstop = int(args[9])
+        self.qstart = int(args[6]) + self.qadjust
+        self.qstop = int(args[7]) + self.qadjust
+        self.sstart = int(args[8]) + self.sadjust
+        self.sstop = int(args[9]) + self.sadjust
         self.evalue = float(args[10])
         self.score = float(args[11])
 
 
 class FeatureList(list):
 
-    def __init__(self, lines, format="bed", feature_types=None):
+    def __init__(self, lines, format="bed", feature_types=None, title="", qadjust=0, sadjust=0):
         # list of FeatureLines
+        self.title = title.strip()
         for line in lines:
             if line[0] == "#" or line.strip()=="": continue
             if line.startswith("track"): continue
-            self.append(FeatureLine(line, format=format))
+            self.append(FeatureLine(line, format=format, qadjust=qadjust, sadjust=sadjust))
 
         self.feature_types = feature_types
 
@@ -74,7 +77,7 @@ class FeatureList(list):
                                         ('qstart', 'sstart'), \
                                         ('qstop', 'sstop'), \
                                         ('qseqid', 'sseqid')
-
+                qs = ("", "")
             for q_or_s, nseqid, nstart, nend in zip(qs, seqids, starts, stops):
                 seqid, start, end = [getattr(b, attr) for attr in (nseqid, nstart, nend)]
                 fseqid = q_or_s + seqid
@@ -94,7 +97,8 @@ class FeatureList(list):
             track_start -= margin
             track_end += margin
             # (@gobe doc) track_id, name, start, end, track
-            yield ",".join(str(x) for x in (t, t, track_start, track_end, \
+            title = self.title + " : " if self.title else ""
+            yield ",".join(str(x) for x in (t, title + t, track_start, track_end, \
                 "track"))
 
     def iter_features(self):
@@ -105,8 +109,10 @@ class FeatureList(list):
             # (@gobe doc) id, track_id, start, end, type, strand, name
             if is_blast:
                 strand = "+" if b.sstart < b.sstop else '-'
-                yield ",".join(str(x) for x in ('q' + str(i), b.qseqid, b.qstart, b.qstop, "HSP", strand))
-                yield ",".join(str(x) for x in ('s' + str(i), b.sseqid, b.sstart, b.sstop, "HSP", strand))
+                # TODO: can allow user to specify a prefix here...
+                qprefix, sprefix = "", ""
+                yield ",".join(str(x) for x in (qprefix + str(i), b.qseqid, b.qstart, b.qstop, "HSP", strand))
+                yield ",".join(str(x) for x in (sprefix + str(i), b.sseqid, b.sstart, b.sstop, "HSP", strand))
 
             else:
                 yield ",".join(str(x) for x in (i, b.seqid, b.start, b.end, \
@@ -114,12 +120,14 @@ class FeatureList(list):
 
 
 
-def feats_to_gobe(lines, format="bed", feature_types=None, title=None):
+def feats_to_gobe(lines, format="bed", feature_types=None, title=None,
+                 qadjust=0, sadjust=0):
     """
     This calls the conversion and puts two sections (tracks and features)
     """
 
-    feats = FeatureList(lines, format=format, feature_types=feature_types)
+    feats = FeatureList(lines, format=format, feature_types=feature_types, title=title or "",
+                       qadjust=qadjust, sadjust=sadjust)
     output = ["### Tracks "]
     output.extend(feats.iter_tracks())
     output.append("### Features ")
@@ -139,7 +147,12 @@ def feats_to_gobe(lines, format="bed", feature_types=None, title=None):
     return "# http://try-gobe.appspot.com/#!!%s\n%s" % (response["anno_id"], r)
 
 
-def main(feat_file, format='bed', feature_types=None, title=None, force_tabs=False):
+def main(feat_file, format='bed', feature_types=None, title=None, force_tabs=False,
+        qadjust=0, sadjust=0):
+    """
+    for a blast result, qadjust and sadjust can be used to transfrom from local
+    coordinates to chromosomal coordinates
+    """
 
     if not isinstance(feature_types, list):
         feature_types = [x.strip() for x in feature_types.split(",")] \
@@ -157,7 +170,7 @@ def main(feat_file, format='bed', feature_types=None, title=None, force_tabs=Fal
         title += (" (%s)" % ", ".join(feature_types))
 
     gobe_contents = feats_to_gobe(contents, format=format,
-            feature_types=feature_types, title=title)
+            feature_types=feature_types, title=title, qadjust=qadjust, sadjust=sadjust)
     return gobe_contents
 
 def guess_format(annos_str, force_tabs=False):

@@ -36,6 +36,10 @@ if __name__ == '__main__':
                       default=None, help=
             "include list of feature types (separated by comma); types not "
             "in the list are excluded (e.g. --feature-types CDS,exon,gene ")
+    parser.add_option("--qadjust", dest="qadjust", type='int', default=0, 
+                      help="adjust local query blast coordinates to chromosomal coords")
+    parser.add_option("--sadjust", dest="sadjust", type='int', default=0, 
+                      help="adjust local subject blast coordinates to chromosomal coords")
     parser.add_option("--title", dest="title", help="optional descriptor for"
                       " this dataset. if specified, the data will be uploaded to"
                       " try-gobe.appspot.com and a url will be printed where you"
@@ -47,5 +51,5 @@ if __name__ == '__main__':
 
     bed_file = args[0]
 
-    print utils.main(bed_file, opts.format, opts.feature_types, title=opts.title)
+    print utils.main(bed_file, opts.format, opts.feature_types, title=opts.title, qadjust=opts.qadjust, sadjust=opts.sadjust)
 
