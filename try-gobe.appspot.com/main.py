@@ -3,6 +3,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from django.utils import simplejson
+import sys
 import hashlib
 import utils
 
@@ -54,7 +55,7 @@ class Index(webapp.RequestHandler):
         self.response.headers['Content-type'] = 'text/javascript';
         user = users.get_current_user()
         annos = self.request.get('annos', '').strip()
-        format = self.request.get('format', utils.guess_format(annos))
+        format = self.request.get('format', utils.guess_format(annos, force_tabs=True))
         if not annos:
             simplejson.dumps({'status': 'fail'})
             return
@@ -86,7 +87,7 @@ class Anno(webapp.RequestHandler):
 
         if a.format and a.format != "gobe":
             content = [x.strip() for x in content.split("\n")]
-            content = utils.main(content, a.format)
+            content = utils.main(content, a.format, force_tabs=True)
 
         self.response.out.write(content or "")
 

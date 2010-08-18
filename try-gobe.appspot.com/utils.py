@@ -1,14 +1,14 @@
 import sys
 import collections
-import os.path as op
+import re
 
 
-class BedLine(object):
+class FeatureLine(object):
     """
     Parsing a line of bed, supporting three required plus three optional columns
     """
     __slots__ = ("seqid", "start", "end", "name", "type", "strand",
-                'query', 'subject', 'pctid', 'hitlen', 'nmismatch', 'ngaps',
+                'qseqid', 'sseqid', 'pctid', 'hitlen', 'nmismatch', 'ngaps',
                  'qstart', 'qstop', 'sstart', 'sstop', 'evalue', 'score',
                  'qseqid', 'sseqid')
 
@@ -34,8 +34,8 @@ class BedLine(object):
         self.strand = args[6]
 
     def _blastline(self, args):
-        self.query = args[0]
-        self.subject = args[1]
+        self.qseqid = args[0]
+        self.sseqid = args[1]
         self.pctid = float(args[2])
         self.hitlen = int(args[3])
         self.nmismatch = int(args[4])
@@ -51,11 +51,11 @@ class BedLine(object):
 class FeatureList(list):
 
     def __init__(self, lines, format="bed", feature_types=None):
-        # list of BedLines
+        # list of FeatureLines
         for line in lines:
             if line[0] == "#" or line.strip()=="": continue
             if line.startswith("track"): continue
-            self.append(BedLine(line, format=format))
+            self.append(FeatureLine(line, format=format))
 
         self.feature_types = feature_types
 
@@ -66,12 +66,24 @@ class FeatureList(list):
         track_order = []
         track_extents = collections.defaultdict(lambda: [sys.maxint, 0])
         for b in self:
-            t_extents = track_extents[b.seqid]
-            # update track extents
-            if b.start < t_extents[0]: t_extents[0] = b.start
-            if b.end > t_extents[1]: t_extents[1] = b.end
-            if b.seqid not in track_order:
-                track_order.append(b.seqid)
+            is_blast = hasattr(b, 'qseqid')
+            qs, starts, stops, seqids = ('', ),('start',), ('end',), ('seqid',)
+            # if it's a blast, have to do query and subject.
+            if is_blast:
+                qs, starts, stops, seqids = ('q', 's'), \
+                                        ('qstart', 'sstart'), \
+                                        ('qstop', 'sstop'), \
+                                        ('qseqid', 'sseqid')
+
+            for q_or_s, nseqid, nstart, nend in zip(qs, seqids, starts, stops):
+                seqid, start, end = [getattr(b, attr) for attr in (nseqid, nstart, nend)]
+                fseqid = q_or_s + seqid
+                t_extents = track_extents[fseqid]
+                # update track extents
+                if start < t_extents[0]: t_extents[0] = start
+                if end > t_extents[1]: t_extents[1] = end
+                if fseqid not in track_order:
+                    track_order.append(fseqid)
 
         for t in track_order:
             t_extents = track_extents[t]
@@ -88,9 +100,16 @@ class FeatureList(list):
     def iter_features(self):
 
         for i, b in enumerate(self):
+            is_blast = not not b.qseqid
             if self.feature_types and not b.type in self.feature_types: continue
             # (@gobe doc) id, track_id, start, end, type, strand, name
-            yield ",".join(str(x) for x in (i, b.seqid, b.start, b.end, \
+            if is_blast:
+                strand = "+" if b.sstart < b.sstop else '-'
+                yield ",".join(str(x) for x in ('q' + str(i), b.qseqid, b.qstart, b.qstop, "HSP", strand))
+                yield ",".join(str(x) for x in ('s' + str(i), b.sseqid, b.sstart, b.sstop, "HSP", strand))
+
+            else:
+                yield ",".join(str(x) for x in (i, b.seqid, b.start, b.end, \
                     b.type or "", b.strand or "", b.name or ""))
 
 
@@ -99,6 +118,7 @@ def feats_to_gobe(lines, format="bed", feature_types=None, title=None):
     """
     This calls the conversion and puts two sections (tracks and features)
     """
+
     feats = FeatureList(lines, format=format, feature_types=feature_types)
     output = ["### Tracks "]
     output.extend(feats.iter_tracks())
@@ -119,7 +139,7 @@ def feats_to_gobe(lines, format="bed", feature_types=None, title=None):
     return "# http://try-gobe.appspot.com/#!!%s\n%s" % (response["anno_id"], r)
 
 
-def main(feat_file, format='bed', feature_types=None, title=None):
+def main(feat_file, format='bed', feature_types=None, title=None, force_tabs=False):
 
     if not isinstance(feature_types, list):
         feature_types = [x.strip() for x in feature_types.split(",")] \
@@ -131,7 +151,8 @@ def main(feat_file, format='bed', feature_types=None, title=None):
     else:
         # they sent in a list of lines.
         contents = feat_file
-
+    if force_tabs:
+        contents = [re.sub("\s+", "\t", l) for l in contents]
     if feature_types and title:
         title += (" (%s)" % ", ".join(feature_types))
 
@@ -139,7 +160,7 @@ def main(feat_file, format='bed', feature_types=None, title=None):
             feature_types=feature_types, title=title)
     return gobe_contents
 
-def guess_format(annos_str):
+def guess_format(annos_str, force_tabs=False):
     r"""
     guess gff3/bed/gobe/blast given an input string of
     annotations
@@ -160,11 +181,14 @@ def guess_format(annos_str):
     'blast'
 
     """
+
     alist = annos_str.split("\n")
     if alist[0].startswith("##gff-version"):
         return "gff"
     alist = [a for a in alist if not a[0] == "#"]
     l1 = alist[0]
+    if force_tabs:
+        l1 = re.sub("\s+", "\t", l1)
 
     if l1.count(",") > l1.count("\t"):
         return "gobe"
