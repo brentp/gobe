@@ -28,7 +28,7 @@ if __name__ == '__main__':
     from optparse import OptionParser
 
     parser = OptionParser(__doc__)
-    supported_fmts = ("bed", "gff")
+    supported_fmts = ("bed", "gff", "blast")
     parser.add_option("--format", dest="format", default="bed",
             choices=supported_fmts,
             help="choose one of %s" % (supported_fmts,) + " [default: %default]")

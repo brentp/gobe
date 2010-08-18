@@ -7,14 +7,15 @@ class BedLine(object):
     """
     Parsing a line of bed, supporting three required plus three optional columns
     """
-    __slots__ = ("seqid", "start", "end", "name", "type", "strand")
+    __slots__ = ("seqid", "start", "end", "name", "type", "strand",
+                'query', 'subject', 'pctid', 'hitlen', 'nmismatch', 'ngaps',
+                 'qstart', 'qstop', 'sstart', 'sstop', 'evalue', 'score',
+                 'qseqid', 'sseqid')
 
     def __init__(self, sline, format="bed"):
         args = sline.strip().split("\t")
-        if format=="bed":
-            self._bedline(args)
-        else:
-            self._gffline(args)
+        method = getattr(self, "_%sline" % format)
+        method(args)
 
     def _bedline(self, args):
         self.seqid = args[0]
@@ -32,8 +33,22 @@ class BedLine(object):
         self.type = args[2]
         self.strand = args[6]
 
+    def _blastline(self, args):
+        self.query = args[0]
+        self.subject = args[1]
+        self.pctid = float(args[2])
+        self.hitlen = int(args[3])
+        self.nmismatch = int(args[4])
+        self.ngaps = int(args[5])
+        self.qstart = int(args[6])
+        self.qstop = int(args[7])
+        self.sstart = int(args[8])
+        self.sstop = int(args[9])
+        self.evalue = float(args[10])
+        self.score = float(args[11])
 
-class Bed(list):
+
+class FeatureList(list):
 
     def __init__(self, lines, format="bed", feature_types=None):
         # list of BedLines
@@ -80,15 +95,15 @@ class Bed(list):
 
 
 
-def bed_to_gobe(lines, format="bed", feature_types=None, title=None):
+def feats_to_gobe(lines, format="bed", feature_types=None, title=None):
     """
     This calls the conversion and puts two sections (tracks and features)
     """
-    bed = Bed(lines, format=format, feature_types=feature_types)
+    feats = FeatureList(lines, format=format, feature_types=feature_types)
     output = ["### Tracks "]
-    output.extend(bed.iter_tracks())
+    output.extend(feats.iter_tracks())
     output.append("### Features ")
-    output.extend(bed.iter_features())
+    output.extend(feats.iter_features())
     r = "\n".join(output)
     if title is None:
         return r
@@ -104,32 +119,32 @@ def bed_to_gobe(lines, format="bed", feature_types=None, title=None):
     return "# http://try-gobe.appspot.com/#!!%s\n%s" % (response["anno_id"], r)
 
 
-def main(bed_file, format='bed', feature_types=None, title=None):
+def main(feat_file, format='bed', feature_types=None, title=None):
 
     if not isinstance(feature_types, list):
         feature_types = [x.strip() for x in feature_types.split(",")] \
             if feature_types else None
 
     # they sent in a filepath.
-    if isinstance(bed_file, basestring):
-        contents = open(bed_file).readlines()
+    if isinstance(feat_file, basestring):
+        contents = open(feat_file).readlines()
     else:
         # they sent in a list of lines.
-        contents = bed_file
+        contents = feat_file
 
     if feature_types and title:
         title += (" (%s)" % ", ".join(feature_types))
 
-    gobe_contents = bed_to_gobe(contents, format=format,
+    gobe_contents = feats_to_gobe(contents, format=format,
             feature_types=feature_types, title=title)
     return gobe_contents
 
 def guess_format(annos_str):
     r"""
-    guess gff3/bed/gobe given an input string of
+    guess gff3/bed/gobe/blast given an input string of
     annotations
     >>> guess_format("##gff-version")
-    'gff3'
+    'gff'
     >>> guess_format("1,2,3,4,5")
     'gobe'
     >>> guess_format("1\n2")
@@ -139,25 +154,33 @@ def guess_format(annos_str):
     >>> guess_format("seqid\tstart\tstop\taccn\ttype\tstrand")
     'bed'
     >>> guess_format("chr22\t.\tBED_feature\t20100001\t20100100\t.\t.\t.\t.")
-    'gff3'
+    'gff'
+
+    >>> guess_format("AT1G77500.1\tfgenesh2_kg.2__2045__AT1G77500.1\t95.2\t2612\t125\t9\t1\t2636\t201\t2836\t0\t4577.5")
+    'blast'
 
     """
     alist = annos_str.split("\n")
     if alist[0].startswith("##gff-version"):
-        return "gff3"
+        return "gff"
     alist = [a for a in alist if not a[0] == "#"]
+    l1 = alist[0]
 
-    if alist[0].count(",") > alist[0].count("\t"):
+    if l1.count(",") > l1.count("\t"):
         return "gobe"
 
     # it's gobe line data with only 1 column.
-    if alist[0].count(",") + alist[0].count("\t") == 0:
+    if l1.count(",") + l1.count("\t") == 0:
         return "gobe"
 
-    if len(alist[0].split("\t")) != 9:
+    s1 = l1.split("\t")
+    if len(s1) == 12 and s1[3].isdigit() and s1[4].isdigit():
+        return 'blast'
+
+    if len(s1) != 9:
         return "bed"
 
-    return "gff3"
+    return "gff"
 
 if __name__ == "__main__":
     import doctest

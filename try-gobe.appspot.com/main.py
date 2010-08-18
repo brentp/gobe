@@ -10,7 +10,7 @@ import utils
 import os.path as op
 from models import Annotation
 
-FORMATS = ("gff3", "bed", "gobe")
+FORMATS = ("gff", "bed", "gobe", "blast")
 
 template_dir = op.join(op.dirname(__file__), "templates")
 def render(path, vals=None, **kwargs):
