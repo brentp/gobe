@@ -7,6 +7,14 @@ CDS {
     z: 16;
 }
 
+text {
+    color: #0000ff;
+    glyph: text;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
 other-rna, mRNA, transposable-element { 
     fill_color: #00ff00;
     fill_alpha: 0.4;
@@ -70,5 +78,5 @@ five_prime_UTR, three_prime_UTR {
 
 plot_line {
     line_color: #0000ff;
-    line_width: 3.0;
+    line_width: 1.0;
 }

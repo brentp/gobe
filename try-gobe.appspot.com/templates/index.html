@@ -22,8 +22,9 @@
 <body>
 
 <div id="left">
+    <h4 class="panel">Paste some data below or click a link at the right to see recently added data</h4>
     <div class="panel" id="main-anno">
-        <h4>Title</h4> 
+        <h4>Enter A Title</h4> 
         <input class="iform" type="text" name="title" id="title" value="{{ anno_title }}" />
         <h4>Data</h4>
         <textarea class="iform" id="annotations" name="annotations" rows="34">{{ anno_content }}</textarea>
@@ -39,11 +40,13 @@
 
 
 <div id="center">
-    <h1> Gobe: interactive comparative genomics viewer 
-    (<a href="http://brentp.github.com/gobe/" target="_blank">Documentation</a>, 
+    <h4 class="panel"> Gobe: interactive, comparative-genomics viewer 
+    (<a href="http://brentp.github.com/gobe/build/html/" target="_blank">Documentation</a>, 
     <a href="http://github.com/brentp/gobe/" target="_blank">Source</a>)
-    <span style="float:right"><a id="gobe-style" href="#">alternate gobe style</a></span>
-    </h1>
+    <button style="float:right"><a id="gobe-style" href="#">alternate gobe style</a></button>
+    <br/>
+    &nbsp;
+    </h4>
     <br />
     <div class="panel" id="content">
 You need to install <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> (or turn it back on in your browser settings).
