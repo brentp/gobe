@@ -71,6 +71,11 @@ float:right;
 
 .dialog {
     color: midnightblue;
+    float:left;
+}
+
+#clear {
+    float: right;
 }
 
 .shadow {

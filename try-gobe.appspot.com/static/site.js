@@ -88,5 +88,7 @@ jQuery(function(){
            jQuery('#submit').click();
         }, "json")
     });
+
+    jQuery('#clear').click(Gobe.clear);
 });
 

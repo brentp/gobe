@@ -2,10 +2,11 @@ var Gobe = {
     'onmouseover': function(id, name, bpstart, bpend, track_id){
     },
     'onclick': function(args){
-        var text = "<b>Type: </b>" + args[2] + "<br />"
+        var text =
+              "<b>Name: </b>"  + args[1] + "<hr />"
+            + "<b>Type: </b>"  + args[2] + "<br />"
             + "<b>Start: </b>" + args[3] + "<br />"
-            + "<b>Stop: </b>" + args[4] + "<br />"
-            + "<b>Name: </b>" + args[5] + "<br />";
+            + "<b>Stop: </b>"  + args[4] + "<br />"
         jQuery('#dialog').addClass("dialog").html(text);
     },
     'warn': function(msg){
