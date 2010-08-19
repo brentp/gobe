@@ -180,7 +180,6 @@ class AnnoTrack extends SubTrack {
     public function setUpTitleTextField(){
         this.ttf = new MTextField();
 
-        ttf.htmlText   = '<p>' + track.title + '</p>';
         ttf.y      = -both.y;
         ttf.x      = 6;
 
@@ -189,7 +188,8 @@ class AnnoTrack extends SubTrack {
         ttf.opaqueBackground = 0xf4f4f4;
         ttf.autoSize         = flash.text.TextFieldAutoSize.LEFT;
         ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize, display: 'inline',
-                                    fontFamily: '_sans'});
+                                    fontFamily: 'Arial,serif,sans-serif'});
+        ttf.htmlText   = '<p>' + track.title + '</p>';
 
         this.addChild(ttf);
     }
@@ -256,7 +256,6 @@ class HSPTrack extends SubTrack {
     public function setUpTextField(){
         this.ttf = new MTextField();
 
-        ttf.htmlText   = '<p>' + other.title + '</p>';
         ttf.multiline = true;
 
         ttf.border = false;
@@ -264,10 +263,11 @@ class HSPTrack extends SubTrack {
         //ttf.opaqueBackground = 0xf4f4f4;
         ttf.autoSize         = flash.text.TextFieldAutoSize.LEFT;
         this.addChildAt(ttf, this.numChildren);
-        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize - 2, display: 'inline', fontColor: '0xcccccc',
-                                    fontFamily: '_sans'});
-        ttf.x      = flash.Lib.current.stage.stageWidth - ttf.width - 10;
+        ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize - 1, display: 'inline', fontColor: '0xcccccc',
+                                    fontFamily: 'arial,sans-serif'});
         ttf.y      = -track_height; // - ttf.height;
+        ttf.htmlText   = '<p>' + other.title + '</p>';
+        ttf.x      = flash.Lib.current.stage.stageWidth - ttf.width - 10;
     }
 }
 
