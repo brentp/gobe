@@ -17,8 +17,15 @@ jQuery(function(){
     Gobe.params = {'bgcolor': '#FFFFFF'};
     Gobe.DIV = "content";
 
-    Gobe.embed(w, height);
 
+
+    // the value on the #hash overrides the other.
+    // this block of code makes the links actually work.
+    var anno_id = location.hash.substr(1).split(/!!/);
+    if(anno_id[1]){
+        Gobe.flashVars.annotations = "/annos/" + anno_id[1]
+    }
+    Gobe.embed(w, height);
 
     jQuery(window).hashchange( function(){
         var anno_id = location.hash.substr(1).split(/!!/); // remove #
@@ -34,7 +41,7 @@ jQuery(function(){
                 jQuery('#title').val(title);
             }
         });
-    });
+    })
 
     var gs = jQuery('#gobe-style');
     gs.click(function(){
