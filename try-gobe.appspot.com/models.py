@@ -18,3 +18,7 @@ class Annotation(db.Model):
         for anno_id in self.bar_hist_ids:
             bhs.append(Annotation.all().filter('anno_id = ', anno_id).get())
         return bhs
+
+    @classmethod
+    def by_anno_id(self, anno_id):
+        return Annotation.all().filter('anno_id =', anno_id).get()

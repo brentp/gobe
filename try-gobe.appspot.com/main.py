@@ -46,9 +46,16 @@ class Index(webapp.RequestHandler):
 
         bar_hists = a.get_bar_hists()
 
+        query = Annotation.all()
+        gobe_examples = [Annotation.get('agh0cnktZ29iZXIQCxIKQW5ub3RhdGlvbhg7DA'),
+                         Annotation.by_anno_id('c8623e5e2f47c3b5282fb20ae08bfca7'),
+                         Annotation.by_anno_id('f59649ac5a6fa39b3b4cb0eed743b05f'),
+                        ]
+
         self.response.out.write(render("index.html", user_tmpl, anno_name=name, anno_id=a.anno_id or "",
                                        anno_content=a.content or "", anno_title=a.title or "",
                                        bar_hists = bar_hists,
+                                       gobe_examples=gobe_examples,
                                        history=history, user_history=user_history))
 
     def post(self, unused):

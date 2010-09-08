@@ -43,7 +43,7 @@
     <h4 class="panel"> Gobe: interactive, comparative-genomics viewer 
     (<a href="http://brentp.github.com/gobe/build/html/" target="_blank">Documentation</a>, 
     <a href="http://github.com/brentp/gobe/" target="_blank">Source</a>)
-    <button style="float:right"><a id="gobe-style" href="#">alternate gobe style</a></button>
+    <button id="gobe-style" style="float:right">alternate gobe style</button>
     <br/>
     &nbsp;
     </h4>
@@ -60,6 +60,15 @@ You need to install <a href="http://www.adobe.com/shockwave/download/download.cg
 <div id="right">
     <div class="panel">
         <a id="login" href="{{ login_url }}">{{ login_url_text }}</a> {{ anno_name }}
+    </div>
+    <br />
+    <div class="panel" id="examples"><!-- holds the links to current user's annos -->
+        <h4>Pretty Gobe Examples</h4>
+        {% for a in gobe_examples %}
+            <p class='history'>
+              <a href="#{{ a.title }}!!{{ a.anno_id }}">{% firstof a.title a.date %}</a>
+            </p>
+        {% endfor %}
     </div>
     <br />
     {% if user_history %}
