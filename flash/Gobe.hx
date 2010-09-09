@@ -29,7 +29,7 @@ import Track;
 
 class Gobe extends Sprite {
 
-    public static var fontSize:Int = 13;
+    public static var fontSize:Int = 16;
 
     public static  var ctx = new LoaderContext(true);
 

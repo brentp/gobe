@@ -136,9 +136,11 @@ class InfoTrack extends Sprite {
             g.lineTo(xpos_px, 1.4*height);
             // tick labels
             var t = new MTextField();
-            t.htmlText = (Util.human_readable(xpos));
             t.y = ymid;
             t.x = xpos_px;
+            t.styleSheet.setStyle('p', {fontSize: Gobe.fontSize - 1, display: 'inline',
+                                    fontFamily: 'Arial,serif,sans-serif'});
+            t.htmlText = '<p>' + (Util.human_readable(xpos)) + '</p>';
             t.autoSize = flash.text.TextFieldAutoSize.LEFT;
             addChild(t);
 
@@ -265,8 +267,8 @@ class HSPTrack extends SubTrack {
         this.addChildAt(ttf, this.numChildren);
         ttf.styleSheet.setStyle('p', {fontSize: Gobe.fontSize - 1, display: 'inline', fontColor: '0xcccccc',
                                     fontFamily: 'arial,sans-serif'});
-        ttf.y      = -track_height; // - ttf.height;
         ttf.htmlText   = '<p>' + other.title + '</p>';
+        ttf.y      = -track_height; // - ttf.height;
         ttf.x      = flash.Lib.current.stage.stageWidth - ttf.width - 10;
     }
 }

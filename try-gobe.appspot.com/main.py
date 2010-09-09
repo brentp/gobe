@@ -49,7 +49,7 @@ class Index(webapp.RequestHandler):
         query = Annotation.all()
         gobe_examples = [Annotation.by_anno_id('8316edf46cc9b4ec845596e91997630f'),
                          Annotation.by_anno_id('50f939d37ebf65f4588ba5bc435e7bdf'),
-                         Annotation.by_anno_id('f59649ac5a6fa39b3b4cb0eed743b05f'),
+                         Annotation.by_anno_id('e58139270757f77ef25ddcfa0df8e61b'),
                         ]
 
         self.response.out.write(render("index.html", user_tmpl, anno_name=name, anno_id=a.anno_id or "",
