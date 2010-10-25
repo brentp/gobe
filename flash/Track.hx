@@ -116,6 +116,7 @@ class InfoTrack extends Sprite {
         var border = Track.border_thickness / 2;
         var sw = flash.Lib.current.stage.stageWidth;
         var tw = track.bpmax - track.bpmin;
+        if (tw < 0) tw = -tw; // get absolute value
         var baseline_lw = 2;
         var major_tick_lw = 2;
         var minor_tick_lw = 1;
