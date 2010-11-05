@@ -208,6 +208,24 @@ class Gobe extends Sprite {
                 tracks.get(k).anno_track.ttf.styleSheet.setStyle('p', {fontSize:Gobe.fontSize});
             }
         }
+        // 'l'
+        if(e.keyCode == 76){
+            // todo hide/show MTextFields.
+            for(k in tracks.keys()){
+                var ttf = tracks.get(k).anno_track.ttf;
+                ttf.visible = !ttf.visible;
+            }
+        }
+        // 's'
+        if(e.keyCode == 83){
+            for(t in tracks.iterator()){
+                for(st in t.subtracks.iterator()){
+                    if(Type.getClass(st) != HSPTrack){ continue; }
+                    cast(st, HSPTrack).ttf.visible = !cast(st, HSPTrack).ttf.visible;
+                }
+            }
+
+        }
     }
     public static function geturl(url:String, handler:Event -> Void){
         //trace("getting:" + url);
@@ -386,7 +404,7 @@ class MTextField extends TextField {
     }
 }
 
-// this makes the gray selection triangle.
+// this makes the gray selection rectangle.
 class DragSprite extends Sprite {
     public var startx:Float;
     public var starty:Float;

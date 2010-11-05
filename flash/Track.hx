@@ -256,6 +256,13 @@ class HSPTrack extends SubTrack {
         super(track, other, track_height);
         this.setUpTextField();
     }
+    public override function toString(){
+        var s = "HSPTrack(" + this.track.title;
+        if(this.track != this.other){
+            s += ", " + this.other.title;
+        }
+        return s + ")";
+    }
     public function setUpTextField(){
         this.ttf = new MTextField();
 
