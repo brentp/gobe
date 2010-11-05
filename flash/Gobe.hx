@@ -226,6 +226,10 @@ class Gobe extends Sprite {
             }
 
         }
+        // 'escape'
+        if(e.keyCode == 27){
+            clear_wedges();
+        }
     }
     public static function geturl(url:String, handler:Event -> Void){
         //trace("getting:" + url);

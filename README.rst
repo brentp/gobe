@@ -221,6 +221,15 @@ file you specified. You should override this callback to perform sophisticated
 queries on an annotation, e.g.: via an AJAX call to a server-side script which
 will return more information about the feature.
 
+Special Keys
+============
+
+    + 'l': hide track labels
+    + 's': hide subtrack labels
+    + up/down arrows: increase/decrease font-size of labels.
+    + 'escape': clear all drawn wedges.
+
+
 Getting Started
 ===============
 
@@ -232,13 +241,6 @@ then specify the paths to your own data with a url like:
 
 Once you have each of those files in the proper location, gobe will render the
 interactive flash movie.
-
-TODO
-====
-
-  * improve docs.
-  * customizable fonts
-  * move HSP colors to CSS.
 
 .. image:: http://lh4.ggpht.com/_uU_kLC5AdTc/S9O1wilCMBI/AAAAAAAAA0A/NniSF6OhTps/s800/screen2.png
 
