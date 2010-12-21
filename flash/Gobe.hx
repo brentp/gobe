@@ -89,6 +89,8 @@ class Gobe extends Sprite {
         ExternalInterface.addCallback("clear_wedges", clear_wedges);
         ExternalInterface.addCallback("set_data", set_data);
         ExternalInterface.addCallback("set_url", set_url);
+        ExternalInterface.addCallback("hide_track_labels", Gobe.hideTrackLabels);
+        ExternalInterface.addCallback("hide_subtrack_labels", Gobe.hideSubTrackLabels);
     }
     public function reset(){
         for(a in annotations.iterator()){ a.graphics.clear(); }
@@ -199,6 +201,21 @@ class Gobe extends Sprite {
         }
     }
 
+    public static function hideTrackLabels(){
+        for(k in tracks.keys()){
+            var ttf = tracks.get(k).anno_track.ttf;
+            ttf.visible = !ttf.visible;
+        }
+    }
+    public static function hideSubTrackLabels(){
+        for(t in tracks.iterator()){
+            for(st in t.subtracks.iterator()){
+                if(Type.getClass(st) != HSPTrack){ continue; }
+                cast(st, HSPTrack).ttf.visible = !cast(st, HSPTrack).ttf.visible;
+            }
+        }
+    }
+
     public function onKeyPress(e:KeyboardEvent){
         if(e.keyCode == 38 || e.keyCode == 40){ // up
             if(e.keyCode == 38 && Gobe.fontSize > 25){ return; }
@@ -210,21 +227,11 @@ class Gobe extends Sprite {
         }
         // 'l'
         if(e.keyCode == 76){
-            // todo hide/show MTextFields.
-            for(k in tracks.keys()){
-                var ttf = tracks.get(k).anno_track.ttf;
-                ttf.visible = !ttf.visible;
-            }
+            hideTrackLabels();
         }
         // 's'
         if(e.keyCode == 83){
-            for(t in tracks.iterator()){
-                for(st in t.subtracks.iterator()){
-                    if(Type.getClass(st) != HSPTrack){ continue; }
-                    cast(st, HSPTrack).ttf.visible = !cast(st, HSPTrack).ttf.visible;
-                }
-            }
-
+            hideSubTrackLabels();
         }
         // 'escape'
         if(e.keyCode == 27){
