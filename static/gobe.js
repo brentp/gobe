@@ -14,7 +14,7 @@ var Gobe = {
     'hide_labels': function(){
         Gobe.swf.hide_track_labels();
         Gobe.swf.hide_subtrack_labels();
-    }
+    },
     'redraw': function(){
         Gobe.swf.redraw();
     },
