@@ -11,7 +11,10 @@ var Gobe = {
     'warn': function(msg){
         console.error("Flash msg:" + msg);
     },
-
+    'hide_labels': function(){
+        Gobe.swf.hide_track_labels();
+        Gobe.swf.hide_subtrack_labels();
+    }
     'redraw': function(){
         Gobe.swf.redraw();
     },
