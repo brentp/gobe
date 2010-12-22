@@ -26,7 +26,7 @@
     <div class="panel" id="main-anno">
         <h4>Enter A Title</h4> 
         <input class="iform" type="text" name="title" id="title" value="{{ anno_title }}" />
-        <h4>Data</h4>
+        <h5>Data in Gobe <a href="http://github.com/brentp/gobe/">Gobe</a>, Bed, BLAST or GFF Format:</h5>
         <textarea class="iform" id="annotations" name="annotations" rows="34">{{ anno_content }}</textarea>
         <br/><button id="submit">Draw These Annotations</button>
     </div>
@@ -54,6 +54,7 @@ You need to install <a href="http://www.adobe.com/shockwave/download/download.cg
     <br />
     <br />
     <div id="dialog"> </div>
+    <button id="hide-labels">Toggle Track-Label Visibility</button>
     <button id="clear">Clear Connectors</button>
 </div>
 

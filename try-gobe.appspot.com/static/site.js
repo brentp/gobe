@@ -46,7 +46,6 @@ jQuery(function(){
     var gs = jQuery('#gobe-style');
     gs.click(function(){
         var current_style = get_style();
-        console.log(current_style);
         if(current_style != "/static/blue.css"){
             window.location = "?style=/static/blue.css" +  window.location.hash;
         }
@@ -97,5 +96,6 @@ jQuery(function(){
     });
 
     jQuery('#clear').click(Gobe.clear);
+    jQuery('#hide-labels').click(Gobe.hide_labels);
 });
 

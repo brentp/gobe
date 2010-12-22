@@ -10,13 +10,18 @@ var Gobe = {
         jQuery('#dialog').addClass("dialog").html(text);
     },
     'warn': function(msg){
-        console.log("Flash msg:" + msg);
+        if(window.console){
+            console.log("Flash msg:" + msg);
+        }
     },
 
     'redraw': function(){
         Gobe.swf.redraw();
     },
-
+    'hide_labels': function(){
+        Gobe.swf.hide_track_labels();
+        Gobe.swf.hide_subtrack_labels();
+    },
     'set_hsp_colors': function(){
         var colors = [];
         if (arguments.length > 0 && arguments[0] instanceof Array){
