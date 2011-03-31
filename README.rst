@@ -242,6 +242,12 @@ then specify the paths to your own data with a url like:
 Once you have each of those files in the proper location, gobe will render the
 interactive flash movie.
 
+
+Cite
+====
+
+Pedersen BS, Tang H, Freeling M. 2011. Gobe: an interactive, web-based tool for comparative genomic visualization. Bioinformatics 27(7):1015-1016.
+
 .. image:: http://lh4.ggpht.com/_uU_kLC5AdTc/S9O1wilCMBI/AAAAAAAAA0A/NniSF6OhTps/s800/screen2.png
 
 .. _`haxe`: http://haxe.org/
